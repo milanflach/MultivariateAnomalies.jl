@@ -3,6 +3,7 @@ using Distances
 
 """
     init_dist_matrix(data)
+    init_dist_matrix(data, training_data)
 
 initialize a `D_out` object for `dist_matrix!()`.
 """
@@ -13,6 +14,18 @@ function init_dist_matrix{tp, N}(data::AbstractArray{tp, N})
   tdat = zeros(tp, size(data, N), T)
   D = zeros(tp, T, T)
   D_out = (D, dat, tdat)
+  return(D_out)
+end
+
+function init_dist_matrix{tp, N}(data::AbstractArray{tp, N}, training_data::AbstractArray{tp, N})
+  T = size(data, 1)
+  Ttrain = size(training_data, 1)
+  dat = zeros(tp, T, size(data, N))
+  traindat = zeros(tp, Ttrain, size(training_data, N))
+  tdat = zeros(tp, size(data, N), T)
+  ttraindat = zeros(tp, size(training_data, N), Ttrain)
+  D = zeros(tp, Ttrain, T)
+  D_out = (D, dat, tdat, traindat, ttraindat)
   return(D_out)
 end
 
@@ -48,10 +61,35 @@ function dist_matrix!{tp, N}(D_out::Tuple{Array{Float64,2},Array{Float64,2},Arra
   return(D_out[1])
 end
 
+function dist_matrix!{tp, N}(D_out::Tuple{Array{Float64,2},Array{Float64,2},Array{Float64,2},Array{Float64,2},Array{Float64,2}},
+                             data::AbstractArray{tp, N}, training_data::AbstractArray{tp, N}; dist::ASCIIString = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
+  #@assert N == 2 || N == 3 || N  = 4
+  (D, dat, tdat, traindat, ttraindat) = D_out
+  if N == 2 copy!(dat, data) end
+  if N == 3 copy!(dat, sub(data, :, space, :)) end
+  if N == 4 copy!(dat, sub(data, :, lat, lon, :))  end
+  if N == 2 copy!(traindat, training_data) end
+  if N == 3 copy!(traindat, sub(training_data, :, space, :)) end
+  if N == 4 copy!(traindat, sub(training_data, :, lat, lon, :))  end
+  transpose!(tdat, dat)
+  transpose!(ttraindat, traindat)
+  if(dist == "Euclidean")         pairwise!(D, Euclidean(), ttraindat, tdat)
+  elseif(dist == "SqEuclidean")   pairwise!(D, SqEuclidean(), ttraindat, tdat)
+  elseif(dist == "Chebyshev")     pairwise!(D, Chebyshev(), ttraindat, tdat)
+  elseif(dist == "Cityblock")     pairwise!(D, Cityblock(), ttraindat, tdat)
+  elseif(dist == "JSDivergence")  pairwise!(D, JSDivergence(), ttraindat, tdat)
+  elseif(dist == "Mahalanobis")   pairwise!(D, Mahalanobis(Q), ttraindat, tdat)
+  elseif(dist == "SqMahalanobis") pairwise!(D, SqMahalanobis(Q), ttraindat, tdat)
+  else print("$dist is not a defined distance metric, has to be one of 'Euclidean', 'SqEuclidean', 'Chebyshev', 'Cityblock' or 'JSDivergence'")
+  end
+  return(D_out[1])
+end
+
 """
     dist_matrix{tp, N}(data::AbstractArray{tp, N}; dist::ASCIIString = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
+    dist_matrix{tp, N}(data::AbstractArray{tp, N}, training_data; dist::ASCIIString = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
 
-compute the distance matrix of `data` i.e. the pairwise distances along the first dimension of data, using the last dimension as variables.
+compute the distance matrix of `data` or the distance matrix between data and training data i.e. the pairwise distances along the first dimension of data, using the last dimension as variables.
 `dist` is a distance metric, currently `Euclidean`(default), `SqEuclidean`, `Chebyshev`, `Cityblock`, `JSDivergence`, `Mahalanobis` and `SqMahalanobis` are supported.
 The latter two need a covariance matrix `Q` as input argument.
 
@@ -66,6 +104,12 @@ julia> D = dist_matrix(dc, space = 2)
 function dist_matrix{tp, N}(data::AbstractArray{tp, N}; dist::ASCIIString = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
   D_out = init_dist_matrix(data)
   dist_matrix!(D_out, data, dist = dist, space = space, lat = lat, lon = lon ,Q = Q)
+  return(D_out[1])
+end
+
+function dist_matrix{tp, N}(data::AbstractArray{tp, N}, training_data::AbstractArray{tp, N}; dist::ASCIIString = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
+  D_out = init_dist_matrix(data, training_data)
+  dist_matrix!(D_out, data, training_data, dist = dist, space = space, lat = lat, lon = lon ,Q = Q)
   return(D_out[1])
 end
 
@@ -159,6 +203,7 @@ end
     kernel_matrix(D::AbstractArray, σ::Float64 = 1.0[, kernel::ASCIIString = "gauss", dimension::Int64 = 1])
 
 compute a kernel matrix out of distance matrix `D`, given `σ`. Optionally normalized by the `dimension`, if `kernel = "normalized_gauss"`.
+compute `D` with `dist_matrix()`.
 
 ```jldoctest
 julia> dc = randn(20, 4,3)
