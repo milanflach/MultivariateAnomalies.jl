@@ -40,6 +40,7 @@ module MultivariateAnomalies
     SVDD_predict,
     SVDD_predict!,
     init_SVDD_predict,
+    KNFST_train,
     KNFST_predict,
     KNFST_predict!,
     init_KNFST,
@@ -68,7 +69,6 @@ module MultivariateAnomalies
 include("DistDensity.jl")
 # Multivariate Anomaly Detection Algorithms
 include("DetectionAlgorithms.jl")
-include("KNFST.jl")
 # AUC computations
 include("AUC.jl")
 # Feature Extraction techniques

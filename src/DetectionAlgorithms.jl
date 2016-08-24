@@ -19,6 +19,8 @@ end
     init_REC(T::Int)
 
 get object for memory efficient `REC!()` versions. Input can be a distance matrix `D` or the number of timesteps (observations) `T`.
+
+Marwan, N., Carmen Romano, M., Thiel, M., & Kurths, J. (2007). Recurrence plots for the analysis of complex systems. Physics Reports, 438(5-6), 237–329. http://doi.org/10.1016/j.physrep.2006.11.001
 """
 
 function init_REC(T::Int)
@@ -57,6 +59,8 @@ end
     KDE(K)
 
 Compute a Kernel Density Estimation (the Parzen sum), given a Kernel matrix `K`.
+
+Parzen, E. (1962). On Estimation of a Probability Density Function and Mode. The Annals of Mathematical Statistics, 33, 1–1065–1076.
 """
 
 function KDE(K::AbstractArray)
@@ -149,6 +153,8 @@ end
 
 Compute Hotelling's T^2 control chart (the squared Mahalanobis distance to the data's mean vector (`mv`), given the covariance matrix `Q`).
 Input data is a two dimensional data matrix (time * variables).
+
+Lowry, C. A., & Woodall, W. H. (1992). A Multivariate Exponentially Weighted Moving Average Control Chart. Technometrics, 34, 46–53.
 """
 
 # Hotelling's T^2 (Mahalanobis distance to the data mean)
@@ -163,6 +169,8 @@ end
     KNN_Gamma(knn_dists_out)
 
 This function computes the mean distance of the K nearest neighbors given a `knn_dists_out` object from `knn_dists()` as input argument.
+
+Harmeling, S., Dornhege, G., Tax, D., Meinecke, F., & Müller, K.-R. (2006). From outliers to prototypes: Ordering data. Neurocomputing, 69(13-15), 1608–1618. http://doi.org/10.1016/j.neucom.2005.05.015
 """
 # mean of k nearest neighbor distances
 function KNN_Gamma(knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},Array{Int64,2},Array{Float64,2}})
@@ -262,6 +270,8 @@ end
     KNN_Delta(knn_dists_out, data)
 
 Compute Delta as vector difference of the K nearest neighbors. Arguments are a `knn_dists()` object (`knn_dists_out`) and a `data` matrix (time * variables)
+
+Harmeling, S., Dornhege, G., Tax, D., Meinecke, F., & Müller, K.-R. (2006). From outliers to prototypes: Ordering data. Neurocomputing, 69(13-15), 1608–1618. http://doi.org/10.1016/j.neucom.2005.05.015
 """
 
 function KNN_Delta(knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},Array{Int64,2},Array{Float64,2}}
@@ -334,6 +344,10 @@ end
 
 train a one class support vecort machine model (i.e. support vector data description), given a kernel matrix K and and the highest possible percentage of outliers `nu`.
 Returns the model object (`svdd_model`). Requires LIBSVM.
+
+Tax, D. M. J., & Duin, R. P. W. (1999). Support vector domain description. Pattern Recognition Letters, 20, 1191–1199.
+
+Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector Algorithms. Neural Computation, 12, 1207–1245.
 """
 function SVDD_train(K::AbstractArray, nu::Float64)
 # function in LIBSVM.jl for optional parameter settings.
@@ -347,6 +361,10 @@ end
     SVDD_predict(K, svdd_model)
 
 predict the outlierness of an object given the testing Kernel matrix `K` and the `svdd_model` from SVDD_train(). Requires LIBSVM.
+
+Tax, D. M. J., & Duin, R. P. W. (1999). Support vector domain description. Pattern Recognition Letters, 20, 1191–1199.
+
+Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector Algorithms. Neural Computation, 12, 1207–1245.
 """
 function SVDD_predict(K::AbstractArray, svdd_model)
     (predicted_labels, decision_values) = svmpredict(svdd_model, K)
@@ -360,21 +378,29 @@ initializes a `SVDD_out` object to be used in `SVDD_predict!()`. Input is the nu
 If `T` for prediction differs from T of the training data (`Ttrain`) use `Ttrain` as additional argument.
 """
 function init_SVDD_predict(T::Int)
-  Ttrain = T
-  predicted_labels = Array(Int64, T);
-  decision_values = Array(Float64, 1, T);
-  nodeptrs = Array(Ptr{LIBSVM.SVMNode}, T);
-  nodes = Array(LIBSVM.SVMNode, Ttrain + 1, T);
-  SVDD_out = (predicted_labels, decision_values, nodeptrs, nodes)
+  instances = Array(Float64, 1, T)
+  SVDD_out = init_svmpredict(instances)
+  #predicted_labels = Array(Int64, T);
+  #decision_values = Array(Float64, 1, T);
+  #nodeptrs = Array(Ptr{LIBSVM.SVMNode}, T);
+  #nodes = Array(LIBSVM.SVMNode, Ttrain + 1, T);
+  #SVDD_out = (predicted_labels, decision_values, nodeptrs, nodes)
   return(SVDD_out)
 end
 
 function init_SVDD_predict(T::Int, Ttrain::Int)
-  predicted_labels = Array(Int64, T);
-  decision_values = Array(Float64, 1, T);
-  nodes = Array(LIBSVM.SVMNode, Ttrain + 1, T);
-  nodeptrs = Array(Ptr{LIBSVM.SVMNode}, T);
-  SVDD_out = (predicted_labels, decision_values, nodes, nodeptrs)
+  instances = Array(Float64, Ttrain, T)
+  SVDD_out = init_svmpredict(instances)
+  #predicted_labels = Array(Int64, T);
+  #decision_values = Array(Float64, 1, T);
+  #nodes = Array(LIBSVM.SVMNode, Ttrain + 1, T);
+  #nodeptrs = Array(Ptr{LIBSVM.SVMNode}, T);
+  #SVDD_out = (predicted_labels, decision_values, nodes, nodeptrs)
+  return(SVDD_out)
+end
+
+function init_SVDD_predict(instances::AbstractArray{Float64,2})
+  SVDD_out = init_svmpredict(instances)
   return(SVDD_out)
 end
 
@@ -384,10 +410,20 @@ end
 Memory efficient version of `SVDD_predict()`. Additional input argument is the `SVDD_out` object from `init_SVDD_predict()`.
 `SVDD_out[1]` are predicted labels, `SVDD_out[2]` decision_values. Requires LIBSVM.
 """
-function SVDD_predict!(SVDD_out::Tuple{Array{Int64,1},Array{Float64,2},Array{LIBSVM.SVMNode,2},Array{Ptr{LIBSVM.SVMNode},1}}
+function SVDD_predict!(SVDD_out::Tuple{Array{Any,1},Array{Float64,2},Array{LIBSVM.SVMNode,2},Array{Ptr{LIBSVM.SVMNode},1}}
                        , svdd_model::LIBSVM.SVMModel{Int64}, K::AbstractArray)
-    svmpredict!(SVDD_out[1], SVDD_out[2], SVDD_out[3], SVDD_out[4], svdd_model, K)
+    svmpredict!(SVDD_out, svdd_model, K)
 end
+
+"""
+    KNFST_predict(model, K)
+
+predict the outlierness of some data (represented by the kernel matrix `K`), given some KNFST `model` from `KNFST_train(K)`.
+
+Paul Bodesheim and Alexander Freytag and Erik Rodner and Michael Kemmler and Joachim Denzler:
+"Kernel Null Space Methods for Novelty Detection". Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2013.
+
+"""
 
 function KNFST_predict(model, K)
   # projected test samples:
@@ -398,6 +434,12 @@ function KNFST_predict(model, K)
   scores = sqrt(sum(diff.*diff,2));
 end
 
+"""
+    init_KNFST(T, KNFST_mod)
+
+initialize a `KNFST_out`object for the use with `KNFST_predict!`, given `T`, the number of observations and the model output `KNFST_train(K)`.
+"""
+
 function init_KNFST(T::Int, KNFST_mod::Tuple{Array{Float64,2},Array{Float64,2}})
   diffs = zeros(Float64, T, size(KNFST_mod[2], 2));
   scores = zeros(Float64, T);
@@ -406,6 +448,16 @@ function init_KNFST(T::Int, KNFST_mod::Tuple{Array{Float64,2},Array{Float64,2}})
   return(KNFST_out)
 end
 
+
+"""
+    KNFST_predict!(KNFST_out, KNFST_mod, K)
+
+predict the outlierness of some data (represented by the kernel matrix `K`), given a `KNFST_out` object (`init_KNFST()`), some KNFST model (`KNFST_mod = KNFST_train(K)`)
+and the testing kernel matrix K.
+
+Paul Bodesheim and Alexander Freytag and Erik Rodner and Michael Kemmler and Joachim Denzler:
+"Kernel Null Space Methods for Novelty Detection". Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2013.
+"""
 
 function KNFST_predict!(scores, diffs, Ktransposed, proj, targetValue, K)
   @assert size(scores, 1) == size(K, 2) == size(diffs, 1)
@@ -437,6 +489,153 @@ function KNFST_predict!(KNFST_out::Tuple{Array{Float64,1},Array{Float64,2},Array
   sum!(scores, diffs)
   broadcast!(sqrt, scores, scores)
   return(scores)
+end
+
+# Learning method for novelty detection with KNFST according to the work:
+#
+# Paul Bodesheim and Alexander Freytag and Erik Rodner and Michael Kemmler and Joachim Denzler:
+# "Kernel Null Space Methods for Novelty Detection".
+# Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2013.
+#
+# Please cite that paper if you are using this code!
+#
+# proj = calculateKNFST(K, labels)
+#
+# calculates projection matrix of KNFST
+#
+# INPUT:
+#   K -- (n x n) kernel matrix containing similarities of n training samples
+#   labels -- (n x 1) vector containing (multi-class) labels of the n training samples
+#
+# OUTPUT:
+#   proj -- projection matrix for data points (project x via kx*proj,
+#           where kx is row vector containing kernel values of x and
+#           training data)
+#
+#
+function calculateKNFST(K, labels)
+
+    classes = unique(labels);
+
+    ### check labels
+    if length(unique(labels)) == 1
+      error("calculateKNFST.jl: not able to calculate a nullspace from data of a single class using KNFST (input variable 'labels' only contains a single value)");
+    end
+
+    ### check kernel matrix
+    (n,m) = size(K);
+    if n != m
+        error("calculateKNFST.jl: kernel matrix must be quadratic");
+    end
+
+    ### calculate weights of orthonormal basis in kernel space
+    centeredK = copy(K); # because we need original K later on again
+    centerKernelMatrix(centeredK);
+    (basisvecsValues,basisvecs) = eig(centeredK);
+    basisvecs = basisvecs[:,basisvecsValues .> 1e-12];
+    basisvecsValues = basisvecsValues[basisvecsValues .> 1e-12];
+    basisvecsValues = diagm(1./sqrt(basisvecsValues));
+    basisvecs = basisvecs*basisvecsValues;
+
+    ### calculate transformation T of within class scatter Sw:
+    ### T= B'*Sw*B = H*H'  and H = B'*K*(I-L) and L a block matrix
+    L = zeros(n,n);
+    for i=1:length(classes)
+
+       L[labels.==classes[i],labels.==classes[i]] = 1./sum(labels.==classes[i]);
+
+    end
+
+    ### need Matrix M with all entries 1/m to modify basisvecs which allows usage of
+    ### uncentered kernel values:  (eye(size(M))-M)*basisvecs
+    M = ones(m,m)./m;
+
+    ### compute helper matrix H
+    H = ((eye(m)-M)*basisvecs)'*K*(eye(n)-L);
+
+    ### T = H*H' = B'*Sw*B with B=basisvecs
+    T = H*H';
+
+    ### calculate weights for null space
+    eigenvecs = nullspace(T);
+
+    if size(eigenvecs,2) < 1
+
+      (eigenvals,eigenvecs) = eig(T);
+      (min_val,min_ID) = findmin(eigenvals);
+      eigenvecs = eigenvecs[:,min_ID];
+
+    end
+
+    ### calculate null space projection and return it
+    proj = ((eye(m)-M)*basisvecs)*eigenvecs;
+
+end
+
+#############################################################################################################
+
+function centerKernelMatrix(kernelMatrix)
+# centering the data in the feature space only using the (uncentered) Kernel-Matrix
+#
+# INPUT:
+#       kernelMatrix -- uncentered kernel matrix
+# OUTPUT:
+#       centeredKernelMatrix -- centered kernel matrix
+
+  ### get size of kernelMatrix
+  n = size(kernelMatrix, 1);
+
+  ### get mean values of each row/column
+  columnMeans = mean(kernelMatrix,1); ### NOTE: columnMeans = rowMeans because kernelMatrix is symmetric
+  matrixMean = mean(columnMeans);
+
+  centeredKernelMatrix = kernelMatrix;
+
+  for k=1:n
+
+    centeredKernelMatrix[k,:] = centeredKernelMatrix[k,:] - columnMeans;
+    centeredKernelMatrix[:,k] = centeredKernelMatrix[:,k] - columnMeans';
+
+  end
+
+  centeredKernelMatrix = centeredKernelMatrix + matrixMean;
+
+end
+
+
+"""
+    KNFST_train(K)
+
+train a one class novelty KNFST model on a Kernel matrix `K` according to
+Paul Bodesheim and Alexander Freytag and Erik Rodner and Michael Kemmler and Joachim Denzler:
+"Kernel Null Space Methods for Novelty Detection". Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2013.
+
+# Output
+
+`(proj, targetValue)`
+`proj` 	-- projection vector for data points (project x via kx*proj, where kx is row vector containing kernel values of x and training data)
+`targetValue` -- value of all training samples in the null space
+"""
+
+function KNFST_train(K)
+
+    # get number of training samples
+    n = size(K,1);
+
+    # include dot products of training samples and the origin in feature space (these dot products are always zero!)
+    K_ext = [K zeros(n,1); zeros(1,n) 0];
+
+    # create one-class labels + a different label for the origin
+    labels = push!(ones(n),0);
+
+    # get model parameters
+    proj = calculateKNFST(K_ext,labels);
+    targetValue = mean(K_ext[labels.==1,:]*proj,1);
+    proj = proj[1:n,:];
+
+    # return both variables
+    return proj, targetValue
+
 end
 
 
