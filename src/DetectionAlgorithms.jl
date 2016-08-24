@@ -39,16 +39,21 @@ Memory efficient version of `REC()` for use within a loop. rec_out is preallocat
 
 function REC!(rec_out::AbstractArray, D::AbstractArray, rec_threshold::Float64, temp_excl::Int = 5)
     N = size(D, 1)
+    @assert temp_excl < N - 1
     @inbounds for i = 1:N
     rec_out[i] = 0.0
-    for j = 1:max(i-temp_excl-1,1)
-      if D[i, j] < rec_threshold
-        rec_out[i] = rec_out[i] + 1
+    if(i-temp_excl-1 >= 1)
+      for j = 1:(i-temp_excl-1)
+        if D[i, j] < rec_threshold && i != j
+          rec_out[i] = rec_out[i] + 1
+        end
       end
     end
-    for j = min(i+temp_excl+1,N):N
-      if D[i, j] < rec_threshold
-        rec_out[i] = rec_out[i] + 1
+    if(i+temp_excl+1 <= N)
+      for j = (i+temp_excl+1):N
+        if D[i, j] < rec_threshold && i != j
+          rec_out[i] = rec_out[i] + 1
+        end
       end
     end
   end
@@ -358,7 +363,7 @@ function SVDD_train(K::AbstractArray, nu::Float64)
 end
 
 """
-    SVDD_predict(K, svdd_model)
+    SVDD_predict(svdd_model, K)
 
 predict the outlierness of an object given the testing Kernel matrix `K` and the `svdd_model` from SVDD_train(). Requires LIBSVM.
 
@@ -366,7 +371,7 @@ Tax, D. M. J., & Duin, R. P. W. (1999). Support vector domain description. Patte
 
 Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector Algorithms. Neural Computation, 12, 1207–1245.
 """
-function SVDD_predict(K::AbstractArray, svdd_model)
+function SVDD_predict(svdd_model, K::AbstractArray)
     (predicted_labels, decision_values) = svmpredict(svdd_model, K)
 end
 
@@ -425,13 +430,10 @@ Paul Bodesheim and Alexander Freytag and Erik Rodner and Michael Kemmler and Joa
 
 """
 
-function KNFST_predict(model, K)
-  # projected test samples:
-  projectionVectors = K'*model["proj"]
-  # differences to the target value:
-  diff = projectionVectors-ones(size(K,2),1)*model["targetValue"];
-  # distances to the target value:
-  scores = sqrt(sum(diff.*diff,2));
+function KNFST_predict(KNFST_mod, K)
+  knfst_out = init_KNFST(size(K,2),KNFST_mod)
+  KNFST_predict!(knfst_out, KNFST_mod, K)
+  return(knfst_out)
 end
 
 """

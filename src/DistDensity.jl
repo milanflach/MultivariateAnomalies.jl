@@ -148,8 +148,8 @@ function knn_dists!(knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},A
         end
         sortperm!(ix, v)
         for j = 1:k
-            indices[i,j] = ix[j+1]
-            nndists[i,j] = v[ix[j+1]]
+            indices[i,j] = ix[j]
+            nndists[i,j] = v[ix[j]]
         end
     end
     return(knn_dists_out)
