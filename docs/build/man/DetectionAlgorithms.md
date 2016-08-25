@@ -45,6 +45,8 @@ init_REC(T::Int)
 
 get object for memory efficient `REC!()` versions. Input can be a distance matrix `D` or the number of timesteps (observations) `T`.
 
+Marwan, N., Carmen Romano, M., Thiel, M., & Kurths, J. (2007). Recurrence plots for the analysis of complex systems. Physics Reports, 438(5-6), 237–329. http://doi.org/10.1016/j.physrep.2006.11.001
+
 <a id='MultivariateAnomalies.KDE' href='#MultivariateAnomalies.KDE'>#</a>
 **`MultivariateAnomalies.KDE`** &mdash; *Function*.
 
@@ -55,6 +57,8 @@ KDE(K)
 ```
 
 Compute a Kernel Density Estimation (the Parzen sum), given a Kernel matrix `K`.
+
+Parzen, E. (1962). On Estimation of a Probability Density Function and Mode. The Annals of Mathematical Statistics, 33, 1–1065–1076.
 
 <a id='MultivariateAnomalies.KDE!' href='#MultivariateAnomalies.KDE!'>#</a>
 **`MultivariateAnomalies.KDE!`** &mdash; *Function*.
@@ -90,6 +94,8 @@ T2{tp}(data::AbstractArray{tp,2}, Q::AbstractArray[, mv])
 
 Compute Hotelling's T^2 control chart (the squared Mahalanobis distance to the data's mean vector (`mv`), given the covariance matrix `Q`). Input data is a two dimensional data matrix (time * variables).
 
+Lowry, C. A., & Woodall, W. H. (1992). A Multivariate Exponentially Weighted Moving Average Control Chart. Technometrics, 34, 46–53.
+
 <a id='MultivariateAnomalies.T2!' href='#MultivariateAnomalies.T2!'>#</a>
 **`MultivariateAnomalies.T2!`** &mdash; *Function*.
 
@@ -124,6 +130,8 @@ KNN_Gamma(knn_dists_out)
 
 This function computes the mean distance of the K nearest neighbors given a `knn_dists_out` object from `knn_dists()` as input argument.
 
+Harmeling, S., Dornhege, G., Tax, D., Meinecke, F., & Müller, K.-R. (2006). From outliers to prototypes: Ordering data. Neurocomputing, 69(13-15), 1608–1618. http://doi.org/10.1016/j.neucom.2005.05.015
+
 <a id='MultivariateAnomalies.KNN_Gamma!' href='#MultivariateAnomalies.KNN_Gamma!'>#</a>
 **`MultivariateAnomalies.KNN_Gamma!`** &mdash; *Function*.
 
@@ -157,6 +165,8 @@ KNN_Delta(knn_dists_out, data)
 ```
 
 Compute Delta as vector difference of the K nearest neighbors. Arguments are a `knn_dists()` object (`knn_dists_out`) and a `data` matrix (time * variables)
+
+Harmeling, S., Dornhege, G., Tax, D., Meinecke, F., & Müller, K.-R. (2006). From outliers to prototypes: Ordering data. Neurocomputing, 69(13-15), 1608–1618. http://doi.org/10.1016/j.neucom.2005.05.015
 
 <a id='MultivariateAnomalies.KNN_Delta!' href='#MultivariateAnomalies.KNN_Delta!'>#</a>
 **`MultivariateAnomalies.KNN_Delta!`** &mdash; *Function*.
@@ -225,16 +235,20 @@ SVDD_train(K, nu)
 
 train a one class support vecort machine model (i.e. support vector data description), given a kernel matrix K and and the highest possible percentage of outliers `nu`. Returns the model object (`svdd_model`). Requires LIBSVM.
 
+Tax, D. M. J., & Duin, R. P. W. (1999). Support vector domain description. Pattern Recognition Letters, 20, 1191–1199. Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector Algorithms. Neural Computation, 12, 1207–1245.
+
 <a id='MultivariateAnomalies.SVDD_predict' href='#MultivariateAnomalies.SVDD_predict'>#</a>
 **`MultivariateAnomalies.SVDD_predict`** &mdash; *Function*.
 
 
 
 ```
-SVDD_predict(K, svdd_model)
+SVDD_predict(svdd_model, K)
 ```
 
 predict the outlierness of an object given the testing Kernel matrix `K` and the `svdd_model` from SVDD_train(). Requires LIBSVM.
+
+Tax, D. M. J., & Duin, R. P. W. (1999). Support vector domain description. Pattern Recognition Letters, 20, 1191–1199. Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector Algorithms. Neural Computation, 12, 1207–1245.
 
 <a id='MultivariateAnomalies.SVDD_predict!' href='#MultivariateAnomalies.SVDD_predict!'>#</a>
 **`MultivariateAnomalies.SVDD_predict!`** &mdash; *Function*.
@@ -245,7 +259,7 @@ predict the outlierness of an object given the testing Kernel matrix `K` and the
 SVDD_predict!(SVDD_out, svdd_model, K)
 ```
 
-Memory efficient version of `SVDD_predict()`. Additional input argument is the `SVDD_out` object from `init_SVDD_predict()`. `SVDD_out[1]` are predicted labels, `SVDD_out[2]` decision_values. Requires LIBSVM.
+Memory efficient version of `SVDD_predict()`. Additional input argument is the `SVDD_out` object from `init_SVDD_predict()`. Compute `K`with `kernel_matrix()`. `SVDD_out[1]` are predicted labels, `SVDD_out[2]` decision_values. Requires LIBSVM.
 
 <a id='MultivariateAnomalies.init_SVDD_predict' href='#MultivariateAnomalies.init_SVDD_predict'>#</a>
 **`MultivariateAnomalies.init_SVDD_predict`** &mdash; *Function*.
@@ -283,9 +297,9 @@ train a one class novelty KNFST model on a Kernel matrix `K` according to Paul B
 KNFST_predict(model, K)
 ```
 
-predict the outlierness of some data (represented by the kernel matrix `K`), given some KNFST `model` from `KNFST_train(K)`.
+predict the outlierness of some data (represented by the kernel matrix `K`), given some KNFST `model` from `KNFST_train(K)`. Compute `K`with `kernel_matrix()`.
 
-Please cite: Paul Bodesheim and Alexander Freytag and Erik Rodner and Michael Kemmler and Joachim Denzler: "Kernel Null Space Methods for Novelty Detection". Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2013.
+Paul Bodesheim and Alexander Freytag and Erik Rodner and Michael Kemmler and Joachim Denzler: "Kernel Null Space Methods for Novelty Detection". Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2013.
 
 <a id='MultivariateAnomalies.KNFST_predict!' href='#MultivariateAnomalies.KNFST_predict!'>#</a>
 **`MultivariateAnomalies.KNFST_predict!`** &mdash; *Function*.
@@ -298,7 +312,7 @@ KNFST_predict!(KNFST_out, KNFST_mod, K)
 
 predict the outlierness of some data (represented by the kernel matrix `K`), given a `KNFST_out` object (`init_KNFST()`), some KNFST model (`KNFST_mod = KNFST_train(K)`) and the testing kernel matrix K.
 
-Please cite: Paul Bodesheim and Alexander Freytag and Erik Rodner and Michael Kemmler and Joachim Denzler: "Kernel Null Space Methods for Novelty Detection". Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2013.
+Paul Bodesheim and Alexander Freytag and Erik Rodner and Michael Kemmler and Joachim Denzler: "Kernel Null Space Methods for Novelty Detection". Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2013.
 
 <a id='MultivariateAnomalies.init_KNFST' href='#MultivariateAnomalies.init_KNFST'>#</a>
 **`MultivariateAnomalies.init_KNFST`** &mdash; *Function*.

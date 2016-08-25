@@ -63,7 +63,9 @@ module MultivariateAnomalies
     boolevents,
 # Scores
     get_quantile_scores,
-    compute_ensemble
+    compute_ensemble,
+# high level functions
+    detectAnomalies
 
 # Distance and Density Estimation
 include("DistDensity.jl")
@@ -75,6 +77,8 @@ include("AUC.jl")
 include("FeatureExtraction.jl")
 # post processing for Anomaly Scores
 include("Scores.jl")
+# high level functions
+include("HighLevelFunctions.jl")
 
 #######################
 end
