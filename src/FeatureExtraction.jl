@@ -82,7 +82,7 @@ function globalPCA{tp, N}(datacube::AbstractArray{tp, N}, expl_var::Float64 = 0.
     Y = Y[:,1:num_expl_comp]
     newsize[N] = num_expl_comp
     Xout = similar(datacube)
-    Xout = Xout[:,:,:,1:num_comp]
+    Xout = Xout[:,:,:,1:num_expl_comp]
     Xout[:] = Y[:]
     Xout
     end
