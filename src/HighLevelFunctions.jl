@@ -61,6 +61,6 @@ function detectAnomalies{tp, N}(data::AbstractArray{tp, N}; algorithm::ASCIIStri
     kernel_matrix!(D_test, D_test, sigma)
     kernel_matrix!(D_train, D_train, sigma)
     if(algorithm == "KNFST") return(KNFST_predict(KNFST_train(D_train), D_test))[1] end
-    if(algorithm == "SVDD") return(SVDD_predict(SVDD_train(D_train, nu), D_test)) end
+    if(algorithm == "SVDD") return(SVDD_predict(SVDD_train(D_train, nu), D_test)[2]) end
   end
 end
