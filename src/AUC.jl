@@ -21,7 +21,6 @@ By default, it is assumed, that the `scores` are ordered increasingly (`increasi
 
 # Examples
 ```jldoctest
-
 julia> scores = rand(10, 2)
 julia> events = rand(0:1, 10, 2)
 julia> auc(scores, events)

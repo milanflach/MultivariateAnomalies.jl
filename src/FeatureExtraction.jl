@@ -141,6 +141,7 @@ returns an embedded datacube by concatenating lagged versions of the 2-, 3- or 4
 ```jldoctest
 julia> dc = randn(50,3)
 julia> TDE(dc, 3, 2)
+```
 """
 
 function TDE{tp}(datacube::Array{tp, 4}, ΔT::Integer, DIM::Int = 3)
@@ -307,8 +308,8 @@ end
     init_MedianCycle(dat::Array{tp}, cycle_length::Int = 46)
     init_MedianCycle(temporal_length::Int[, cycle_length::Int = 46])
 
-initialises an init_MC object to be used as input for get_MedianCycle!. Input is either some sample data or the temporal lenght of the expected input vector
-and the length of the annual cycle (presetting: cycle_length = 46)
+initialises an init_MC object to be used as input for `get_MedianCycle!()`. Input is either some sample data or the temporal lenght of the expected input vector
+and the length of the annual cycle (presetting: `cycle_length = 46`)
 """
 
 function init_MedianCycle{tp}(dat::Array{tp}, cycle_length::Int = 46)
@@ -330,7 +331,7 @@ end
 """
     get_MedianCycle!(init_MC, dat::Array{tp,1})
 
-Memory efficient version of get_MedianCycle, returning the median cycle in `init_MC[3]`. The init_MC object should be created with init_MedianCycle.
+Memory efficient version of `get_MedianCycle()`, returning the median cycle in `init_MC[3]`. The `init_MC` object should be created with `init_MedianCycle`.
 Can deal with some NaN values.
 
 # Examples
@@ -361,7 +362,7 @@ end
 """
     get_MedianCycle(dat::Array{tp,1}, cycle_length::Int = 46)
 
-returns the median annual cycle of a one dimensional data array, given the length of the annual cycle (presetting: cycle_length = 46).
+returns the median annual cycle of a one dimensional data array, given the length of the annual cycle (presetting: `cycle_length = 46`).
 Can deal with some NaN values.
 
 # Examples

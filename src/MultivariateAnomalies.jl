@@ -63,9 +63,13 @@ module MultivariateAnomalies
     boolevents,
 # Scores
     get_quantile_scores,
+    get_quantile_scores!,
     compute_ensemble,
 # high level functions
-    detectAnomalies
+    getParameters,
+    detectAnomalies,
+    init_getAnomalies,
+    detectAnomalies!
 
 # Distance and Density Estimation
 include("DistDensity.jl")
