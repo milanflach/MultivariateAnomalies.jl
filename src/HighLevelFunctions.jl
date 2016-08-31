@@ -51,17 +51,19 @@ end
 """
     getParameters(algorithms::Array{ASCIIString,1} = ["REC", "KDE"], training_data::AbstractArray{tp, 2} = [NaN NaN])
 
-return an object of type PARAMS, given the `algorithms` and some `training_data`.
+return an object of type PARAMS, given the `algorithms` and some `training_data` as a matrix.
 
 # Arguments
+- `algorithms`: Subset of `["REC", "KDE", "KNN_Gamma", "KNN_Delta", "SVDD", "KNFST", "T2"]`
+- `training_data`: data for training the algorithms / for getting the Parameters.
 - `dist::ASCIIString = "Euclidean"`
-- `sigma_quantile::Float64 = 0.5`
-- 'varepsilon_quantile::Float64 = NaN`
-- `k_perc::Float64 = 0.05`
-- `nu::Float64 = 0.2`
-- `temp_excl::Int64 = 0`
-- `ensemble_method = "None"`
-- `quantiles = false`
+- `sigma_quantile::Float64 = 0.5` (median): quantile of the distance matrix, used to compute the weighting parameter for the kernel matrix (`algorithms = ["SVDD", "KNFST", "KDE"]`)
+- `varepsilon_quantile` = `sigma_quantile` by default: quantile of the distance matrix to compute the radius of the hyperball in which the number of reccurences is counted (`algorihtms = ["REC"]`)
+- `k_perc::Float64 = 0.05`: percentage of the first dimension of `training_data` to estimmate the number of nearest neighbors (`algorithms = ["KNN-Gamma", "KNN_Delta"]`)
+- `nu::Float64 = 0.2`: use the maximal percentage of outliers for `algorithms = ["SVDD"]`
+- `temp_excl::Int64 = 0`. Exclude temporal adjacent points from beeing count as recurrences of k-nearest neighbors `algorithms = ["REC", "KNN-Gamma", "KNN_Delta"]`
+- `ensemble_method = "None"`: compute an ensemble of the used algorithms. Possible choices (given in `compute_ensemble()`) are "mean", "median", "max" and "min". Currently only suported for the algorithms `["REC", "KDE", "KNN-Gamma"]`
+- `quantiles = false`: convert the output scores of the algorithms into quantiles.
 """
 
 function getParameters{tp}(algorithms::Array{ASCIIString,1} = ["REC", "KDE"], training_data::AbstractArray{tp, 2} = [NaN NaN]; dist::ASCIIString = "Euclidean", sigma_quantile::Float64 = 0.5, varepsilon_quantile::Float64 = NaN, k_perc::Float64 = 0.05, nu::Float64 = 0.2, temp_excl::Int64 = 0, ensemble_method = "None", quantiles = false)
@@ -109,8 +111,14 @@ function getParameters{tp}(algorithms::Array{ASCIIString,1} = ["REC", "KDE"], tr
   return(P)
 end
 
+"""
+    init_detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
 
-function init_getAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
+initialize empty arrays in `P` for detecting the anomalies.
+"""
+
+
+function init_detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
 # initialisation
   T = size(data, 1)
   VARs = size(data, N)
@@ -138,8 +146,11 @@ function init_getAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
   return(P)
 end
 
+"""
+    detectAnomalies!{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
 
-
+mutating version of `detectAnomalies()`. Directly writes the output into `P`.
+"""
 function detectAnomalies!{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
   P.data = data
   allalgorithms = ["KDE", "REC", "KNN_Delta", "KNN_Gamma", "T2", "SVDD", "KNFST"]
@@ -190,6 +201,15 @@ function detectAnomalies!{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
     if(any(ispartof(P.algorithms, ["KNN_Delta"]))) P.KNN_Delta[1] = get_quantile_scores(P.KNN_Delta[1]) end
   end
 
+  if(P.ensemble_method != "None")
+    @assert !any(ispartof(P.algorithms, ["KNN_Delta", "SVDD", "KNFST", "T2"]))
+    if(!P.quantiles) print("Warning: P.quantiles should be true for computing ensembles out of comparable scores, but is false") end
+    L = length(P.algorithms)
+    if(L > 4 || L < 2) print("compute_ensemble() does currently only support 2-4 detection algorihms. You selected $L.") end
+    if(L == 2) P.ensemble = compute_ensemble(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), ensemble = P.ensemble_method) end
+    if(L == 3) P.ensemble = compute_ensemble(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])), ensemble = P.ensemble_method) end
+    if(L == 4) P.ensemble = compute_ensemble(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])), getfield(P, parse(P.algorithms[4])), ensemble = P.ensemble_method) end
+  end
 
   return(P)
 end
@@ -205,16 +225,16 @@ Some default parameters are used in this case to initialize `P` internally.
 """
 
 function detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
-  init_getAnomalies(data, P)
+  init_detectAnomalies(data, P)
   detectAnomalies!(data, P)
   L = length(P.algorithms)
-  if(L == 1) return(getfield(P, parse(algorithms[1]))) end
-  if(L == 2) return(getfield(P, parse(algorithms[1])), getfield(P, parse(algorithms[2]))) end
-  if(L == 3) return(getfield(P, parse(algorithms[1])), getfield(P, parse(algorithms[2])), getfield(P, parse(algorithms[3])) ) end
-  if(L == 4) return(getfield(P, parse(algorithms[1])), getfield(P, parse(algorithms[2])), getfield(P, parse(algorithms[3])), getfield(P, parse(algorithms[4])) ) end
-  if(L == 5) return(getfield(P, parse(algorithms[1])), getfield(P, parse(algorithms[2])), getfield(P, parse(algorithms[3])), getfield(P, parse(algorithms[4])),  getfield(P, parse(algorithms[5]))) end
-  if(L == 6) return(getfield(P, parse(algorithms[1])), getfield(P, parse(algorithms[2])), getfield(P, parse(algorithms[3])), getfield(P, parse(algorithms[4])),  getfield(P, parse(algorithms[5])),   getfield(P, parse(algorithms[6]))) end
-  if(L == 7) return(getfield(P, parse(algorithms[1])), getfield(P, parse(algorithms[2])), getfield(P, parse(algorithms[3])), getfield(P, parse(algorithms[4])),  getfield(P, parse(algorithms[5])),   getfield(P, parse(algorithms[6])), getfield(P, parse(algorithms[7]))) end
+  if(L == 1) return(getfield(P, parse(P.algorithms[1]))) end
+  if(L == 2) return(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2]))) end
+  if(L == 3) return(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])) ) end
+  if(L == 4) return(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])), getfield(P, parse(P.algorithms[4])) ) end
+  if(L == 5) return(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])), getfield(P, parse(P.algorithms[4])),  getfield(P, parse(P.algorithms[5]))) end
+  if(L == 6) return(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])), getfield(P, parse(P.algorithms[4])),  getfield(P, parse(P.algorithms[5])),   getfield(P, parse(P.algorithms[6]))) end
+  if(L == 7) return(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])), getfield(P, parse(P.algorithms[4])),  getfield(P, parse(P.algorithms[5])),   getfield(P, parse(P.algorithms[6])), getfield(P, parse(P.algorithms[7]))) end
 end
 
 
@@ -245,7 +265,7 @@ function detectAnomalies{tp, N}(data::AbstractArray{tp, N}, algorithms::Array{AS
                       , data # data
                       , 0, "None", NaN, false
                          )
-  init_getAnomalies(data, P)
+  init_detectAnomalies(data, P)
   detectAnomalies!(data, P)
   L = length(P.algorithms)
   if(L == 1) return(getfield(P, parse(algorithms[1]))) end

@@ -1,9 +1,9 @@
 using Base.Cartesian
 
-"""
-AUC.jl provides fast and memory efficient versions to compute the Area under der receiver operator curve and true/false positive rates after
-Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters, 27(8), 861–874. http://doi.org/10.1016/j.patrec.2005.10.010
-"""
+#"""
+#AUC.jl provides fast and memory efficient versions to compute the Area under der receiver operator curve and true/false positive rates after
+#Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters, 27(8), 861–874. http://doi.org/10.1016/j.patrec.2005.10.010
+#"""
 
 macro removeTrailing(x...)
     ex=Expr(:block)

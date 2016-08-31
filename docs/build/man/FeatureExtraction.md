@@ -63,7 +63,10 @@ TDE{tp}(datacube::Array{tp, 3}, ΔT::Integer, DIM::Int = 3)
 
 returns an embedded datacube by concatenating lagged versions of the 2-, 3- or 4-dimensional datacube with `ΔT` time steps in the past up to dimension `DIM` (presetting: `DIM = 3`)
 
-```jldoctest julia> dc = randn(50,3) julia> TDE(dc, 3, 2)
+```jlcon
+julia> dc = randn(50,3)
+julia> TDE(dc, 3, 2)
+```
 
 <a id='MultivariateAnomalies.mw_VAR' href='#MultivariateAnomalies.mw_VAR'>#</a>
 **`MultivariateAnomalies.mw_VAR`** &mdash; *Function*.
@@ -155,7 +158,7 @@ julia> cycles = get_MedianCycles(dc, 48)
 get_MedianCycle(dat::Array{tp,1}, cycle_length::Int = 46)
 ```
 
-returns the median annual cycle of a one dimensional data array, given the length of the annual cycle (presetting: cycle_length = 46). Can deal with some NaN values.
+returns the median annual cycle of a one dimensional data array, given the length of the annual cycle (presetting: `cycle_length = 46`). Can deal with some NaN values.
 
 **Examples**
 
@@ -174,7 +177,7 @@ julia> cycles = get_MedianCycle(dat, 48)
 get_MedianCycle!(init_MC, dat::Array{tp,1})
 ```
 
-Memory efficient version of get_MedianCycle, returning the median cycle in `init_MC[3]`. The init_MC object should be created with init_MedianCycle. Can deal with some NaN values.
+Memory efficient version of `get_MedianCycle()`, returning the median cycle in `init_MC[3]`. The `init_MC` object should be created with `init_MedianCycle`. Can deal with some NaN values.
 
 **Examples**
 
@@ -196,7 +199,7 @@ init_MedianCycle(dat::Array{tp}, cycle_length::Int = 46)
 init_MedianCycle(temporal_length::Int[, cycle_length::Int = 46])
 ```
 
-initialises an init_MC object to be used as input for get_MedianCycle!. Input is either some sample data or the temporal lenght of the expected input vector and the length of the annual cycle (presetting: cycle_length = 46)
+initialises an init_MC object to be used as input for `get_MedianCycle!()`. Input is either some sample data or the temporal lenght of the expected input vector and the length of the annual cycle (presetting: `cycle_length = 46`)
 
 
 <a id='Index-1'></a>
@@ -228,10 +231,16 @@ initialises an init_MC object to be used as input for get_MedianCycle!. Input is
 - [`MultivariateAnomalies.auc_fpr_tpr`](AUC.md#MultivariateAnomalies.auc_fpr_tpr)
 - [`MultivariateAnomalies.boolevents`](AUC.md#MultivariateAnomalies.boolevents)
 - [`MultivariateAnomalies.compute_ensemble`](Scores.md#MultivariateAnomalies.compute_ensemble)
+- [`MultivariateAnomalies.detectAnomalies`](DetectionAlgorithms.md#MultivariateAnomalies.detectAnomalies)
+- [`MultivariateAnomalies.detectAnomalies!`](DetectionAlgorithms.md#MultivariateAnomalies.detectAnomalies!)
+- [`MultivariateAnomalies.dist_matrix`](DistDensity.md#MultivariateAnomalies.dist_matrix)
+- [`MultivariateAnomalies.dist_matrix!`](DistDensity.md#MultivariateAnomalies.dist_matrix!)
+- [`MultivariateAnomalies.getParameters`](DetectionAlgorithms.md#MultivariateAnomalies.getParameters)
 - [`MultivariateAnomalies.get_MedianCycle`](FeatureExtraction.md#MultivariateAnomalies.get_MedianCycle)
 - [`MultivariateAnomalies.get_MedianCycle!`](FeatureExtraction.md#MultivariateAnomalies.get_MedianCycle!)
 - [`MultivariateAnomalies.get_MedianCycles`](FeatureExtraction.md#MultivariateAnomalies.get_MedianCycles)
 - [`MultivariateAnomalies.get_quantile_scores`](Scores.md#MultivariateAnomalies.get_quantile_scores)
+- [`MultivariateAnomalies.get_quantile_scores!`](Scores.md#MultivariateAnomalies.get_quantile_scores!)
 - [`MultivariateAnomalies.globalICA`](FeatureExtraction.md#MultivariateAnomalies.globalICA)
 - [`MultivariateAnomalies.globalPCA`](FeatureExtraction.md#MultivariateAnomalies.globalPCA)
 - [`MultivariateAnomalies.init_KDE`](DetectionAlgorithms.md#MultivariateAnomalies.init_KDE)
@@ -243,6 +252,13 @@ initialises an init_MC object to be used as input for get_MedianCycle!. Input is
 - [`MultivariateAnomalies.init_SVDD_predict`](DetectionAlgorithms.md#MultivariateAnomalies.init_SVDD_predict)
 - [`MultivariateAnomalies.init_T2`](DetectionAlgorithms.md#MultivariateAnomalies.init_T2)
 - [`MultivariateAnomalies.init_UNIV`](DetectionAlgorithms.md#MultivariateAnomalies.init_UNIV)
+- [`MultivariateAnomalies.init_detectAnomalies`](DetectionAlgorithms.md#MultivariateAnomalies.init_detectAnomalies)
+- [`MultivariateAnomalies.init_dist_matrix`](DistDensity.md#MultivariateAnomalies.init_dist_matrix)
+- [`MultivariateAnomalies.init_knn_dists`](DistDensity.md#MultivariateAnomalies.init_knn_dists)
+- [`MultivariateAnomalies.kernel_matrix`](DistDensity.md#MultivariateAnomalies.kernel_matrix)
+- [`MultivariateAnomalies.kernel_matrix!`](DistDensity.md#MultivariateAnomalies.kernel_matrix!)
+- [`MultivariateAnomalies.knn_dists`](DistDensity.md#MultivariateAnomalies.knn_dists)
+- [`MultivariateAnomalies.knn_dists!`](DistDensity.md#MultivariateAnomalies.knn_dists!)
 - [`MultivariateAnomalies.mw_COR`](FeatureExtraction.md#MultivariateAnomalies.mw_COR)
 - [`MultivariateAnomalies.mw_VAR`](FeatureExtraction.md#MultivariateAnomalies.mw_VAR)
 - [`MultivariateAnomalies.sMSC`](FeatureExtraction.md#MultivariateAnomalies.sMSC)

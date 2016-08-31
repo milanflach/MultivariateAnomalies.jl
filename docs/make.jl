@@ -2,12 +2,9 @@ cd("/Users/mflach/.julia/v0.4/MultivariateAnomalies/docs")
 
 using Documenter, MultivariateAnomalies
 
-makedocs()
+makedocs(modules = [MultivariateAnomalies])
 
 
-#deploydocs(
-#    repo = "github.com/JuliaDocs/Documenter.jl.git",
-#   target = "build",
-#    deps = nothing,
-#    make = nothing,
-#)
+deploydocs(
+  repo = "github.com/milanflach/MultivariateAnomalies.jl.git"
+)

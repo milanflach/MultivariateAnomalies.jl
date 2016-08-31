@@ -7,6 +7,7 @@ Postprocess your anomaly scores by making different algorithms comparable and co
 
 ```@docs
 get_quantile_scores
+get_quantile_scores!
 compute_ensemble
 ```
 

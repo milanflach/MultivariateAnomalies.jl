@@ -7,6 +7,69 @@
 detect anomalies out of multivariate correlated data.
 
 
+<a id='High-Level-Functions-1'></a>
+
+## High Level Functions
+
+<a id='MultivariateAnomalies.getParameters' href='#MultivariateAnomalies.getParameters'>#</a>
+**`MultivariateAnomalies.getParameters`** &mdash; *Function*.
+
+
+
+```
+getParameters(algorithms::Array{ASCIIString,1} = ["REC", "KDE"], training_data::AbstractArray{tp, 2} = [NaN NaN])
+```
+
+return an object of type PARAMS, given the `algorithms` and some `training_data` as a matrix.
+
+**Arguments**
+
+  * `algorithms`: Subset of `["REC", "KDE", "KNN_Gamma", "KNN_Delta", "SVDD", "KNFST", "T2"]`
+  * `training_data`: data for training the algorithms / for getting the Parameters.
+  * `dist::ASCIIString = "Euclidean"`
+  * `sigma_quantile::Float64 = 0.5` (median): quantile of the distance matrix, used to compute the weighting parameter for the kernel matrix (`algorithms = ["SVDD", "KNFST", "KDE"]`)
+  * `varepsilon_quantile` = `sigma_quantile` by default: quantile of the distance matrix to compute the radius of the hyperball in which the number of reccurences is counted (`algorihtms = ["REC"]`)
+  * `k_perc::Float64 = 0.05`: percentage of the first dimension of `training_data` to estimmate the number of nearest neighbors (`algorithms = ["KNN-Gamma", "KNN_Delta"]`)
+  * `nu::Float64 = 0.2`: use the maximal percentage of outliers for `algorithms = ["SVDD"]`
+  * `temp_excl::Int64 = 0`. Exclude temporal adjacent points from beeing count as recurrences of k-nearest neighbors `algorithms = ["REC", "KNN-Gamma", "KNN_Delta"]`
+  * `ensemble_method = "None"`: compute an ensemble of the used algorithms. Possible choices (given in `compute_ensemble()`) are "mean", "median", "max" and "min". Currently only suported for the algorithms `["REC", "KDE", "KNN-Gamma"]`
+  * `quantiles = false`: convert the output scores of the algorithms into quantiles.
+
+<a id='MultivariateAnomalies.detectAnomalies' href='#MultivariateAnomalies.detectAnomalies'>#</a>
+**`MultivariateAnomalies.detectAnomalies`** &mdash; *Function*.
+
+
+
+```
+detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
+detectAnomalies{tp, N}(data::AbstractArray{tp, N}, algorithms::Array{ASCIIString,1} = ["REC", "KDE"]; mean = 0)
+```
+
+detect anomalies, given some Parameter object `P` of type PARAMS. Train the Parameters `P` with `getParameters()` beforehand on some training data. Without training `P` beforehand, it is also possible to use `detectAnomalies(data, algorithms)` given some algorithms (except SVDD, KNFST). Some default parameters are used in this case to initialize `P` internally.
+
+<a id='MultivariateAnomalies.detectAnomalies!' href='#MultivariateAnomalies.detectAnomalies!'>#</a>
+**`MultivariateAnomalies.detectAnomalies!`** &mdash; *Function*.
+
+
+
+```
+detectAnomalies!{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
+```
+
+mutating version of `detectAnomalies()`. Directly writes the output into `P`.
+
+<a id='MultivariateAnomalies.init_detectAnomalies' href='#MultivariateAnomalies.init_detectAnomalies'>#</a>
+**`MultivariateAnomalies.init_detectAnomalies`** &mdash; *Function*.
+
+
+
+```
+init_detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
+```
+
+initialize empty arrays in `P` for detecting the anomalies.
+
+
 <a id='Functions-1'></a>
 
 ## Functions
@@ -355,10 +418,16 @@ initialize a `KNFST_out`object for the use with `KNFST_predict!`, given `T`, the
 - [`MultivariateAnomalies.auc_fpr_tpr`](AUC.md#MultivariateAnomalies.auc_fpr_tpr)
 - [`MultivariateAnomalies.boolevents`](AUC.md#MultivariateAnomalies.boolevents)
 - [`MultivariateAnomalies.compute_ensemble`](Scores.md#MultivariateAnomalies.compute_ensemble)
+- [`MultivariateAnomalies.detectAnomalies`](DetectionAlgorithms.md#MultivariateAnomalies.detectAnomalies)
+- [`MultivariateAnomalies.detectAnomalies!`](DetectionAlgorithms.md#MultivariateAnomalies.detectAnomalies!)
+- [`MultivariateAnomalies.dist_matrix`](DistDensity.md#MultivariateAnomalies.dist_matrix)
+- [`MultivariateAnomalies.dist_matrix!`](DistDensity.md#MultivariateAnomalies.dist_matrix!)
+- [`MultivariateAnomalies.getParameters`](DetectionAlgorithms.md#MultivariateAnomalies.getParameters)
 - [`MultivariateAnomalies.get_MedianCycle`](FeatureExtraction.md#MultivariateAnomalies.get_MedianCycle)
 - [`MultivariateAnomalies.get_MedianCycle!`](FeatureExtraction.md#MultivariateAnomalies.get_MedianCycle!)
 - [`MultivariateAnomalies.get_MedianCycles`](FeatureExtraction.md#MultivariateAnomalies.get_MedianCycles)
 - [`MultivariateAnomalies.get_quantile_scores`](Scores.md#MultivariateAnomalies.get_quantile_scores)
+- [`MultivariateAnomalies.get_quantile_scores!`](Scores.md#MultivariateAnomalies.get_quantile_scores!)
 - [`MultivariateAnomalies.globalICA`](FeatureExtraction.md#MultivariateAnomalies.globalICA)
 - [`MultivariateAnomalies.globalPCA`](FeatureExtraction.md#MultivariateAnomalies.globalPCA)
 - [`MultivariateAnomalies.init_KDE`](DetectionAlgorithms.md#MultivariateAnomalies.init_KDE)
@@ -370,6 +439,13 @@ initialize a `KNFST_out`object for the use with `KNFST_predict!`, given `T`, the
 - [`MultivariateAnomalies.init_SVDD_predict`](DetectionAlgorithms.md#MultivariateAnomalies.init_SVDD_predict)
 - [`MultivariateAnomalies.init_T2`](DetectionAlgorithms.md#MultivariateAnomalies.init_T2)
 - [`MultivariateAnomalies.init_UNIV`](DetectionAlgorithms.md#MultivariateAnomalies.init_UNIV)
+- [`MultivariateAnomalies.init_detectAnomalies`](DetectionAlgorithms.md#MultivariateAnomalies.init_detectAnomalies)
+- [`MultivariateAnomalies.init_dist_matrix`](DistDensity.md#MultivariateAnomalies.init_dist_matrix)
+- [`MultivariateAnomalies.init_knn_dists`](DistDensity.md#MultivariateAnomalies.init_knn_dists)
+- [`MultivariateAnomalies.kernel_matrix`](DistDensity.md#MultivariateAnomalies.kernel_matrix)
+- [`MultivariateAnomalies.kernel_matrix!`](DistDensity.md#MultivariateAnomalies.kernel_matrix!)
+- [`MultivariateAnomalies.knn_dists`](DistDensity.md#MultivariateAnomalies.knn_dists)
+- [`MultivariateAnomalies.knn_dists!`](DistDensity.md#MultivariateAnomalies.knn_dists!)
 - [`MultivariateAnomalies.mw_COR`](FeatureExtraction.md#MultivariateAnomalies.mw_COR)
 - [`MultivariateAnomalies.mw_VAR`](FeatureExtraction.md#MultivariateAnomalies.mw_VAR)
 - [`MultivariateAnomalies.sMSC`](FeatureExtraction.md#MultivariateAnomalies.sMSC)

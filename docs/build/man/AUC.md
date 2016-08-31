@@ -28,7 +28,6 @@ compute the Area Under the receiver operator Curve (AUC), given some output `sco
 **Examples**
 
 ```jlcon
-
 julia> scores = rand(10, 2)
 julia> events = rand(0:1, 10, 2)
 julia> auc(scores, events)

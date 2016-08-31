@@ -77,6 +77,9 @@ Please cite this package as ...
 - [`MultivariateAnomalies.T2!`](man/DetectionAlgorithms.md#MultivariateAnomalies.T2!)
 - [`MultivariateAnomalies.UNIV`](man/DetectionAlgorithms.md#MultivariateAnomalies.UNIV)
 - [`MultivariateAnomalies.UNIV!`](man/DetectionAlgorithms.md#MultivariateAnomalies.UNIV!)
+- [`MultivariateAnomalies.detectAnomalies`](man/DetectionAlgorithms.md#MultivariateAnomalies.detectAnomalies)
+- [`MultivariateAnomalies.detectAnomalies!`](man/DetectionAlgorithms.md#MultivariateAnomalies.detectAnomalies!)
+- [`MultivariateAnomalies.getParameters`](man/DetectionAlgorithms.md#MultivariateAnomalies.getParameters)
 - [`MultivariateAnomalies.init_KDE`](man/DetectionAlgorithms.md#MultivariateAnomalies.init_KDE)
 - [`MultivariateAnomalies.init_KNFST`](man/DetectionAlgorithms.md#MultivariateAnomalies.init_KNFST)
 - [`MultivariateAnomalies.init_KNN_Delta`](man/DetectionAlgorithms.md#MultivariateAnomalies.init_KNN_Delta)
@@ -85,4 +88,5 @@ Please cite this package as ...
 - [`MultivariateAnomalies.init_SVDD_predict`](man/DetectionAlgorithms.md#MultivariateAnomalies.init_SVDD_predict)
 - [`MultivariateAnomalies.init_T2`](man/DetectionAlgorithms.md#MultivariateAnomalies.init_T2)
 - [`MultivariateAnomalies.init_UNIV`](man/DetectionAlgorithms.md#MultivariateAnomalies.init_UNIV)
+- [`MultivariateAnomalies.init_detectAnomalies`](man/DetectionAlgorithms.md#MultivariateAnomalies.init_detectAnomalies)
 

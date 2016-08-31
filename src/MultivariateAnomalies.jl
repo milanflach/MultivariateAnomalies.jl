@@ -68,7 +68,7 @@ module MultivariateAnomalies
 # high level functions
     getParameters,
     detectAnomalies,
-    init_getAnomalies,
+    init_detectAnomalies,
     detectAnomalies!
 
 # Distance and Density Estimation
