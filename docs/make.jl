@@ -1,4 +1,4 @@
-cd(joinpath(Pkg.dir("MultivariateAnomalies"), "docs"))
+# cd(joinpath(Pkg.dir("MultivariateAnomalies"), "docs"))
 
 using Documenter, MultivariateAnomalies
 
