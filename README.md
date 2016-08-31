@@ -6,11 +6,11 @@
 
 # Installation
 
-- Clone LIBSVM branch
-`git clone git@github.com:milanflach/LIBSVM.jl.git --branch mutating_versions as LIBSVM`
-- then in julia
+- clone latest LIBSVM branch and checkout branch mutating_versions
+`Pkg.clone("https://github.com/milanflach/LIBSVM.jl.git")`
+`Pkg.checkout("LIBSVM", "mutating_versions")`
 `Pkg.build("LIBSVM")`
-- Clone package
+- clone MultivariateAnomalies.jl
 `Pkg.clone("https://github.com/milanflach/MultivariateAnomalies.jl")`
 
 # Documentation
