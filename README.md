@@ -1,7 +1,8 @@
 # MultivariateAnomalies
 
-[![Build Status](https://travis-ci.org/milanflach/MultivariateAnomalies.jl.svg?branch=master)](https://travis-ci.org/milanflach/MultivariateAnomalies.jl)
-
+| **Documentation**                                                                                                        | **Build Status**                                                                                |
+|:-------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------:|
+| [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://USER_NAME.github.io/PACKAGE_NAME.jl/stable) | [![Build Status](https://travis-ci.org/milanflach/MultivariateAnomalies.jl.svg?branch=master)](https://travis-ci.org/milanflach/MultivariateAnomalies.jl)|
 
 # Installation
 
