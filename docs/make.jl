@@ -1,4 +1,4 @@
-cd("/Users/mflach/.julia/v0.4/MultivariateAnomalies/docs")
+cd(Pkg.dir("MultivariateAnomalies"))
 
 using Documenter, MultivariateAnomalies
 
@@ -6,5 +6,7 @@ makedocs(modules = [MultivariateAnomalies])
 
 
 deploydocs(
-  repo = "github.com/milanflach/MultivariateAnomalies.jl.git"
+  deps   = Deps.pip("mkdocs", "python-markdown-math"),
+  repo = "github.com/milanflach/MultivariateAnomalies.jl.git",
+  julia = "0.4"
 )
