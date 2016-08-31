@@ -74,7 +74,7 @@ function getParameters{tp}(algorithms::Array{ASCIIString,1} = ["REC", "KDE"], tr
 
   #Parameters = PARAMS(algorithms, training_data, dist, NaN, 0, NaN, [NaN NaN], [NaN NaN], NaN, NaN, NaN)
     P = PARAMS(algorithms, training_data, "Euclidean"
-               , NaN, 0, NaN, [NaN NaN], [NaN NaN], NaN, NaN, NaN
+               , NaN, 0, NaN, [NaN NaN], [NaN NaN], nu, NaN, NaN
                       , ([NaN NaN], [NaN NaN], [NaN NaN]) #D
                       , [NaN NaN] # K
                       ,  [NaN] # KDE

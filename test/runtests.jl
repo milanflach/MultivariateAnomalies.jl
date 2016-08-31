@@ -24,7 +24,7 @@ knfst_model = KNFST_train(K[1:4,1:4])
 # KNN Delta, approximately
 @test all(round(KNN_Delta(knn_dists_out, dat), 1) .== [1.4, 2.1, 0.5, 1.6, 0.5])
 # KDE # results show exhibit similar ordering like REC
-@test all(sortperm(KDE(-K)) .== [5,3,1,4,2])
+@test all(sortperm(-KDE(K)) .== [5,3,1,4,2])
 # Hotelling's T^2
 # is also the quared mahalanobis distance to the data's mean
 using Distances
@@ -32,9 +32,33 @@ using Distances
 
 # SVDD
 Ktest = exp(-0.5 * pairwise(Euclidean(), dat[1:4,:]', dat') ./ sigma^2)
-# @test all(SVDD_predict(svdd_model, Ktest)[1] .== [-1, 1, -1, -1, 1])
+@test all(SVDD_predict(svdd_model, Ktest)[1] .== [-1, 1, -1, -1, 1])
 # KNFST, last data point (not seen in training) should differ, i.e. have largest values
 @test sortperm(-KNFST_predict(knfst_model, Ktest)[1])[1] == 5
 
+# high level functions
+algorithms = ["T2", "REC", "KDE", "KNN_Gamma", "KNN_Delta"]
+P = getParameters(algorithms, dat)
+P.KNN_k = 2
+P.Q = Q
+@test P.K_sigma == sigma == P.REC_varepsilon
+# detectAnomalies
+detectAnomalies(dat, P)
+# chekct detectAnomalies for self consistency
+@test round(P.REC, 3) == round(-REC(D, sigma, 0), 3)
+@test round(P.KDE, 3) == round(-KDE(K), 3)
+@test round(P.KNN_Gamma, 3) ==  round(KNN_Gamma(knn_dists_out), 3)
+@test round(P.KNN_Delta[1], 3) ==  round(KNN_Delta(knn_dists_out, dat), 3)
+@test round(P.T2[1], 3) ==  round(T2(dat, Q, mean(dat, 1)),3)
 
+algorithms = ["SVDD", "KNFST"]
+P = getParameters(algorithms, dat[1:4,:])
+P.K_sigma = sigma
+P.SVDD_model = svdd_model
+P.KNFST_model = knfst_model
+detectAnomalies(dat, P)
+@test round(P.SVDD[2], 3) == round(SVDD_predict(svdd_model, Ktest)[2], 3)
+@test K[1:4,1:4] == P.D_train[1]
+@test Ktest == P.D_test[1]
+@test round(P.KNFST[1], 3) == round(KNFST_predict(knfst_model, Ktest)[1], 3)
 
