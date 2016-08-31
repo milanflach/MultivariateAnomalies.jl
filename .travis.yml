@@ -12,6 +12,8 @@ notifications:
 # uncomment the following lines to override the default test script
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
+  - git clone git@github.com:milanflach/LIBSVM.jl.git --branch mutating_versions as LIBSVM
+  - julia -e 'Pkg.build("LIBSVM")'
   - julia -e 'Pkg.clone(pwd()); Pkg.build("MultivariateAnomalies"); Pkg.test("MultivariateAnomalies"; coverage=true)'
 after_success:
   - julia -e 'Pkg.add("Documenter")'
