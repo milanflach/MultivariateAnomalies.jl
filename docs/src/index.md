@@ -11,7 +11,11 @@ A package for detecting anomalies in multivariate data.
 ## Requirements
 
 - Julia `0.4`
-- `Distances`, `LIBSVM`, `MultivariateStats`
+- `Distances`, `MultivariateStats`
+-  latest `LIBSVM` branch via:
+`Pkg.clone("https://github.com/milanflach/LIBSVM.jl.git")`
+`Pkg.checkout("LIBSVM", "mutating_versions")`
+`Pkg.build("LIBSVM")`
 
 ## Package Features
 
