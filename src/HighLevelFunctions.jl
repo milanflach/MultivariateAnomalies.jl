@@ -204,7 +204,10 @@ function detectAnomalies!{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
     kernel_matrix!(P.D_train[1],P.D_train[1], P.K_sigma) # transform distance to kernel matrix
     kernel_matrix!(P.D_test[1], P.D_test[1], P.K_sigma) # transform distance to kernel matrix
     if(any(ispartof(P.algorithms, ["KNFST"])))  KNFST_predict!(P.KNFST, P.KNFST_model, P.D_test[1]) end
-    if(any(ispartof(P.algorithms, ["SVDD"])))  SVDD_predict!(P.SVDD, P.SVDD_model, P.D_test[1]) end
+    if(any(ispartof(P.algorithms, ["SVDD"])))
+      SVDD_predict!(P.SVDD, P.SVDD_model, P.D_test[1])
+      broadcast!(*, P.SVDD[2], P.SVDD[2], -1)
+    end
   end
 
   if(P.quantiles)
