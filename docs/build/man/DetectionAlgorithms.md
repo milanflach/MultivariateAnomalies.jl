@@ -35,6 +35,14 @@ return an object of type PARAMS, given the `algorithms` and some `training_data`
   * `ensemble_method = "None"`: compute an ensemble of the used algorithms. Possible choices (given in `compute_ensemble()`) are "mean", "median", "max" and "min". Currently only suported for the algorithms `["REC", "KDE", "KNN-Gamma"]`
   * `quantiles = false`: convert the output scores of the algorithms into quantiles.
 
+**Examples**
+
+```jlcon
+julia> training_data = randn(100, 2); testing_data = randn(100, 2);
+julia> P = getParameters(["REC", "KDE", "SVDD"], training_data, quantiles = false);
+julia> detectAnomalies(testing_data, P)
+```
+
 <a id='MultivariateAnomalies.detectAnomalies' href='#MultivariateAnomalies.detectAnomalies'>#</a>
 **`MultivariateAnomalies.detectAnomalies`** &mdash; *Function*.
 
@@ -45,7 +53,15 @@ detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
 detectAnomalies{tp, N}(data::AbstractArray{tp, N}, algorithms::Array{ASCIIString,1} = ["REC", "KDE"]; mean = 0)
 ```
 
-detect anomalies, given some Parameter object `P` of type PARAMS. Train the Parameters `P` with `getParameters()` beforehand on some training data. Without training `P` beforehand, it is also possible to use `detectAnomalies(data, algorithms)` given some algorithms (except SVDD, KNFST). Some default parameters are used in this case to initialize `P` internally.
+detect anomalies, given some Parameter object `P` of type PARAMS. Train the Parameters `P` with `getParameters()` beforehand on some training data. See `getParameters()`. Without training `P` beforehand, it is also possible to use `detectAnomalies(data, algorithms)` given some algorithms (except SVDD, KNFST). Some default parameters are used in this case to initialize `P` internally.
+
+**Examples**
+
+```jlcon
+julia> training_data = randn(100, 2); testing_data = randn(100, 2);
+julia> P = getParameters(["REC", "KDE", "T2", "KNN_Gamma"], training_data, quantiles = true, ensemble_method = "mean");
+julia> detectAnomalies(testing_data, P)
+```
 
 <a id='MultivariateAnomalies.detectAnomalies!' href='#MultivariateAnomalies.detectAnomalies!'>#</a>
 **`MultivariateAnomalies.detectAnomalies!`** &mdash; *Function*.

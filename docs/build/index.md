@@ -24,7 +24,8 @@ Please cite this package as ...
 
 
   * Julia `0.4`
-  * `Distances`, `LIBSVM`, `MultivariateStats`
+  * `Distances`, `MultivariateStats`
+  *  latest `LIBSVM` branch via: `Pkg.clone("https://github.com/milanflach/LIBSVM.jl.git")` `Pkg.checkout("LIBSVM", "mutating_versions")` `Pkg.build("LIBSVM")`
 
 
 <a id='Package-Features-1'></a>

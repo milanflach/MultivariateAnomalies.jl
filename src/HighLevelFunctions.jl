@@ -24,6 +24,13 @@ type PARAMS
   D_test::Tuple{Array{Float64,2},Array{Float64,2},Array{Float64,2},Array{Float64,2},Array{Float64,2}}
   KNFST
   SVDD # ::Tuple{Array{Any,1},Array{Float64,2},Array{LIBSVM.SVMNode,2},Array{Ptr{LIBSVM.SVMNode},1}}
+  REC_quantiles::Array{Float64,1}
+  KDE_quantiles::Array{Float64,1}
+  KNN_Gamma_quantiles::Array{Float64,1}
+  KNN_Delta_quantiles::Array{Float64,1}
+  T2_quantiles::Array{Float64,1}
+  KNFST_quantiles::Array{Float64,1}
+  SVDD_quantiles::Array{Float64,1}
   data
   temp_excl::Int64
   ensemble_method::ASCIIString
@@ -64,6 +71,14 @@ return an object of type PARAMS, given the `algorithms` and some `training_data`
 - `temp_excl::Int64 = 0`. Exclude temporal adjacent points from beeing count as recurrences of k-nearest neighbors `algorithms = ["REC", "KNN-Gamma", "KNN_Delta"]`
 - `ensemble_method = "None"`: compute an ensemble of the used algorithms. Possible choices (given in `compute_ensemble()`) are "mean", "median", "max" and "min". Currently only suported for the algorithms `["REC", "KDE", "KNN-Gamma"]`
 - `quantiles = false`: convert the output scores of the algorithms into quantiles.
+
+# Examples
+
+```jldoctest
+julia> training_data = randn(100, 2); testing_data = randn(100, 2);
+julia> P = getParameters(["REC", "KDE", "SVDD"], training_data, quantiles = false);
+julia> detectAnomalies(testing_data, P)
+```
 """
 
 function getParameters{tp}(algorithms::Array{ASCIIString,1} = ["REC", "KDE"], training_data::AbstractArray{tp, 2} = [NaN NaN]; dist::ASCIIString = "Euclidean", sigma_quantile::Float64 = 0.5, varepsilon_quantile::Float64 = NaN, k_perc::Float64 = 0.05, nu::Float64 = 0.2, temp_excl::Int64 = 0, ensemble_method = "None", quantiles = false)
@@ -87,6 +102,7 @@ function getParameters{tp}(algorithms::Array{ASCIIString,1} = ["REC", "KDE"], tr
                       , ([NaN NaN], [NaN NaN], [NaN NaN], [NaN NaN], [NaN NaN])  # D test
                       , NaN # KNFST
                       , NaN # SVDD
+                              , [NaN], [NaN], [NaN], [NaN], [NaN], [NaN], [NaN] # quantiles
                       , NaN# data
                       , temp_excl, ensemble_method, NaN, quantiles
                          )
@@ -192,23 +208,28 @@ function detectAnomalies!{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
   end
 
   if(P.quantiles)
-    if(any(ispartof(P.algorithms, ["T2"])))  P.T2[1] = get_quantile_scores(P.T2[1]) end
-    if(any(ispartof(P.algorithms, ["REC"]))) P.REC = get_quantile_scores(P.REC) end
-    if(any(ispartof(P.algorithms, ["KDE"]))) P.KDE = get_quantile_scores(P.KDE) end
-    if(any(ispartof(P.algorithms, ["SVDD"]))) P.SVDD[2] = get_quantile_scores(P.SVDD[2]) end
-    if(any(ispartof(P.algorithms, ["KNFST"]))) P.KNFST[1] = get_quantile_scores(P.KNFST[1]) end
-    if(any(ispartof(P.algorithms, ["KNN_Gamma"]))) P.KNN_Gamma = get_quantile_scores(P.KNN_Gamma) end
-    if(any(ispartof(P.algorithms, ["KNN_Delta"]))) P.KNN_Delta[1] = get_quantile_scores(P.KNN_Delta[1]) end
+    if(any(ispartof(P.algorithms, ["T2"])))  P.T2_quantiles = get_quantile_scores(P.T2[1]) end
+    if(any(ispartof(P.algorithms, ["REC"]))) P.REC_quantiles = get_quantile_scores(P.REC) end
+    if(any(ispartof(P.algorithms, ["KDE"]))) P.KDE_quantiles = get_quantile_scores(P.KDE) end
+    if(any(ispartof(P.algorithms, ["SVDD"]))) P.SVDD_quantiles = squeeze(get_quantile_scores(P.SVDD[2]), 1) end
+    if(any(ispartof(P.algorithms, ["KNFST"]))) P.KNFST_quantiles = get_quantile_scores(P.KNFST[1]) end
+    if(any(ispartof(P.algorithms, ["KNN_Gamma"]))) P.KNN_Gamma_quantiles = get_quantile_scores(P.KNN_Gamma) end
+    if(any(ispartof(P.algorithms, ["KNN_Delta"]))) P.KNN_Delta_quantiles = get_quantile_scores(P.KNN_Delta[1]) end
   end
 
   if(P.ensemble_method != "None")
-    @assert !any(ispartof(P.algorithms, ["KNN_Delta", "SVDD", "KNFST", "T2"]))
-    if(!P.quantiles) print("Warning: P.quantiles should be true for computing ensembles out of comparable scores, but is false") end
     L = length(P.algorithms)
-    if(L > 4 || L < 2) print("compute_ensemble() does currently only support 2-4 detection algorihms. You selected $L.") end
-    if(L == 2) P.ensemble = compute_ensemble(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), ensemble = P.ensemble_method) end
-    if(L == 3) P.ensemble = compute_ensemble(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])), ensemble = P.ensemble_method) end
-    if(L == 4) P.ensemble = compute_ensemble(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])), getfield(P, parse(P.algorithms[4])), ensemble = P.ensemble_method) end
+    if(L > 4 || L < 2) print("compute_ensemble() does currently only support 2-4 detection algorihms. You selected $L. \n") end
+    if(!P.quantiles) print("Warning: P.quantiles should be true for computing ensembles out of comparable scores, but is false")
+      @assert !any(ispartof(P.algorithms, ["KNN_Delta", "SVDD", "KNFST", "T2"]))
+      if(L == 2) P.ensemble = compute_ensemble(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), ensemble = P.ensemble_method) end
+      if(L == 3) P.ensemble = compute_ensemble(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])), ensemble = P.ensemble_method) end
+      if(L == 4) P.ensemble = compute_ensemble(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])), getfield(P, parse(P.algorithms[4])), ensemble = P.ensemble_method) end
+    else
+      if(L == 2) P.ensemble = compute_ensemble(getfield(P, parse(string(P.algorithms[1], "_quantiles"))), getfield(P, parse(string(P.algorithms[2], "_quantiles"))), ensemble = P.ensemble_method) end
+      if(L == 3) P.ensemble = compute_ensemble(getfield(P, parse(string(P.algorithms[1], "_quantiles"))), getfield(P, parse(string(P.algorithms[2], "_quantiles"))), getfield(P, parse(string(P.algorithms[3], "_quantiles"))), ensemble = P.ensemble_method) end
+      if(L == 4) P.ensemble = compute_ensemble(getfield(P, parse(string(P.algorithms[1], "_quantiles"))), getfield(P, parse(string(P.algorithms[2], "_quantiles"))), getfield(P, parse(string(P.algorithms[3], "_quantiles"))), getfield(P, parse(string(P.algorithms[4], "_quantiles"))), ensemble = P.ensemble_method) end
+    end
   end
 
   return(P)
@@ -219,22 +240,42 @@ end
     detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
     detectAnomalies{tp, N}(data::AbstractArray{tp, N}, algorithms::Array{ASCIIString,1} = ["REC", "KDE"]; mean = 0)
 
-detect anomalies, given some Parameter object `P` of type PARAMS. Train the Parameters `P` with `getParameters()` beforehand on some training data.
+detect anomalies, given some Parameter object `P` of type PARAMS. Train the Parameters `P` with `getParameters()` beforehand on some training data. See `getParameters()`.
 Without training `P` beforehand, it is also possible to use `detectAnomalies(data, algorithms)` given some algorithms (except SVDD, KNFST).
 Some default parameters are used in this case to initialize `P` internally.
+
+# Examples
+
+```jldoctest
+julia> training_data = randn(100, 2); testing_data = randn(100, 2);
+julia> P = getParameters(["REC", "KDE", "T2", "KNN_Gamma"], training_data, quantiles = true, ensemble_method = "mean");
+julia> detectAnomalies(testing_data, P)
+```
 """
 
 function detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
   init_detectAnomalies(data, P)
   detectAnomalies!(data, P)
   L = length(P.algorithms)
-  if(L == 1) return(getfield(P, parse(P.algorithms[1]))) end
-  if(L == 2) return(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2]))) end
-  if(L == 3) return(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])) ) end
-  if(L == 4) return(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])), getfield(P, parse(P.algorithms[4])) ) end
-  if(L == 5) return(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])), getfield(P, parse(P.algorithms[4])),  getfield(P, parse(P.algorithms[5]))) end
-  if(L == 6) return(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])), getfield(P, parse(P.algorithms[4])),  getfield(P, parse(P.algorithms[5])),   getfield(P, parse(P.algorithms[6]))) end
-  if(L == 7) return(getfield(P, parse(P.algorithms[1])), getfield(P, parse(P.algorithms[2])), getfield(P, parse(P.algorithms[3])), getfield(P, parse(P.algorithms[4])),  getfield(P, parse(P.algorithms[5])),   getfield(P, parse(P.algorithms[6])), getfield(P, parse(P.algorithms[7]))) end
+  if(any(ispartof([P.ensemble_method], ["mean","max","min", "median"]))) return(P.ensemble)
+  elseif(L == 1 && !P.quantiles)  return(return_scores(1,P))
+  elseif(!P.quantiles && L > 1) return(ntuple(i->return_scores(i,P), L))
+  elseif(L > 1 && P.quantiles) return(ntuple(i->return_quantile_scores(i,P), L))
+  elseif(L == 1 && P.quantiles) return(return_quantile_scores(1,P))
+  end
+end
+
+
+function return_scores(i, P)
+  if(isa(getfield(P, parse(P.algorithms[i])), Tuple))
+    return(getfield(P, parse(P.algorithms[i]))[1])
+  else
+    return(getfield(P, parse(P.algorithms[i])))
+  end
+end
+
+function return_quantile_scores(i, P)
+    return(getfield(P, parse(string(P.algorithms[i], "_quantiles"))))
 end
 
 
@@ -262,6 +303,7 @@ function detectAnomalies{tp, N}(data::AbstractArray{tp, N}, algorithms::Array{AS
                       , ([NaN NaN], [NaN NaN], [NaN NaN], [NaN NaN], [NaN NaN])  # D test
                       , NaN # KNFST
                       , NaN # SVDD
+                    , [NaN], [NaN], [NaN], [NaN], [NaN], [NaN], [NaN] # quantiles
                       , data # data
                       , 0, "None", NaN, false
                          )
