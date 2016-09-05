@@ -256,17 +256,11 @@ julia> detectAnomalies(testing_data, P)
 function detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
   init_detectAnomalies(data, P)
   detectAnomalies!(data, P)
-  L = length(P.algorithms)
-  if(any(ispartof([P.ensemble_method], ["mean","max","min", "median"]))) return(P.ensemble)
-  elseif(L == 1 && !P.quantiles)  return(return_scores(1,P))
-  elseif(!P.quantiles && L > 1) return(ntuple(i->return_scores(i,P), L))
-  elseif(L > 1 && P.quantiles) return(ntuple(i->return_quantile_scores(i,P), L))
-  elseif(L == 1 && P.quantiles) return(return_quantile_scores(1,P))
-  end
+  return(return_detectAnomalies(P))
 end
 
 
-function return_scores(i, P)
+function return_scores(i, P::PARAMS)
   if(isa(getfield(P, parse(P.algorithms[i])), Tuple))
     return(getfield(P, parse(P.algorithms[i]))[1])
   else
@@ -274,8 +268,18 @@ function return_scores(i, P)
   end
 end
 
-function return_quantile_scores(i, P)
+function return_quantile_scores(i, P::PARAMS)
     return(getfield(P, parse(string(P.algorithms[i], "_quantiles"))))
+end
+
+function return_detectAnomalies(P::PARAMS)
+  L = length(P.algorithms)
+  if(any(ispartof([P.ensemble_method], ["mean","max","min", "median"]))) return(P.ensemble)
+  elseif(L == 1 && !P.quantiles)  return(return_scores(1,P))
+  elseif(!P.quantiles && L > 1) return(ntuple(i->return_scores(i,P), L))
+  elseif(L > 1 && P.quantiles) return(ntuple(i->return_quantile_scores(i,P), L))
+  elseif(L == 1 && P.quantiles) return(return_quantile_scores(1,P))
+  end
 end
 
 
@@ -309,14 +313,7 @@ function detectAnomalies{tp, N}(data::AbstractArray{tp, N}, algorithms::Array{AS
                          )
   init_detectAnomalies(data, P)
   detectAnomalies!(data, P)
-  L = length(P.algorithms)
-  if(L == 1) return(getfield(P, parse(algorithms[1]))) end
-  if(L == 2) return(getfield(P, parse(algorithms[1])), getfield(P, parse(algorithms[2]))) end
-  if(L == 3) return(getfield(P, parse(algorithms[1])), getfield(P, parse(algorithms[2])), getfield(P, parse(algorithms[3])) ) end
-  if(L == 4) return(getfield(P, parse(algorithms[1])), getfield(P, parse(algorithms[2])), getfield(P, parse(algorithms[3])), getfield(P, parse(algorithms[4])) ) end
-  if(L == 5) return(getfield(P, parse(algorithms[1])), getfield(P, parse(algorithms[2])), getfield(P, parse(algorithms[3])), getfield(P, parse(algorithms[4])),  getfield(P, parse(algorithms[5]))) end
-  #if(L == 6) return(getfield(P, parse(algorithms[1])), getfield(P, parse(algorithms[2])), getfield(P, parse(algorithms[3])), getfield(P, parse(algorithms[4])),  getfield(P, parse(algorithms[5])),   getfield(P, parse(algorithms[6]))) end
-  #if(L == 7) return(getfield(P, parse(algorithms[1])), getfield(P, parse(algorithms[2])), getfield(P, parse(algorithms[3])), getfield(P, parse(algorithms[4])),  getfield(P, parse(algorithms[5])),   getfield(P, parse(algorithms[6])), getfield(P, parse(algorithms[7]))) end
+  return(return_detectAnomalies(P))
 end
 
 
