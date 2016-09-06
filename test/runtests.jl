@@ -57,7 +57,7 @@ P.K_sigma = sigma
 P.SVDD_model = svdd_model
 P.KNFST_model = knfst_model
 detectAnomalies(dat, P)
-@test round(P.SVDD[2], 3) == round(SVDD_predict(svdd_model, Ktest)[2], 3)
+@test P.SVDD[1] == SVDD_predict(svdd_model, Ktest)[1]
 @test K[1:4,1:4] == P.D_train[1]
 @test Ktest == P.D_test[1]
 @test round(P.KNFST[1], 3) == round(KNFST_predict(knfst_model, Ktest)[1], 3)
