@@ -2,7 +2,11 @@
 
 using Documenter, MultivariateAnomalies
 
-makedocs(modules = [MultivariateAnomalies])
+makedocs(modules = [MultivariateAnomalies];
+             pages    = Any[
+        "man/FeatureExtraction.md", "man/DetectionAlgorithms.md", "man/DetectionAlgorithms.md", "man/DistDensity.md", "man/Scores.md"
+        ]
+         )
 
 
 deploydocs(
