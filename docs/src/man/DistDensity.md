@@ -1,6 +1,6 @@
 ## Distance, Kernel Matrices and k-Nearest Neighbours 
 
-Compute distance matrices (similarity matrices), convert them into kernel matrices or k-Neartest Neighbor objects.
+Compute distance matrices (similarity matrices), convert them into kernel matrices or k-nearest neighbor objects.
 
 
 ## Functions

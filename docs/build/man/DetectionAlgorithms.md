@@ -4,7 +4,7 @@
 ## Detection Algorithms
 
 
-detect anomalies out of multivariate correlated data.
+detect anomalies out of multivariate correlated data. 
 
 
 <a id='High-Level-Functions-1'></a>
@@ -32,7 +32,7 @@ return an object of type PARAMS, given the `algorithms` and some `training_data`
   * `k_perc::Float64 = 0.05`: percentage of the first dimension of `training_data` to estimmate the number of nearest neighbors (`algorithms = ["KNN-Gamma", "KNN_Delta"]`)
   * `nu::Float64 = 0.2`: use the maximal percentage of outliers for `algorithms = ["SVDD"]`
   * `temp_excl::Int64 = 0`. Exclude temporal adjacent points from beeing count as recurrences of k-nearest neighbors `algorithms = ["REC", "KNN-Gamma", "KNN_Delta"]`
-  * `ensemble_method = "None"`: compute an ensemble of the used algorithms. Possible choices (given in `compute_ensemble()`) are "mean", "median", "max" and "min". Currently only suported for the algorithms `["REC", "KDE", "KNN-Gamma"]`
+  * `ensemble_method = "None"`: compute an ensemble of the used algorithms. Possible choices (given in `compute_ensemble()`) are "mean", "median", "max" and "min".
   * `quantiles = false`: convert the output scores of the algorithms into quantiles.
 
 **Examples**
@@ -59,6 +59,7 @@ detect anomalies, given some Parameter object `P` of type PARAMS. Train the Para
 
 ```jlcon
 julia> training_data = randn(100, 2); testing_data = randn(100, 2);
+julia> # compute the anoamly scores of the algorithms "REC", "KDE", "T2" and "KNN_Gamma", their quantiles and return their ensemble scores
 julia> P = getParameters(["REC", "KDE", "T2", "KNN_Gamma"], training_data, quantiles = true, ensemble_method = "mean");
 julia> detectAnomalies(testing_data, P)
 ```
@@ -160,7 +161,7 @@ init_KDE(K::Array{Float64, 2})
 init_KDE(T::Int)
 ```
 
-Returns `KDE_out` object for usage in `KDE!()`. Use either a Kernel matrix `K` or the number of timesteps `T` as argument.
+Returns `KDE_out` object for usage in `KDE!()`. Use either a Kernel matrix `K` or the number of time steps/observations `T` as argument.
 
 <a id='MultivariateAnomalies.T2' href='#MultivariateAnomalies.T2'>#</a>
 **`MultivariateAnomalies.T2`** &mdash; *Function*.
@@ -171,7 +172,7 @@ Returns `KDE_out` object for usage in `KDE!()`. Use either a Kernel matrix `K` o
 T2{tp}(data::AbstractArray{tp,2}, Q::AbstractArray[, mv])
 ```
 
-Compute Hotelling's T^2 control chart (the squared Mahalanobis distance to the data's mean vector (`mv`), given the covariance matrix `Q`). Input data is a two dimensional data matrix (time * variables).
+Compute Hotelling's T^2 control chart (the squared Mahalanobis distance to the data's mean vector (`mv`), given the covariance matrix `Q`). Input data is a two dimensional data matrix (observations * variables).
 
 Lowry, C. A., & Woodall, W. H. (1992). A Multivariate Exponentially Weighted Moving Average Control Chart. Technometrics, 34, 46–53.
 
@@ -196,7 +197,7 @@ init_T2(VAR::Int, T::Int)
 init_T2{tp}(data::AbstractArray{tp,2})
 ```
 
-initialize `t2_out` object for `T2!` either with number of varaiables `VAR` and timesteps `T` or with a two dimensional `data` matrix (time * variables)
+initialize `t2_out` object for `T2!` either with number of variables `VAR` and observations/time steps `T` or with a two dimensional `data` matrix (time * variables)
 
 <a id='MultivariateAnomalies.KNN_Gamma' href='#MultivariateAnomalies.KNN_Gamma'>#</a>
 **`MultivariateAnomalies.KNN_Gamma`** &mdash; *Function*.
@@ -232,7 +233,7 @@ init_KNN_Gamma(T::Int)
 init_KNN_Gamma(knn_dists_out)
 ```
 
-initialize a `KNN_Gamma_out` object for `KNN_Gamma!` either with `T`, the number of timesteps or with a `knn_dists_out` object.
+initialize a `KNN_Gamma_out` object for `KNN_Gamma!` either with `T`, the number of observations/time steps or with a `knn_dists_out` object.
 
 <a id='MultivariateAnomalies.KNN_Delta' href='#MultivariateAnomalies.KNN_Delta'>#</a>
 **`MultivariateAnomalies.KNN_Delta`** &mdash; *Function*.
@@ -243,7 +244,7 @@ initialize a `KNN_Gamma_out` object for `KNN_Gamma!` either with `T`, the number
 KNN_Delta(knn_dists_out, data)
 ```
 
-Compute Delta as vector difference of the K nearest neighbors. Arguments are a `knn_dists()` object (`knn_dists_out`) and a `data` matrix (time * variables)
+Compute Delta as vector difference of the k-nearest neighbors. Arguments are a `knn_dists()` object (`knn_dists_out`) and a `data` matrix (observations * variables)
 
 Harmeling, S., Dornhege, G., Tax, D., Meinecke, F., & Müller, K.-R. (2006). From outliers to prototypes: Ordering data. Neurocomputing, 69(13-15), 1608–1618. http://doi.org/10.1016/j.neucom.2005.05.015
 
@@ -256,7 +257,7 @@ Harmeling, S., Dornhege, G., Tax, D., Meinecke, F., & Müller, K.-R. (2006). Fro
 KNN_Delta!(KNN_Delta_out, knn_dists_out, data)
 ```
 
-Memory Efficient Version of `KNN_Delta()`. `KNN_Delta_out[1]` is the vector difference of the K nearest neighbors.
+Memory Efficient Version of `KNN_Delta()`. `KNN_Delta_out[1]` is the vector difference of the k-nearest neighbors.
 
 <a id='MultivariateAnomalies.init_KNN_Delta' href='#MultivariateAnomalies.init_KNN_Delta'>#</a>
 **`MultivariateAnomalies.init_KNN_Delta`** &mdash; *Function*.
@@ -264,10 +265,10 @@ Memory Efficient Version of `KNN_Delta()`. `KNN_Delta_out[1]` is the vector diff
 
 
 ```
-init_KNN_Delta(T, VAR, K)
+init_KNN_Delta(T, VAR, k)
 ```
 
-return a `KNN_Delta_out` object to be used for `KNN_Delta!`. Input: timesteps `T`, variables `V`, number of K nearest neighbors `K`.
+return a `KNN_Delta_out` object to be used for `KNN_Delta!`. Input: time steps/observations `T`, variables `VAR`, number of K nearest neighbors `k`.
 
 <a id='MultivariateAnomalies.UNIV' href='#MultivariateAnomalies.UNIV'>#</a>
 **`MultivariateAnomalies.UNIV`** &mdash; *Function*.
@@ -278,7 +279,7 @@ return a `KNN_Delta_out` object to be used for `KNN_Delta!`. Input: timesteps `T
 UNIV(data)
 ```
 
-order the values in each varaible and return their maximum, i.e. any of the variables in `data` (times * variables) is above a given quantile, the highest quantile will be returned.
+order the values in each varaible and return their maximum, i.e. any of the variables in `data` (observations * variables) is above a given quantile, the highest quantile will be returned.
 
 <a id='MultivariateAnomalies.UNIV!' href='#MultivariateAnomalies.UNIV!'>#</a>
 **`MultivariateAnomalies.UNIV!`** &mdash; *Function*.
@@ -289,7 +290,7 @@ order the values in each varaible and return their maximum, i.e. any of the vari
 UNIV!(univ_out, data)
 ```
 
-Memory efficient version of `UNIV()`, input an `univ_out` object from `init_UNIV()` and some `data` matrix time * variables
+Memory efficient version of `UNIV()`, input an `univ_out` object from `init_UNIV()` and some `data` matrix observations * variables
 
 <a id='MultivariateAnomalies.init_UNIV' href='#MultivariateAnomalies.init_UNIV'>#</a>
 **`MultivariateAnomalies.init_UNIV`** &mdash; *Function*.
@@ -301,7 +302,7 @@ init_UNIV(T::Int, VAR::Int)
 init_UNIV{tp}(data::AbstractArray{tp, 2})
 ```
 
-initialize a `univ_out` object to be used in `UNIV!()` either with number of time steps `T` and variables `V` or with a `data` matrix time * variables.
+initialize a `univ_out` object to be used in `UNIV!()` either with number of time steps/observations `T` and variables `VAR` or with a `data` matrix observations * variables.
 
 <a id='MultivariateAnomalies.SVDD_train' href='#MultivariateAnomalies.SVDD_train'>#</a>
 **`MultivariateAnomalies.SVDD_train`** &mdash; *Function*.

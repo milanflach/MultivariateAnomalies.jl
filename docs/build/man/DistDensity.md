@@ -4,7 +4,7 @@
 ## Distance, Kernel Matrices and k-Nearest Neighbours
 
 
-Compute distance matrices (similarity matrices), convert them into kernel matrices or k-Neartest Neighbor objects.
+Compute distance matrices (similarity matrices), convert them into kernel matrices or k-nearest neighbor objects.
 
 
 <a id='Functions-1'></a>
@@ -36,7 +36,7 @@ julia> D = dist_matrix(dc, space = 2)
 
 
 ```
-dist_matrix!
+dist_matrix!(D_out, data, ...)
 ```
 
 compute the distance matrix of `data`, similar to `dist_matrix()`. `D_out` object has to be preallocated, i.e. with `init_dist_matrix`.

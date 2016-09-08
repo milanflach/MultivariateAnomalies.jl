@@ -1,6 +1,7 @@
 ## Detection Algorithms
 
-detect anomalies out of multivariate correlated data.
+detect anomalies out of multivariate correlated data. 
+
 
 ## High Level Functions
 

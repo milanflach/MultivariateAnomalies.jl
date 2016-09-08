@@ -1,6 +1,6 @@
 site_name:        MultivariateAnomalies.jl
-repo_url:         https://github.com/milanflach/MultivariateAnomalies.jl
-site_description: Description...
+repo_url:         https://github.com/milanflach/MultivariateAnomalies.jl.git
+site_description: A julia package to detect multivarate anomalies.
 site_author:      milanflach
 
 theme: readthedocs

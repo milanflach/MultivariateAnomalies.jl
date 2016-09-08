@@ -76,7 +76,7 @@ end
     init_KDE(K::Array{Float64, 2})
     init_KDE(T::Int)
 
-Returns `KDE_out` object for usage in `KDE!()`. Use either a Kernel matrix `K` or the number of timesteps `T` as argument.
+Returns `KDE_out` object for usage in `KDE!()`. Use either a Kernel matrix `K` or the number of time steps/observations `T` as argument.
 """
 
 function init_KDE(T::Int)
@@ -103,7 +103,7 @@ end
     init_T2(VAR::Int, T::Int)
     init_T2{tp}(data::AbstractArray{tp,2})
 
-initialize `t2_out` object for `T2!` either with number of varaiables `VAR` and timesteps `T` or with a two dimensional `data` matrix (time * variables)
+initialize `t2_out` object for `T2!` either with number of variables `VAR` and observations/time steps `T` or with a two dimensional `data` matrix (time * variables)
 """
 function init_T2(VAR::Int, T::Int)
   diagS =  zeros(Float64, VAR, VAR);
@@ -157,7 +157,7 @@ end
     T2{tp}(data::AbstractArray{tp,2}, Q::AbstractArray[, mv])
 
 Compute Hotelling's T^2 control chart (the squared Mahalanobis distance to the data's mean vector (`mv`), given the covariance matrix `Q`).
-Input data is a two dimensional data matrix (time * variables).
+Input data is a two dimensional data matrix (observations * variables).
 
 Lowry, C. A., & Woodall, W. H. (1992). A Multivariate Exponentially Weighted Moving Average Control Chart. Technometrics, 34, 46–53.
 """
@@ -190,7 +190,7 @@ end
     init_KNN_Gamma(T::Int)
     init_KNN_Gamma(knn_dists_out)
 
-initialize a `KNN_Gamma_out` object for `KNN_Gamma!` either with `T`, the number of timesteps or with a `knn_dists_out` object.
+initialize a `KNN_Gamma_out` object for `KNN_Gamma!` either with `T`, the number of observations/time steps or with a `knn_dists_out` object.
 """
 
 #T: number of timesteps in the datacube
@@ -219,15 +219,15 @@ end
 
 
 """
-    init_KNN_Delta(T, VAR, K)
+    init_KNN_Delta(T, VAR, k)
 
-return a `KNN_Delta_out` object to be used for `KNN_Delta!`. Input: timesteps `T`, variables `V`, number of K nearest neighbors `K`.
+return a `KNN_Delta_out` object to be used for `KNN_Delta!`. Input: time steps/observations `T`, variables `VAR`, number of K nearest neighbors `k`.
 """
 
-function init_KNN_Delta(T::Int, VAR::Int, K::Int)
+function init_KNN_Delta(T::Int, VAR::Int, k::Int)
   r = Array(Float64,T)
   x_i = Array(Float64, 1, VAR)
-  d_x = Array(Float64, K, VAR)
+  d_x = Array(Float64, k, VAR)
   KNN_Delta_out = (r, x_i, d_x)
   return(KNN_Delta_out)
 end
@@ -245,7 +245,7 @@ end
 """
     KNN_Delta!(KNN_Delta_out, knn_dists_out, data)
 
-Memory Efficient Version of `KNN_Delta()`. `KNN_Delta_out[1]` is the vector difference of the K nearest neighbors.
+Memory Efficient Version of `KNN_Delta()`. `KNN_Delta_out[1]` is the vector difference of the k-nearest neighbors.
 """
 
 function KNN_Delta!(KNN_Delta_out::Tuple{Array{Float64,1},Array{Float64,2},Array{Float64,2}}
@@ -274,7 +274,7 @@ end
 """
     KNN_Delta(knn_dists_out, data)
 
-Compute Delta as vector difference of the K nearest neighbors. Arguments are a `knn_dists()` object (`knn_dists_out`) and a `data` matrix (time * variables)
+Compute Delta as vector difference of the k-nearest neighbors. Arguments are a `knn_dists()` object (`knn_dists_out`) and a `data` matrix (observations * variables)
 
 Harmeling, S., Dornhege, G., Tax, D., Meinecke, F., & Müller, K.-R. (2006). From outliers to prototypes: Ordering data. Neurocomputing, 69(13-15), 1608–1618. http://doi.org/10.1016/j.neucom.2005.05.015
 """
@@ -290,7 +290,7 @@ end
     init_UNIV(T::Int, VAR::Int)
     init_UNIV{tp}(data::AbstractArray{tp, 2})
 
-initialize a `univ_out` object to be used in `UNIV!()` either with number of time steps `T` and variables `V` or with a `data` matrix time * variables.
+initialize a `univ_out` object to be used in `UNIV!()` either with number of time steps/observations `T` and variables `VAR` or with a `data` matrix observations * variables.
 """
 function init_UNIV(T::Int, VAR::Int)
      var_dat = zeros(Float64, T)
@@ -313,7 +313,7 @@ end
 """
     UNIV!(univ_out, data)
 
-Memory efficient version of `UNIV()`, input an `univ_out` object from `init_UNIV()` and some `data` matrix time * variables
+Memory efficient version of `UNIV()`, input an `univ_out` object from `init_UNIV()` and some `data` matrix observations * variables
 """
 function UNIV!{tp}(univ_out::Tuple{Array{tp,1},Array{Int64,2},Array{Int64,2}}
                               , data::AbstractArray{tp, 2})
@@ -335,7 +335,7 @@ end
 """
     UNIV(data)
 
-order the values in each varaible and return their maximum, i.e. any of the variables in `data` (times * variables) is above a given quantile,
+order the values in each varaible and return their maximum, i.e. any of the variables in `data` (observations * variables) is above a given quantile,
 the highest quantile will be returned.
 """
 function UNIV{tp}(data::AbstractArray{tp, 2})

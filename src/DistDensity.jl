@@ -30,7 +30,7 @@ function init_dist_matrix{tp, N}(data::AbstractArray{tp, N}, training_data::Abst
 end
 
 """
-    dist_matrix!
+    dist_matrix!(D_out, data, ...)
 
 compute the distance matrix of `data`, similar to `dist_matrix()`. `D_out` object has to be preallocated, i.e. with `init_dist_matrix`.
 

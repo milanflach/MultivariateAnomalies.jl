@@ -69,7 +69,7 @@ return an object of type PARAMS, given the `algorithms` and some `training_data`
 - `k_perc::Float64 = 0.05`: percentage of the first dimension of `training_data` to estimmate the number of nearest neighbors (`algorithms = ["KNN-Gamma", "KNN_Delta"]`)
 - `nu::Float64 = 0.2`: use the maximal percentage of outliers for `algorithms = ["SVDD"]`
 - `temp_excl::Int64 = 0`. Exclude temporal adjacent points from beeing count as recurrences of k-nearest neighbors `algorithms = ["REC", "KNN-Gamma", "KNN_Delta"]`
-- `ensemble_method = "None"`: compute an ensemble of the used algorithms. Possible choices (given in `compute_ensemble()`) are "mean", "median", "max" and "min". Currently only suported for the algorithms `["REC", "KDE", "KNN-Gamma"]`
+- `ensemble_method = "None"`: compute an ensemble of the used algorithms. Possible choices (given in `compute_ensemble()`) are "mean", "median", "max" and "min".
 - `quantiles = false`: convert the output scores of the algorithms into quantiles.
 
 # Examples
@@ -81,7 +81,7 @@ julia> detectAnomalies(testing_data, P)
 ```
 """
 
-function getParameters{tp}(algorithms::Array{ASCIIString,1} = ["REC", "KDE"], training_data::AbstractArray{tp, 2} = [NaN NaN]; dist::ASCIIString = "Euclidean", sigma_quantile::Float64 = 0.5, varepsilon_quantile::Float64 = NaN, k_perc::Float64 = 0.05, nu::Float64 = 0.2, temp_excl::Int64 = 0, ensemble_method = "None", quantiles = false)
+function getParameters{tp, N}(algorithms::Array{ASCIIString,1} = ["REC", "KDE"], training_data::AbstractArray{tp, N} = [NaN NaN]; dist::ASCIIString = "Euclidean", sigma_quantile::Float64 = 0.5, varepsilon_quantile::Float64 = NaN, k_perc::Float64 = 0.05, nu::Float64 = 0.2, temp_excl::Int64 = 0, ensemble_method = "None", quantiles = false)
   @assert any(ispartof(algorithms, ["REC", "KDE", "KNN_Gamma", "KNN_Delta", "SVDD", "KNFST", "T2"]))
   T = size(training_data, 1)
 
@@ -167,7 +167,7 @@ end
 
 mutating version of `detectAnomalies()`. Directly writes the output into `P`.
 """
-function detectAnomalies!{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
+function detectAnomalies!{tp}(data::AbstractArray{tp, 2}, P::PARAMS)
   P.data = data
   allalgorithms = ["KDE", "REC", "KNN_Delta", "KNN_Gamma", "T2", "SVDD", "KNFST"]
   @assert any(ispartof(P.algorithms, allalgorithms))
@@ -251,12 +251,13 @@ Some default parameters are used in this case to initialize `P` internally.
 
 ```jldoctest
 julia> training_data = randn(100, 2); testing_data = randn(100, 2);
+julia> # compute the anoamly scores of the algorithms "REC", "KDE", "T2" and "KNN_Gamma", their quantiles and return their ensemble scores
 julia> P = getParameters(["REC", "KDE", "T2", "KNN_Gamma"], training_data, quantiles = true, ensemble_method = "mean");
 julia> detectAnomalies(testing_data, P)
 ```
 """
 
-function detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
+function detectAnomalies{tp}(data::AbstractArray{tp, 2}, P::PARAMS)
   init_detectAnomalies(data, P)
   detectAnomalies!(data, P)
   return(return_detectAnomalies(P))
