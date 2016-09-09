@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A julia package to detect multivarate anomalies.">
+  <meta name="author" content="milanflach">
+  
+  <title>MultivariateAnomalies.jl</title>
+  
+
+  <link rel="shortcut icon" href="./img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="./css/highlight.css">
+  <link href="./assets/Documenter.css" rel="stylesheet">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "None";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = "/";
+  </script>
+  
+  <script src="./js/jquery-2.1.1.min.js"></script>
+  <script src="./js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="./js/highlight.pack.js"></script>
+  <script src="./js/theme.js"></script> 
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <script src="./assets/mathjaxhelper.js"></script>
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> MultivariateAnomalies.jl</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href=".">Home</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#multivariateanomaliesjl">MultivariateAnomalies.jl</a></li>
+                
+                    <li><a class="toctree-l4" href="#requirements">Requirements</a></li>
+                
+                    <li><a class="toctree-l4" href="#package-features">Package Features</a></li>
+                
+                    <li><a class="toctree-l4" href="#using-the-package">Using the Package</a></li>
+                
+                    <li><a class="toctree-l4" href="#input-data">Input Data</a></li>
+                
+                    <li><a class="toctree-l4" href="#index">Index</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">MultivariateAnomalies.jl</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="https://github.com/milanflach/MultivariateAnomalies.jl.git" class="icon icon-github"> Edit on GitHub</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><a id='MultivariateAnomalies.jl-1'></a></p>
+<h1 id="multivariateanomaliesjl">MultivariateAnomalies.jl</h1>
+<p><em>Decting multivariate anomalies in Julia.</em></p>
+<p>A package for detecting anomalies in multivariate data.</p>
+<p><em>Keywords: Novelty detection, Anomaly Detection, Outlier Detection, Statistical Process Control</em></p>
+<pre><code>Please cite this package as ...
+</code></pre>
+
+<p><a id='Requirements-1'></a></p>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>Julia <code>0.4</code></li>
+<li><code>Distances</code>, <code>MultivariateStats</code></li>
+<li>latest <code>LIBSVM</code> branch via: <code>Pkg.clone("https://github.com/milanflach/LIBSVM.jl.git")</code> <code>Pkg.checkout("LIBSVM", "mutating_versions")</code> <code>Pkg.build("LIBSVM")</code></li>
+</ul>
+<p><a id='Package-Features-1'></a></p>
+<h2 id="package-features">Package Features</h2>
+<ul>
+<li>Extract the relevant features from the data  <code>@contents Pages = ["man/FeatureExtraction.md"]</code></li>
+<li>Compute Distance, Kernel matrices and k-nearest neighbors objects  <code>@contents Pages = ["man/DistDensity.md"]</code></li>
+<li>Detect the anomalies <code>@contents Pages = ["man/DetectionAlgorithms.md"]</code></li>
+<li>Postprocess your anomaly scores, by computing their quantiles or ensembles <code>@contents Pages = ["man/Scores.md"]</code></li>
+<li>Compute the area under the curve as external evaluation metric <code>@contents Pages = ["man/AUC.md"]</code></li>
+</ul>
+<p><a id='Using-the-Package-1'></a></p>
+<h2 id="using-the-package">Using the Package</h2>
+<p>We provide high-level convenience functions for detecting the anomalies. Namely the pair of </p>
+<p><code>P = getParameters(algorithms, training_data)</code> and <code>detectAnomalies(testing_data, P)</code></p>
+<p>sets standard choices of the Parameters <code>P</code> and hands the parameters as well as the algorithms choice over to detect the anomalies. </p>
+<p>Currently supported algorithms include Kernel Density Estimation (<code>algorithms = ["KDE"]</code>), Recurrences (<code>"REC"</code>), k-Nearest Neighbors algorithms (<code>"KNN-Gamma"</code>, <code>"KNN-Delta"</code>), Hotelling's T^2 (<code>"T2"</code>), Support Vector Data Description (<code>"SVDD"</code>) and Kernel Null Foley Summon Transform (<code>"KNFST"</code>). With <code>getParameters()</code> it is also possible to compute output scores of multiple algorithms at once (<code>algorihtms = ["KDE", "T2"]</code>), quantiles of the output anomaly scores (<code>quantiles = true</code>) and ensembles of the selected algorithms (e.g. <code>ensemble_method = "mean"</code>). For more details about the detection algorithms and their usage please consider </p>
+<pre><code>@contents Pages = [&quot;man/DetectionAlgorithms.md&quot;]
+</code></pre>
+
+<p><a id='Input-Data-1'></a></p>
+<h2 id="input-data">Input Data</h2>
+<p>Within MultivariateAnomalies we assume that observations/samples/time steps are stored along the first dimension of the data array (rows of a matrix) with the number of observations <code>T = size(data, 1)</code>. Variables/attributes are stored along the last dimension <code>N</code> of the data array (along the columns of a matrix) with the number of variables <code>VAR = size(data, N)</code>. We are interested in the question which observation(s) of the data are anomalous.</p>
+<p><a id='Index-1'></a></p>
+<h2 id="index">Index</h2>
+<ul>
+<li><a href="man/FeatureExtraction.md#MultivariateAnomalies.EWMA"><code>MultivariateAnomalies.EWMA</code></a></li>
+<li><a href="man/FeatureExtraction.md#MultivariateAnomalies.EWMA!"><code>MultivariateAnomalies.EWMA!</code></a></li>
+<li><a href="man/FeatureExtraction.md#MultivariateAnomalies.TDE"><code>MultivariateAnomalies.TDE</code></a></li>
+<li><a href="man/FeatureExtraction.md#MultivariateAnomalies.get_MedianCycle"><code>MultivariateAnomalies.get_MedianCycle</code></a></li>
+<li><a href="man/FeatureExtraction.md#MultivariateAnomalies.get_MedianCycle!"><code>MultivariateAnomalies.get_MedianCycle!</code></a></li>
+<li><a href="man/FeatureExtraction.md#MultivariateAnomalies.get_MedianCycles"><code>MultivariateAnomalies.get_MedianCycles</code></a></li>
+<li><a href="man/FeatureExtraction.md#MultivariateAnomalies.globalICA"><code>MultivariateAnomalies.globalICA</code></a></li>
+<li><a href="man/FeatureExtraction.md#MultivariateAnomalies.globalPCA"><code>MultivariateAnomalies.globalPCA</code></a></li>
+<li><a href="man/FeatureExtraction.md#MultivariateAnomalies.init_MedianCycle"><code>MultivariateAnomalies.init_MedianCycle</code></a></li>
+<li><a href="man/FeatureExtraction.md#MultivariateAnomalies.mw_COR"><code>MultivariateAnomalies.mw_COR</code></a></li>
+<li><a href="man/FeatureExtraction.md#MultivariateAnomalies.mw_VAR"><code>MultivariateAnomalies.mw_VAR</code></a></li>
+<li><a href="man/FeatureExtraction.md#MultivariateAnomalies.sMSC"><code>MultivariateAnomalies.sMSC</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.KDE"><code>MultivariateAnomalies.KDE</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.KDE!"><code>MultivariateAnomalies.KDE!</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.KNFST_predict"><code>MultivariateAnomalies.KNFST_predict</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.KNFST_predict!"><code>MultivariateAnomalies.KNFST_predict!</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.KNFST_train"><code>MultivariateAnomalies.KNFST_train</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.KNN_Delta"><code>MultivariateAnomalies.KNN_Delta</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.KNN_Delta!"><code>MultivariateAnomalies.KNN_Delta!</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.KNN_Gamma"><code>MultivariateAnomalies.KNN_Gamma</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.KNN_Gamma!"><code>MultivariateAnomalies.KNN_Gamma!</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.REC"><code>MultivariateAnomalies.REC</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.REC!"><code>MultivariateAnomalies.REC!</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.SVDD_predict"><code>MultivariateAnomalies.SVDD_predict</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.SVDD_predict!"><code>MultivariateAnomalies.SVDD_predict!</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.SVDD_train"><code>MultivariateAnomalies.SVDD_train</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.T2"><code>MultivariateAnomalies.T2</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.T2!"><code>MultivariateAnomalies.T2!</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.UNIV"><code>MultivariateAnomalies.UNIV</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.UNIV!"><code>MultivariateAnomalies.UNIV!</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.detectAnomalies"><code>MultivariateAnomalies.detectAnomalies</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.detectAnomalies!"><code>MultivariateAnomalies.detectAnomalies!</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.getParameters"><code>MultivariateAnomalies.getParameters</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.init_KDE"><code>MultivariateAnomalies.init_KDE</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.init_KNFST"><code>MultivariateAnomalies.init_KNFST</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.init_KNN_Delta"><code>MultivariateAnomalies.init_KNN_Delta</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.init_KNN_Gamma"><code>MultivariateAnomalies.init_KNN_Gamma</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.init_REC"><code>MultivariateAnomalies.init_REC</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.init_SVDD_predict"><code>MultivariateAnomalies.init_SVDD_predict</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.init_T2"><code>MultivariateAnomalies.init_T2</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.init_UNIV"><code>MultivariateAnomalies.init_UNIV</code></a></li>
+<li><a href="man/DetectionAlgorithms.md#MultivariateAnomalies.init_detectAnomalies"><code>MultivariateAnomalies.init_detectAnomalies</code></a></li>
+<li><a href="man/Scores.md#MultivariateAnomalies.compute_ensemble"><code>MultivariateAnomalies.compute_ensemble</code></a></li>
+<li><a href="man/Scores.md#MultivariateAnomalies.get_quantile_scores"><code>MultivariateAnomalies.get_quantile_scores</code></a></li>
+<li><a href="man/Scores.md#MultivariateAnomalies.get_quantile_scores!"><code>MultivariateAnomalies.get_quantile_scores!</code></a></li>
+<li><a href="man/AUC.md#MultivariateAnomalies.auc"><code>MultivariateAnomalies.auc</code></a></li>
+<li><a href="man/AUC.md#MultivariateAnomalies.auc_fpr_tpr"><code>MultivariateAnomalies.auc_fpr_tpr</code></a></li>
+<li><a href="man/AUC.md#MultivariateAnomalies.boolevents"><code>MultivariateAnomalies.boolevents</code></a></li>
+<li><a href="man/DistDensity.md#MultivariateAnomalies.dist_matrix"><code>MultivariateAnomalies.dist_matrix</code></a></li>
+<li><a href="man/DistDensity.md#MultivariateAnomalies.dist_matrix!"><code>MultivariateAnomalies.dist_matrix!</code></a></li>
+<li><a href="man/DistDensity.md#MultivariateAnomalies.init_dist_matrix"><code>MultivariateAnomalies.init_dist_matrix</code></a></li>
+<li><a href="man/DistDensity.md#MultivariateAnomalies.init_knn_dists"><code>MultivariateAnomalies.init_knn_dists</code></a></li>
+<li><a href="man/DistDensity.md#MultivariateAnomalies.kernel_matrix"><code>MultivariateAnomalies.kernel_matrix</code></a></li>
+<li><a href="man/DistDensity.md#MultivariateAnomalies.kernel_matrix!"><code>MultivariateAnomalies.kernel_matrix!</code></a></li>
+<li><a href="man/DistDensity.md#MultivariateAnomalies.knn_dists"><code>MultivariateAnomalies.knn_dists</code></a></li>
+<li><a href="man/DistDensity.md#MultivariateAnomalies.knn_dists!"><code>MultivariateAnomalies.knn_dists!</code></a></li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/milanflach/MultivariateAnomalies.jl.git" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+      
+    </span>
+</div>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 0.15.3
+Build Date UTC : 2016-09-09 08:27:55.002399
+-->
