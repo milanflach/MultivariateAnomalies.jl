@@ -33,11 +33,11 @@ Pages = ["man/DetectionAlgorithms.md"]
 ```
 - Postprocess your anomaly scores, by computing their quantiles or ensembles
 ```@contents
-Pages = ["man/Scores"]
+Pages = ["man/Scores.md"]
 ```
 - Compute the area under the curve as external evaluation metric
 ```@contents
-Pages = ["man/AUC"]
+Pages = ["man/AUC.md"]
 ```
 
 ## Using the Package
@@ -62,7 +62,7 @@ Within MultivariateAnomalies we assume that observations/samples/time steps are 
 ## Index
 
 ```@index
-Pages = ["man/FeatureExtraction.md", "man/DetectionAlgorithms.md", "man/Scores", "man/AUC"]
+Pages = ["man/FeatureExtraction.md", "man/DetectionAlgorithms.md", "man/Scores.md", "man/AUC.md", "man/DistDensity.md"]
 ```
 
 

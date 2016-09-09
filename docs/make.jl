@@ -9,7 +9,7 @@ makedocs(modules = [MultivariateAnomalies],
            "Manual" => Any[
                "man/FeatureExtraction.md"
              , "man/DetectionAlgorithms.md"
-             , "man/DetectionAlgorithms.md"
+             , "man/AUC.md"
              , "man/DistDensity.md"
              , "man/Scores.md"
              ]
