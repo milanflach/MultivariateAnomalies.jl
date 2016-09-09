@@ -1,6 +1,6 @@
 ## Anomaly Detection Algorithms
 
-Most of the anomaly detection algorithms below work on a distance/similarity matrix `D` or a kernel/dissimilarity matrix `K`. They can be comuted using the functions provided [here](man/DistancesDensity.md).
+Most of the anomaly detection algorithms below work on a distance/similarity matrix `D` or a kernel/dissimilarity matrix `K`. They can be comuted using the functions provided [here](DistancesDensity.md).
 
 Currently supported algorithms include
 
