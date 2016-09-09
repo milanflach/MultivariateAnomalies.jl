@@ -18,6 +18,7 @@
 ## Package Features
 
 - Preprocess your data by extracting its relevant features
+[Feature Extraction](man/Preprocessing.md)
 ```@contents 
 Pages = ["man/Preprocessing.md"]
 Depth = 1
