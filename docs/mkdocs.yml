@@ -23,6 +23,7 @@ docs_dir: 'build'
 pages:
 - Home: 'index.md'
 - Manual:
+    - 'Anomaly Detection - convenience': 'man/HighLevelFunctions.md'
     - 'Anomaly Detection': 'man/DetectionAlgorithms.md'
     - 'Distances and Densities': 'man/DistancesDensity.md'
     - 'Preprocessing': 'man/Preprocessing.md'
