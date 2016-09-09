@@ -1,4 +1,4 @@
-## AUC
+## Area Under the Curve
 
 Compute true positive rates, false positive rates and the area under the curve to evaulate the algorihtms performance.
 Efficient implementation according to

@@ -47,7 +47,8 @@ Depth = 1
 
 We provide high-level convenience functions for detecting the anomalies. Namely the pair of 
 
-`P = getParameters(algorithms, training_data)` and
+`P = getParameters(algorithms, training_data)` 
+and
 `detectAnomalies(testing_data, P)`
 
 sets standard choices of the Parameters `P` and hands the parameters as well as the algorithms choice over to detect the anomalies. 
@@ -56,7 +57,7 @@ Currently supported algorithms include Kernel Density Estimation (`algorithms = 
 
 ```
 @contents 
-Pages = ["Manual/DetectionAlgorithms.md"]
+Pages = ["man/DetectionAlgorithms.md"]
 Depth = 2
 ```
 
@@ -67,7 +68,7 @@ Within MultivariateAnomalies we assume that observations/samples/time steps are 
 ## Index
 
 ```@index
-Pages = ["Manual/FeatureExtraction.md", "Manual/DetectionAlgorithms.md", "Manual/Scores.md", "Manual/AUC.md", "Manual/DistDensity.md"]
+Pages = ["man/FeatureExtraction.md", "man/DetectionAlgorithms.md", "man/Scores.md", "man/AUC.md", "man/DistDensity.md"]
 ```
 
 

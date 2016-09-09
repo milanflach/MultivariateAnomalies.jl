@@ -1,4 +1,4 @@
-## Detection Algorithms
+## Anomaly Detection Algorithms
 
 detect anomalies out of multivariate correlated data. 
 
