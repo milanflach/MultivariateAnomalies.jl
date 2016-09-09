@@ -12,13 +12,7 @@
     
         
     <url>
-     <loc>None/man/AUC/</loc>
-     <lastmod>2016-09-09</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>None/man/DetectionAlgorithms/</loc>
+     <loc>None/man/Preprocessing/</loc>
      <lastmod>2016-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url>
@@ -30,13 +24,19 @@
     </url>
         
     <url>
+     <loc>None/man/DetectionAlgorithms/</loc>
+     <lastmod>2016-09-09</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
      <loc>None/man/Postprocessing/</loc>
      <lastmod>2016-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>None/man/Preprocessing/</loc>
+     <loc>None/man/AUC/</loc>
      <lastmod>2016-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url>
