@@ -8,7 +8,7 @@
   
   <meta name="author" content="milanflach">
   
-  <title>Anomaly Detection - MultivariateAnomalies.jl</title>
+  <title>Anomaly Detection Algorithms - MultivariateAnomalies.jl</title>
   
 
   <link rel="shortcut icon" href="../../img/favicon.ico">
@@ -24,7 +24,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Anomaly Detection";
+    var mkdocs_page_name = "Anomaly Detection Algorithms";
     var mkdocs_page_input_path = "man/DetectionAlgorithms.md";
     var mkdocs_page_url = "/man/DetectionAlgorithms/";
   </script>
@@ -71,14 +71,14 @@
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../HighLevelFunctions/">Anomaly Detection - convenience</a>
+        <a class="" href="../HighLevelFunctions/">High Level Functions</a>
         
     </li>
 
         
             
     <li class="toctree-l1 current">
-        <a class="current" href="./">Anomaly Detection</a>
+        <a class="current" href="./">Anomaly Detection Algorithms</a>
         
             <ul>
             
@@ -86,6 +86,20 @@
                 
             
                 <li class="toctree-l3"><a href="#functions">Functions</a></li>
+                
+                    <li><a class="toctree-l4" href="#recurrences">Recurrences</a></li>
+                
+                    <li><a class="toctree-l4" href="#kernel-density-estimation">Kernel Density Estimation</a></li>
+                
+                    <li><a class="toctree-l4" href="#hotellings-t2-squared-mahalanobis-distance">Hotelling's $T^2$ (Squared Mahalanobis Distance)</a></li>
+                
+                    <li><a class="toctree-l4" href="#k-nearest-neighbors">k-Nearest Neighbors</a></li>
+                
+                    <li><a class="toctree-l4" href="#univariate-approach">Univariate Approach</a></li>
+                
+                    <li><a class="toctree-l4" href="#support-vector-data-description">Support Vector Data Description</a></li>
+                
+                    <li><a class="toctree-l4" href="#kernel-null-foley-summon-transform">Kernel Null Foley Summon Transform</a></li>
                 
             
                 <li class="toctree-l3"><a href="#index">Index</a></li>
@@ -153,7 +167,7 @@
         
       
     
-    <li>Anomaly Detection</li>
+    <li>Anomaly Detection Algorithms</li>
     <li class="wy-breadcrumbs-aside">
       
         
@@ -169,15 +183,28 @@
               
                 <p><a id='Anomaly-Detection-Algorithms-1'></a></p>
 <h2 id="anomaly-detection-algorithms">Anomaly Detection Algorithms</h2>
-<p>detect anomalies out of multivariate correlated data. </p>
+<p>Most of the anomaly detection algorithms below work on a distance/similarity matrix <code>D</code> or a kernel/dissimilarity matrix <code>K</code>. They can be comuted using the functions provided <a href="man/DistancesDensity.md">here</a>.</p>
+<p>Currently supported algorithms include</p>
+<ul>
+<li>Recurrences (REC)</li>
+<li>Kernel Density Estimation (KDE)</li>
+<li>Hotelling's $T^2$ (Mahalanobis distance) (T2)</li>
+<li>two k-Nearest Neighbor approaches (KNN-Gamma, KNN-Delta)  </li>
+<li>Univariate Approach (UNIV)</li>
+<li>Support Vector Data Description (SVDD)</li>
+<li>Kernel Null Foley Summon Transform (KNFST)</li>
+</ul>
 <p><a id='Functions-1'></a></p>
 <h2 id="functions">Functions</h2>
+<p><a id='Recurrences-1'></a></p>
+<h3 id="recurrences">Recurrences</h3>
 <p><a id='MultivariateAnomalies.REC' href='#MultivariateAnomalies.REC'>#</a>
 <strong><code>MultivariateAnomalies.REC</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>REC(D::AbstractArray, rec_threshold::Float64, temp_excl::Int = 5)
 </code></pre>
 
 <p>Count the number of observations (recurrences) which fall into a radius <code>rec_threshold</code> of a distance matrix <code>D</code>. Exclude steps which are closer than <code>temp_excl</code> to be count as recurrences (default: <code>temp_excl = 5</code>)</p>
+<p>Marwan, N., Carmen Romano, M., Thiel, M., &amp; Kurths, J. (2007). Recurrence plots for the analysis of complex systems. Physics Reports, 438(5-6), 237–329. http://doi.org/10.1016/j.physrep.2006.11.001</p>
 <p><a id='MultivariateAnomalies.REC!' href='#MultivariateAnomalies.REC!'>#</a>
 <strong><code>MultivariateAnomalies.REC!</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>REC!(rec_out::AbstractArray, D::AbstractArray, rec_threshold::Float64, temp_excl::Int = 5)
@@ -191,7 +218,8 @@ init_REC(T::Int)
 </code></pre>
 
 <p>get object for memory efficient <code>REC!()</code> versions. Input can be a distance matrix <code>D</code> or the number of timesteps (observations) <code>T</code>.</p>
-<p>Marwan, N., Carmen Romano, M., Thiel, M., &amp; Kurths, J. (2007). Recurrence plots for the analysis of complex systems. Physics Reports, 438(5-6), 237–329. http://doi.org/10.1016/j.physrep.2006.11.001</p>
+<p><a id='Kernel-Density-Estimation-1'></a></p>
+<h3 id="kernel-density-estimation">Kernel Density Estimation</h3>
 <p><a id='MultivariateAnomalies.KDE' href='#MultivariateAnomalies.KDE'>#</a>
 <strong><code>MultivariateAnomalies.KDE</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>KDE(K)
@@ -212,6 +240,8 @@ init_KDE(T::Int)
 </code></pre>
 
 <p>Returns <code>KDE_out</code> object for usage in <code>KDE!()</code>. Use either a Kernel matrix <code>K</code> or the number of time steps/observations <code>T</code> as argument.</p>
+<p><a id='Hotelling's-T2-(Squared-Mahalanobis-Distance)-1'></a></p>
+<h3 id="hotellings-t2-squared-mahalanobis-distance">Hotelling's $T^2$ (Squared Mahalanobis Distance)</h3>
 <p><a id='MultivariateAnomalies.T2' href='#MultivariateAnomalies.T2'>#</a>
 <strong><code>MultivariateAnomalies.T2</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>T2{tp}(data::AbstractArray{tp,2}, Q::AbstractArray[, mv])
@@ -232,6 +262,8 @@ init_T2{tp}(data::AbstractArray{tp,2})
 </code></pre>
 
 <p>initialize <code>t2_out</code> object for <code>T2!</code> either with number of variables <code>VAR</code> and observations/time steps <code>T</code> or with a two dimensional <code>data</code> matrix (time * variables)</p>
+<p><a id='k-Nearest-Neighbors-1'></a></p>
+<h3 id="k-nearest-neighbors">k-Nearest Neighbors</h3>
 <p><a id='MultivariateAnomalies.KNN_Gamma' href='#MultivariateAnomalies.KNN_Gamma'>#</a>
 <strong><code>MultivariateAnomalies.KNN_Gamma</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>KNN_Gamma(knn_dists_out)
@@ -271,6 +303,8 @@ init_KNN_Gamma(knn_dists_out)
 </code></pre>
 
 <p>return a <code>KNN_Delta_out</code> object to be used for <code>KNN_Delta!</code>. Input: time steps/observations <code>T</code>, variables <code>VAR</code>, number of K nearest neighbors <code>k</code>.</p>
+<p><a id='Univariate-Approach-1'></a></p>
+<h3 id="univariate-approach">Univariate Approach</h3>
 <p><a id='MultivariateAnomalies.UNIV' href='#MultivariateAnomalies.UNIV'>#</a>
 <strong><code>MultivariateAnomalies.UNIV</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>UNIV(data)
@@ -290,6 +324,8 @@ init_UNIV{tp}(data::AbstractArray{tp, 2})
 </code></pre>
 
 <p>initialize a <code>univ_out</code> object to be used in <code>UNIV!()</code> either with number of time steps/observations <code>T</code> and variables <code>VAR</code> or with a <code>data</code> matrix observations * variables.</p>
+<p><a id='Support-Vector-Data-Description-1'></a></p>
+<h3 id="support-vector-data-description">Support Vector Data Description</h3>
 <p><a id='MultivariateAnomalies.SVDD_train' href='#MultivariateAnomalies.SVDD_train'>#</a>
 <strong><code>MultivariateAnomalies.SVDD_train</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>SVDD_train(K, nu)
@@ -317,6 +353,8 @@ init_SVDD_predict(T::Int, Ttrain::Int)
 </code></pre>
 
 <p>initializes a <code>SVDD_out</code> object to be used in <code>SVDD_predict!()</code>. Input is the number of time steps <code>T</code> (in prediction mode). If <code>T</code> for prediction differs from T of the training data (<code>Ttrain</code>) use <code>Ttrain</code> as additional argument.</p>
+<p><a id='Kernel-Null-Foley-Summon-Transform-1'></a></p>
+<h3 id="kernel-null-foley-summon-transform">Kernel Null Foley Summon Transform</h3>
 <p><a id='MultivariateAnomalies.KNFST_train' href='#MultivariateAnomalies.KNFST_train'>#</a>
 <strong><code>MultivariateAnomalies.KNFST_train</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>KNFST_train(K)
@@ -357,7 +395,7 @@ init_SVDD_predict(T::Int, Ttrain::Int)
         <a href="../DistancesDensity/" class="btn btn-neutral float-right" title="Distances and Densities">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../HighLevelFunctions/" class="btn btn-neutral" title="Anomaly Detection - convenience"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../HighLevelFunctions/" class="btn btn-neutral" title="High Level Functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   

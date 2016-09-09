@@ -8,7 +8,7 @@
   
   <meta name="author" content="milanflach">
   
-  <title>Anomaly Detection - convenience - MultivariateAnomalies.jl</title>
+  <title>High Level Functions - MultivariateAnomalies.jl</title>
   
 
   <link rel="shortcut icon" href="../../img/favicon.ico">
@@ -24,7 +24,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Anomaly Detection - convenience";
+    var mkdocs_page_name = "High Level Functions";
     var mkdocs_page_input_path = "man/HighLevelFunctions.md";
     var mkdocs_page_url = "/man/HighLevelFunctions/";
   </script>
@@ -71,11 +71,11 @@
         
             
     <li class="toctree-l1 current">
-        <a class="current" href="./">Anomaly Detection - convenience</a>
+        <a class="current" href="./">High Level Functions</a>
         
             <ul>
             
-                <li class="toctree-l3"><a href="#anomaly-detection-algorithms">Anomaly Detection Algorithms</a></li>
+                <li class="toctree-l3"><a href="#high-level-anomaly-detection-functions">High Level Anomaly Detection Functions</a></li>
                 
             
                 <li class="toctree-l3"><a href="#high-level-functions">High Level Functions</a></li>
@@ -91,7 +91,7 @@
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../DetectionAlgorithms/">Anomaly Detection</a>
+        <a class="" href="../DetectionAlgorithms/">Anomaly Detection Algorithms</a>
         
     </li>
 
@@ -153,7 +153,7 @@
         
       
     
-    <li>Anomaly Detection - convenience</li>
+    <li>High Level Functions</li>
     <li class="wy-breadcrumbs-aside">
       
         
@@ -167,9 +167,12 @@
           <div role="main">
             <div class="section">
               
-                <p><a id='Anomaly-Detection-Algorithms-1'></a></p>
-<h2 id="anomaly-detection-algorithms">Anomaly Detection Algorithms</h2>
-<p>detect anomalies out of multivariate correlated data. </p>
+                <p><a id='High-Level-Anomaly-Detection-Functions-1'></a></p>
+<h2 id="high-level-anomaly-detection-functions">High Level Anomaly Detection Functions</h2>
+<p>We provide high-level convenience functions for detecting the anomalies. Namely the pair of </p>
+<p><code>P = getParameters(algorithms, training_data)</code>  and <code>detectAnomalies(testing_data, P)</code></p>
+<p>sets standard choices of the Parameters <code>P</code> and hands the parameters as well as the algorithms choice over to detect the anomalies. </p>
+<p>Currently supported algorithms include Kernel Density Estimation (<code>algorithms = ["KDE"]</code>), Recurrences (<code>"REC"</code>), k-Nearest Neighbors algorithms (<code>"KNN-Gamma"</code>, <code>"KNN-Delta"</code>), Hotelling's T2 (<code>"T2"</code>), Support Vector Data Description (<code>"SVDD"</code>) and Kernel Null Foley Summon Transform (<code>"KNFST"</code>). With <code>getParameters()</code> it is also possible to compute output scores of multiple algorithms at once (<code>algorihtms = ["KDE", "T2"]</code>), quantiles of the output anomaly scores (<code>quantiles = true</code>) and ensembles of the selected algorithms (e.g. <code>ensemble_method = "mean"</code>). </p>
 <p><a id='High-Level-Functions-1'></a></p>
 <h2 id="high-level-functions">High Level Functions</h2>
 <p><a id='MultivariateAnomalies.getParameters' href='#MultivariateAnomalies.getParameters'>#</a>
@@ -232,7 +235,7 @@ julia&gt; detectAnomalies(testing_data, P)
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../DetectionAlgorithms/" class="btn btn-neutral float-right" title="Anomaly Detection">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../DetectionAlgorithms/" class="btn btn-neutral float-right" title="Anomaly Detection Algorithms">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../.." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>

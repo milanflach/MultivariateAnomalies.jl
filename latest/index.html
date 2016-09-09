@@ -88,14 +88,14 @@
         
             
     <li class="toctree-l1 ">
-        <a class="" href="man/HighLevelFunctions/">Anomaly Detection - convenience</a>
+        <a class="" href="man/HighLevelFunctions/">High Level Functions</a>
         
     </li>
 
         
             
     <li class="toctree-l1 ">
-        <a class="" href="man/DetectionAlgorithms/">Anomaly Detection</a>
+        <a class="" href="man/DetectionAlgorithms/">Anomaly Detection Algorithms</a>
         
     </li>
 
@@ -184,7 +184,13 @@
 <p><a id='Package-Features-1'></a></p>
 <h2 id="package-features">Package Features</h2>
 <ul>
-<li>Detect anomalies in your data with      - easy to use <a href="" title="man/HighLevelFunctions.md">high level functions</a>     - individual <a href="" title="man/AnomalyDetection.md">anomaly detection algorithms</a></li>
+<li>Detect anomalies in your data with </li>
+</ul>
+<pre><code>- easy to use [high level functions](&quot;man/HighLevelFunctions.md&quot;)
+- individual [anomaly detection algorithms](&quot;manAnomalyDetection.md&quot;)
+</code></pre>
+
+<ul>
 <li>
 <p><a href="man/Preprocessing/">Feature Extraction</a>: Preprocess your data by extracting relevant features</p>
 </li>
@@ -192,7 +198,7 @@
 <p><a href="man/DistancesDensity/">Similarities and Dissimilarities</a>: Compute distance matrices, kernel matrices and k-nearest neighbor objects.</p>
 </li>
 <li>
-<p><a href="man/Postprocessing/">Postprocessing</a>: Postprocess your anomaly scores, by computing their quantiles or ensembles, i.e. combinations of several algorithms.</p>
+<p><a href="man/Postprocessing/">Postprocessing</a>: Postprocess your anomaly scores, by computing their quantiles or combinations of several algorithms (ensembles).</p>
 </li>
 <li>
 <p><a href="man/AUC/">AUC</a>: Compute the area under the curve as external evaluation metric of your scores.</p>
@@ -200,13 +206,10 @@
 </ul>
 <p><a id='Using-the-Package-1'></a></p>
 <h2 id="using-the-package">Using the Package</h2>
-<p>We provide high-level convenience functions for detecting the anomalies. Namely the pair of </p>
-<p><code>P = getParameters(algorithms, training_data)</code>  and <code>detectAnomalies(testing_data, P)</code></p>
-<p>sets standard choices of the Parameters <code>P</code> and hands the parameters as well as the algorithms choice over to detect the anomalies. </p>
-<p>Currently supported algorithms include Kernel Density Estimation (<code>algorithms = ["KDE"]</code>), Recurrences (<code>"REC"</code>), k-Nearest Neighbors algorithms (<code>"KNN-Gamma"</code>, <code>"KNN-Delta"</code>), Hotelling's T2 (<code>"T2"</code>), Support Vector Data Description (<code>"SVDD"</code>) and Kernel Null Foley Summon Transform (<code>"KNFST"</code>). With <code>getParameters()</code> it is also possible to compute output scores of multiple algorithms at once (<code>algorihtms = ["KDE", "T2"]</code>), quantiles of the output anomaly scores (<code>quantiles = true</code>) and ensembles of the selected algorithms (e.g. <code>ensemble_method = "mean"</code>). For more details about the detection algorithms and their usage please consider <a href="" title="man/HighLevelFunctions.md">high level functions</a></p>
+<p>For a quick start it might be useful to start with the <a href="" title="man/HighLevelFunctions.md">high-level convenience functions</a> for detecting anomalies. They can be used in highly automized way. </p>
 <p><a id='Input-Data-1'></a></p>
 <h2 id="input-data">Input Data</h2>
-<p>Within MultivariateAnomalies we assume that observations/samples/time steps are stored along the first dimension of the data array (rows of a matrix) with the number of observations <code>T = size(data, 1)</code>. Variables/attributes are stored along the last dimension <code>N</code> of the data array (along the columns of a matrix) with the number of variables <code>VAR = size(data, N)</code>. We are interested in the question which observation(s) of the data are anomalous.</p>
+<p><em>MultivariateAnomalies.jl</em> assumes that observations/samples/time steps are stored along the first dimension of the data array (rows of a matrix) with the number of observations <code>T = size(data, 1)</code>. Variables/attributes are stored along the last dimension <code>N</code> of the data array (along the columns of a matrix) with the number of variables <code>VAR = size(data, N)</code>. The implemented anomaly detection algorithms return anomaly scores indicating which observation(s) of the data are anomalous.</p>
 <p><a id='Index-1'></a></p>
 <h2 id="index">Index</h2>
 <ul>
@@ -270,7 +273,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="man/HighLevelFunctions/" class="btn btn-neutral float-right" title="Anomaly Detection - convenience">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="man/HighLevelFunctions/" class="btn btn-neutral float-right" title="High Level Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
     </div>
@@ -310,5 +313,5 @@
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2016-09-09 16:29:26.384431
+Build Date UTC : 2016-09-09 20:01:00.489690
 -->

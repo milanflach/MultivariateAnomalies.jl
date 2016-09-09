@@ -71,14 +71,14 @@
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../HighLevelFunctions/">Anomaly Detection - convenience</a>
+        <a class="" href="../HighLevelFunctions/">High Level Functions</a>
         
     </li>
 
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../DetectionAlgorithms/">Anomaly Detection</a>
+        <a class="" href="../DetectionAlgorithms/">Anomaly Detection Algorithms</a>
         
     </li>
 
@@ -92,7 +92,19 @@
                 <li class="toctree-l3"><a href="#distance-kernel-matrices-and-k-nearest-neighbours">Distance, Kernel Matrices and k-Nearest Neighbours</a></li>
                 
             
-                <li class="toctree-l3"><a href="#functions">Functions</a></li>
+                <li class="toctree-l3"><a href="#distancesimilarity-matrices">Distance/Similarity Matrices</a></li>
+                
+                    <li><a class="toctree-l4" href="#functions">Functions</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#k-nearest-neighbor-objects">k-Nearest Neighbor Objects</a></li>
+                
+                    <li><a class="toctree-l4" href="#functions_1">Functions</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#kernel-matrices-dissimilarities">Kernel Matrices (Dissimilarities)</a></li>
+                
+                    <li><a class="toctree-l4" href="#functions_2">Functions</a></li>
                 
             
                 <li class="toctree-l3"><a href="#index">Index</a></li>
@@ -169,9 +181,14 @@
               
                 <p><a id='Distance,-Kernel-Matrices-and-k-Nearest-Neighbours-1'></a></p>
 <h2 id="distance-kernel-matrices-and-k-nearest-neighbours">Distance, Kernel Matrices and k-Nearest Neighbours</h2>
-<p>Compute distance matrices (similarity matrices), convert them into kernel matrices or k-nearest neighbor objects.</p>
+<p>Compute distance matrices (similarity matrices) and convert them into kernel matrices or k-nearest neighbor objects.</p>
+<p><a id='Distance/Similarity-Matrices-1'></a></p>
+<h2 id="distancesimilarity-matrices">Distance/Similarity Matrices</h2>
+<p>A distance matrix <code>D</code> consists of pairwise distances $d()$computed with some metrix (e.g. Euclidean):</p>
+<p>$D = d(X_{t_i}, X_{t_j})$</p>
+<p>i.e. the distance between vector $X$ of observation $t_i$ and $t_j$ for all observations $t_i,t_j = 1 \ldots T$.</p>
 <p><a id='Functions-1'></a></p>
-<h2 id="functions">Functions</h2>
+<h3 id="functions">Functions</h3>
 <p><a id='MultivariateAnomalies.dist_matrix' href='#MultivariateAnomalies.dist_matrix'>#</a>
 <strong><code>MultivariateAnomalies.dist_matrix</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>dist_matrix{tp, N}(data::AbstractArray{tp, N}; dist::ASCIIString = &quot;Euclidean&quot;, space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
@@ -203,6 +220,11 @@ init_dist_matrix(data, training_data)
 </code></pre>
 
 <p>initialize a <code>D_out</code> object for <code>dist_matrix!()</code>.</p>
+<p><a id='k-Nearest-Neighbor-Objects-1'></a></p>
+<h2 id="k-nearest-neighbor-objects">k-Nearest Neighbor Objects</h2>
+<p>k-Nearest Neighbor objects return the k nearest points and their distance out of a distance matrix <code>D</code>.</p>
+<p><a id='Functions-2'></a></p>
+<h3 id="functions_1">Functions</h3>
 <p><a id='MultivariateAnomalies.knn_dists' href='#MultivariateAnomalies.knn_dists'>#</a>
 <strong><code>MultivariateAnomalies.knn_dists</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>knn_dists(D, k::Int, temp_excl::Int = 5)
@@ -237,6 +259,12 @@ init_knn_dists(datacube::AbstractArray, k::Int)
 </code></pre>
 
 <p>initialize a preallocated <code>knn_dists_out</code> object. <code>k</code>is the number of nerarest neighbors, <code>T</code> the number of time steps (i.e. size of the first dimension) or a multidimensional <code>datacube</code>.</p>
+<p><a id='Kernel-Matrices-(Dissimilarities)-1'></a></p>
+<h2 id="kernel-matrices-dissimilarities">Kernel Matrices (Dissimilarities)</h2>
+<p>A distance matrix <code>D</code> can be converted into a kernel matrix <code>K</code>, i.e. by computing pairwise dissimilarities using Gaussian kernels centered on each datapoint. </p>
+<p>$K= exp(-0.5 \cdot D \cdot \sigma^{-2})$</p>
+<p><a id='Functions-3'></a></p>
+<h3 id="functions_2">Functions</h3>
 <p><a id='MultivariateAnomalies.kernel_matrix' href='#MultivariateAnomalies.kernel_matrix'>#</a>
 <strong><code>MultivariateAnomalies.kernel_matrix</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>kernel_matrix(D::AbstractArray, σ::Float64 = 1.0[, kernel::ASCIIString = &quot;gauss&quot;, dimension::Int64 = 1])
@@ -271,7 +299,7 @@ julia&gt; kernel_matrix!(D, D, 2.0) # overwrites distance matrix
         <a href="../Preprocessing/" class="btn btn-neutral float-right" title="Preprocessing">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../DetectionAlgorithms/" class="btn btn-neutral" title="Anomaly Detection"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../DetectionAlgorithms/" class="btn btn-neutral" title="Anomaly Detection Algorithms"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   

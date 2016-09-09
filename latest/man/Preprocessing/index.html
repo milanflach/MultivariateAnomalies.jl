@@ -71,14 +71,14 @@
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../HighLevelFunctions/">Anomaly Detection - convenience</a>
+        <a class="" href="../HighLevelFunctions/">High Level Functions</a>
         
     </li>
 
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../DetectionAlgorithms/">Anomaly Detection</a>
+        <a class="" href="../DetectionAlgorithms/">Anomaly Detection Algorithms</a>
         
     </li>
 
@@ -99,7 +99,29 @@
                 <li class="toctree-l3"><a href="#feature-extraction-techniques">Feature Extraction Techniques</a></li>
                 
             
-                <li class="toctree-l3"><a href="#functions">Functions</a></li>
+                <li class="toctree-l3"><a href="#dimensionality-reduction">Dimensionality Reduction</a></li>
+                
+                    <li><a class="toctree-l4" href="#functions">Functions</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#seasonality">Seasonality</a></li>
+                
+                    <li><a class="toctree-l4" href="#functions_1">Functions</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#exponential-weighted-moving-average">Exponential Weighted Moving Average</a></li>
+                
+                    <li><a class="toctree-l4" href="#function">Function</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#time-delay-embedding">Time Delay Embedding</a></li>
+                
+                    <li><a class="toctree-l4" href="#function_1">Function</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#moving-window-features">Moving Window Features</a></li>
+                
+                    <li><a class="toctree-l4" href="#functions_2">Functions</a></li>
                 
             
                 <li class="toctree-l3"><a href="#index">Index</a></li>
@@ -170,19 +192,15 @@
                 <p><a id='Feature-Extraction-Techniques-1'></a></p>
 <h2 id="feature-extraction-techniques">Feature Extraction Techniques</h2>
 <p>Extract the relevant inforamtion out of your data and use them as input feature for the anomaly detection algorithms.</p>
+<p><a id='Dimensionality-Reduction-1'></a></p>
+<h2 id="dimensionality-reduction">Dimensionality Reduction</h2>
+<p>Currently two dimenionality reduction techniques are implemented from <em>MultivariateStats.jl</em>:</p>
+<ul>
+<li>Principal Component Analysis (PCA)</li>
+<li>Independent Component Analysis (ICA)</li>
+</ul>
 <p><a id='Functions-1'></a></p>
-<h2 id="functions">Functions</h2>
-<p><a id='MultivariateAnomalies.sMSC' href='#MultivariateAnomalies.sMSC'>#</a>
-<strong><code>MultivariateAnomalies.sMSC</code></strong> &mdash; <em>Function</em>.</p>
-<pre><code>sMSC(datacube, cycle_length)
-</code></pre>
-
-<p>subtract the median seasonal cycle from the datacube given the length of year <code>cycle_length</code>.</p>
-<p><strong>Examples</strong></p>
-<pre><code class="jlcon">julia&gt; dc = hcat(rand(193) + 2* sin(0:pi/24:8*pi), rand(193) + 2* sin(0:pi/24:8*pi))
-julia&gt; sMSC_dc = sMSC(dc, 48)
-</code></pre>
-
+<h3 id="functions">Functions</h3>
 <p><a id='MultivariateAnomalies.globalPCA' href='#MultivariateAnomalies.globalPCA'>#</a>
 <strong><code>MultivariateAnomalies.globalPCA</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>globalPCA{tp, N}(datacube::Array{tp, N}, expl_var::Float64 = 0.95)
@@ -195,53 +213,24 @@ julia&gt; sMSC_dc = sMSC(dc, 48)
 </code></pre>
 
 <p>perform an Independent Component Analysis on the entire 4-dimensional datacube either by (<code>mode = "num_comp"</code>) returning num_comp number of independent components or (<code>mode = "expl_var"</code>) returning the number of components which is necessary to explain expl_var of the variance, when doing a Prinicpal Component Analysis before.</p>
-<p><a id='MultivariateAnomalies.TDE' href='#MultivariateAnomalies.TDE'>#</a>
-<strong><code>MultivariateAnomalies.TDE</code></strong> &mdash; <em>Function</em>.</p>
-<pre><code>TDE{tp}(datacube::Array{tp, 4}, ΔT::Integer, DIM::Int = 3)
-TDE{tp}(datacube::Array{tp, 3}, ΔT::Integer, DIM::Int = 3)
+<p><a id='Seasonality-1'></a></p>
+<h2 id="seasonality">Seasonality</h2>
+<p>When dealing with time series, i.e. the observations are time steps, it might be important to remove or get robust estimates of the mean seasonal cycles. This is implemended by</p>
+<ul>
+<li>subtracting the median seasonal cycle (sMSC) and</li>
+<li>getting the median seasonal cycle (get_MedianCycles)</li>
+</ul>
+<p><a id='Functions-2'></a></p>
+<h3 id="functions_1">Functions</h3>
+<p><a id='MultivariateAnomalies.sMSC' href='#MultivariateAnomalies.sMSC'>#</a>
+<strong><code>MultivariateAnomalies.sMSC</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>sMSC(datacube, cycle_length)
 </code></pre>
 
-<p>returns an embedded datacube by concatenating lagged versions of the 2-, 3- or 4-dimensional datacube with <code>ΔT</code> time steps in the past up to dimension <code>DIM</code> (presetting: <code>DIM = 3</code>)</p>
-<pre><code class="jlcon">julia&gt; dc = randn(50,3)
-julia&gt; TDE(dc, 3, 2)
-</code></pre>
-
-<p><a id='MultivariateAnomalies.mw_VAR' href='#MultivariateAnomalies.mw_VAR'>#</a>
-<strong><code>MultivariateAnomalies.mw_VAR</code></strong> &mdash; <em>Function</em>.</p>
-<pre><code>mw_VAR{tp,N}(datacube::Array{tp,N}, windowsize::Int = 10)
-</code></pre>
-
-<p>compute the variance in a moving window along the first dimension of the datacube (presetting: <code>windowsize = 10</code>). Accepts N dimensional datacubes.</p>
-<pre><code class="jlcon">julia&gt; dc = randn(50,3,3,3)
-julia&gt; mw_VAR(dc, 15)
-</code></pre>
-
-<p><a id='MultivariateAnomalies.mw_COR' href='#MultivariateAnomalies.mw_COR'>#</a>
-<strong><code>MultivariateAnomalies.mw_COR</code></strong> &mdash; <em>Function</em>.</p>
-<pre><code>mw_COR{tp}(datacube::Array{tp, 4}, windowsize::Int = 10)
-</code></pre>
-
-<p>compute the correlation in a moving window along the first dimension of the datacube (presetting: <code>windowsize = 10</code>). Accepts 4-dimensional datacubes.</p>
-<p><a id='MultivariateAnomalies.EWMA' href='#MultivariateAnomalies.EWMA'>#</a>
-<strong><code>MultivariateAnomalies.EWMA</code></strong> &mdash; <em>Function</em>.</p>
-<pre><code>EWMA(dat,  λ)
-</code></pre>
-
-<p>Compute the exponential weighted moving average (EWMA) with the weighting parameter <code>λ</code> between 0 (full weighting) and 1 (no weighting) in the first dimension of <code>dat</code>. Supports N-dimensional Arrays.</p>
-<p>Lowry, C. A., &amp; Woodall, W. H. (1992). A Multivariate Exponentially Weighted Moving Average Control Chart. Technometrics, 34, 46–53.</p>
-<pre><code class="jlcon">julia&gt; dc = rand(100,3,2)
-julia&gt; ewma_dc = EWMA(dc, 0.1)
-</code></pre>
-
-<p><a id='MultivariateAnomalies.EWMA!' href='#MultivariateAnomalies.EWMA!'>#</a>
-<strong><code>MultivariateAnomalies.EWMA!</code></strong> &mdash; <em>Function</em>.</p>
-<pre><code>EWMA!(Z, dat,  λ)
-</code></pre>
-
-<p>use a preallocated output Z. <code>Z = similar(dat)</code> or <code>dat = dat</code> for overwriting itself.</p>
+<p>subtract the median seasonal cycle from the datacube given the length of year <code>cycle_length</code>.</p>
 <p><strong>Examples</strong></p>
-<pre><code class="jlcon">julia&gt; dc = rand(100,3,2)
-julia&gt; EWMA!(dc, dc, 0.1)
+<pre><code class="jlcon">julia&gt; dc = hcat(rand(193) + 2* sin(0:pi/24:8*pi), rand(193) + 2* sin(0:pi/24:8*pi))
+julia&gt; sMSC_dc = sMSC(dc, 48)
 </code></pre>
 
 <p><a id='MultivariateAnomalies.get_MedianCycles' href='#MultivariateAnomalies.get_MedianCycles'>#</a>
@@ -288,6 +277,70 @@ init_MedianCycle(temporal_length::Int[, cycle_length::Int = 46])
 </code></pre>
 
 <p>initialises an init_MC object to be used as input for <code>get_MedianCycle!()</code>. Input is either some sample data or the temporal lenght of the expected input vector and the length of the annual cycle (presetting: <code>cycle_length = 46</code>)</p>
+<p><a id='Exponential-Weighted-Moving-Average-1'></a></p>
+<h2 id="exponential-weighted-moving-average">Exponential Weighted Moving Average</h2>
+<p>One option to reduce the noise level in the data and detect more 'significant' anomalies is computing an exponential weighted moving average (EWMA)</p>
+<p><a id='Function-1'></a></p>
+<h3 id="function">Function</h3>
+<p><a id='MultivariateAnomalies.EWMA' href='#MultivariateAnomalies.EWMA'>#</a>
+<strong><code>MultivariateAnomalies.EWMA</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>EWMA(dat,  λ)
+</code></pre>
+
+<p>Compute the exponential weighted moving average (EWMA) with the weighting parameter <code>λ</code> between 0 (full weighting) and 1 (no weighting) along the first dimension of <code>dat</code>. Supports N-dimensional Arrays.</p>
+<p>Lowry, C. A., &amp; Woodall, W. H. (1992). A Multivariate Exponentially Weighted Moving Average Control Chart. Technometrics, 34, 46–53.</p>
+<pre><code class="jlcon">julia&gt; dc = rand(100,3,2)
+julia&gt; ewma_dc = EWMA(dc, 0.1)
+</code></pre>
+
+<p><a id='MultivariateAnomalies.EWMA!' href='#MultivariateAnomalies.EWMA!'>#</a>
+<strong><code>MultivariateAnomalies.EWMA!</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>EWMA!(Z, dat,  λ)
+</code></pre>
+
+<p>use a preallocated output Z. <code>Z = similar(dat)</code> or <code>dat = dat</code> for overwriting itself.</p>
+<p><strong>Examples</strong></p>
+<pre><code class="jlcon">julia&gt; dc = rand(100,3,2)
+julia&gt; EWMA!(dc, dc, 0.1)
+</code></pre>
+
+<p><a id='Time-Delay-Embedding-1'></a></p>
+<h2 id="time-delay-embedding">Time Delay Embedding</h2>
+<p>Increase the feature space (Variabales) with lagged observations. </p>
+<p><a id='Function-2'></a></p>
+<h3 id="function_1">Function</h3>
+<p><a id='MultivariateAnomalies.TDE' href='#MultivariateAnomalies.TDE'>#</a>
+<strong><code>MultivariateAnomalies.TDE</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>TDE{tp}(datacube::Array{tp, 4}, ΔT::Integer, DIM::Int = 3)
+TDE{tp}(datacube::Array{tp, 3}, ΔT::Integer, DIM::Int = 3)
+</code></pre>
+
+<p>returns an embedded datacube by concatenating lagged versions of the 2-, 3- or 4-dimensional datacube with <code>ΔT</code> time steps in the past up to dimension <code>DIM</code> (presetting: <code>DIM = 3</code>)</p>
+<pre><code class="jlcon">julia&gt; dc = randn(50,3)
+julia&gt; TDE(dc, 3, 2)
+</code></pre>
+
+<p><a id='Moving-Window-Features-1'></a></p>
+<h2 id="moving-window-features">Moving Window Features</h2>
+<p>include the variance (mw_VAR) and correlations (mw_COR) in a moving window along the first dimension of the data.</p>
+<p><a id='Functions-3'></a></p>
+<h3 id="functions_2">Functions</h3>
+<p><a id='MultivariateAnomalies.mw_VAR' href='#MultivariateAnomalies.mw_VAR'>#</a>
+<strong><code>MultivariateAnomalies.mw_VAR</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>mw_VAR{tp,N}(datacube::Array{tp,N}, windowsize::Int = 10)
+</code></pre>
+
+<p>compute the variance in a moving window along the first dimension of the datacube (presetting: <code>windowsize = 10</code>). Accepts N dimensional datacubes.</p>
+<pre><code class="jlcon">julia&gt; dc = randn(50,3,3,3)
+julia&gt; mw_VAR(dc, 15)
+</code></pre>
+
+<p><a id='MultivariateAnomalies.mw_COR' href='#MultivariateAnomalies.mw_COR'>#</a>
+<strong><code>MultivariateAnomalies.mw_COR</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>mw_COR{tp}(datacube::Array{tp, 4}, windowsize::Int = 10)
+</code></pre>
+
+<p>compute the correlation in a moving window along the first dimension of the datacube (presetting: <code>windowsize = 10</code>). Accepts 4-dimensional datacubes.</p>
 <p><a id='Index-1'></a></p>
 <h2 id="index">Index</h2>
               
