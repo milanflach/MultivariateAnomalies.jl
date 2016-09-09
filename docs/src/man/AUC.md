@@ -17,5 +17,5 @@ Index
 
 ```
 @index
-Pages = ["Manual/AUC.md"]
+Pages = ["man/AUC.md"]
 ```

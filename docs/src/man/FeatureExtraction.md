@@ -22,5 +22,5 @@ init_MedianCycle
 ## Index
 
 ```@index
-Pages = ["Manual/FeatureExtraction.md"]
+Pages = ["man/FeatureExtraction.md"]
 ```

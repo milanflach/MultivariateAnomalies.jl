@@ -18,28 +18,28 @@
 ## Package Features
 
 - Extract the relevant features from the data 
-```@contents
-Pages = ["Manual/FeatureExtraction.md"]
+```
+Pages = ["man/FeatureExtraction.md"]
 Depth = 1
 ```
 - Compute Distance, Kernel matrices and k-nearest neighbors objects 
-```@contents
-Pages = ["Manual/DistDensity.md"]
+```
+Pages = ["man/DistDensity.md"]
 Depth = 1
 ```
 - Detect the anomalies
-```@contents
-Pages = ["Manual/DetectionAlgorithms.md"]
+```
+Pages = ["man/DetectionAlgorithms.md"]
 Depth = 1
 ```
 - Postprocess your anomaly scores, by computing their quantiles or ensembles
-```@contents
-Pages = ["Manual/Scores.md"]
+```
+Pages = ["man/Scores.md"]
 Depth = 1
 ```
 - Compute the area under the curve as external evaluation metric
-```@contents
-Pages = ["Manual/AUC.md"]
+```
+Pages = ["man/AUC.md"]
 Depth = 1
 ```
 

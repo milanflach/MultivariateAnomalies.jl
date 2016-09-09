@@ -19,5 +19,5 @@ kernel_matrix!
 ## Index
 
 ```@index
-Pages = ["Manual/DistDensity.md"]
+Pages = ["man/DistDensity.md"]
 ```
