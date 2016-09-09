@@ -19,23 +19,28 @@
 
 - Extract the relevant features from the data 
 ```@contents
-Pages = ["man/FeatureExtraction.md"]
+Pages = ["Manual/FeatureExtraction.md"]
+Depth = 1
 ```
 - Compute Distance, Kernel matrices and k-nearest neighbors objects 
 ```@contents
-Pages = ["man/DistDensity.md"]
+Pages = ["Manual/DistDensity.md"]
+Depth = 1
 ```
 - Detect the anomalies
 ```@contents
-Pages = ["man/DetectionAlgorithms.md"]
+Pages = ["Manual/DetectionAlgorithms.md"]
+Depth = 1
 ```
 - Postprocess your anomaly scores, by computing their quantiles or ensembles
 ```@contents
-Pages = ["man/Scores.md"]
+Pages = ["Manual/Scores.md"]
+Depth = 1
 ```
 - Compute the area under the curve as external evaluation metric
 ```@contents
-Pages = ["man/AUC.md"]
+Pages = ["Manual/AUC.md"]
+Depth = 1
 ```
 
 ## Using the Package
@@ -50,7 +55,9 @@ sets standard choices of the Parameters `P` and hands the parameters as well as 
 Currently supported algorithms include Kernel Density Estimation (`algorithms = ["KDE"]`), Recurrences (`"REC"`), k-Nearest Neighbors algorithms (`"KNN-Gamma"`, `"KNN-Delta"`), Hotelling's T^2 (`"T2"`), Support Vector Data Description (`"SVDD"`) and Kernel Null Foley Summon Transform (`"KNFST"`). With `getParameters()` it is also possible to compute output scores of multiple algorithms at once (`algorihtms = ["KDE", "T2"]`), quantiles of the output anomaly scores (`quantiles = true`) and ensembles of the selected algorithms (e.g. `ensemble_method = "mean"`). For more details about the detection algorithms and their usage please consider 
 
 ```
-@contents Pages = ["man/DetectionAlgorithms.md"]
+@contents 
+Pages = ["Manual/DetectionAlgorithms.md"]
+Depth = 2
 ```
 
 ## Input Data
@@ -60,7 +67,7 @@ Within MultivariateAnomalies we assume that observations/samples/time steps are 
 ## Index
 
 ```@index
-Pages = ["man/FeatureExtraction.md", "man/DetectionAlgorithms.md", "man/Scores.md", "man/AUC.md", "man/DistDensity.md"]
+Pages = ["Manual/FeatureExtraction.md", "Manual/DetectionAlgorithms.md", "Manual/Scores.md", "Manual/AUC.md", "Manual/DistDensity.md"]
 ```
 
 

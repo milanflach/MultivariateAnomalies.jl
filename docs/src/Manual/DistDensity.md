@@ -19,4 +19,5 @@ kernel_matrix!
 ## Index
 
 ```@index
+Pages = ["Manual/DistDensity.md"]
 ```

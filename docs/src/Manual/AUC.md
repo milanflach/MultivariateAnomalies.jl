@@ -12,3 +12,10 @@ auc
 auc_fpr_tpr
 boolevents
 ```
+
+Index
+
+```
+@index
+Pages = ["Manual/AUC.md"]
+```

@@ -14,4 +14,5 @@ compute_ensemble
 ## Index
 
 ```@index
+Pages = ["Manual/Scores.md"]
 ```

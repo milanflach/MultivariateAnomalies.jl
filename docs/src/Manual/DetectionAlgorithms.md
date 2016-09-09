@@ -46,4 +46,5 @@ init_KNFST
 ## Index
 
 ```@index
+Pages = "Manual/DetectionAlgorithms.md"
 ```
