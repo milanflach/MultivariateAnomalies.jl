@@ -2,19 +2,19 @@
 
 using Documenter, MultivariateAnomalies
 
-makedocs(modules = [MultivariateAnomalies],
+makedocs(modules = [MultivariateAnomalies]
          #format   = Documenter.Formats.HTML,
          #sitename = "MultivariateAnomalies.jl",
          #pages    = Any[
-#            "Home" =>  "index.md",
-#            "Manual" => Any[
-#                "man/FeatureExtraction.md"
-#              , "man/DetectionAlgorithms.md"
-#              , "man/AUC.md"
-#              , "man/DistDensity.md"
-#              , "man/Scores.md"
-#              ]
-#            ]
+         #   "Home" =>  "index.md",
+         #   "Manual" => Any[
+         #       "man/Preprocessing.md"
+         #     , "man/DetectionAlgorithms.md"
+         #     , "man/AUC.md"
+         #     , "man/DistancesDensity.md"
+         #     , "man/Postprocessing.md"
+         #     ]
+         #   ]
          )
 
 

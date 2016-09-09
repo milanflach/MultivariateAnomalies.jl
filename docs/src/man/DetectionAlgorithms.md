@@ -40,11 +40,8 @@ init_SVDD_predict
 KNFST_train
 KNFST_predict
 KNFST_predict!
-init_KNFST    
+init_KNFST  
 ```
-  
+
 ## Index
 
-```@index
-Pages = "man/DetectionAlgorithms.md"
-```
