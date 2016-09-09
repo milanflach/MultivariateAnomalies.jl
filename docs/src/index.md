@@ -17,12 +17,12 @@
 
 ## Package Features
 
-- Extract the relevant features from the data 
+- Preprocess your data by extracting its relevant features
 ```@contents 
 Pages = ["man/Preprocessing.md"]
 Depth = 1
 ```
-- Compute Distance, Kernel matrices and k-nearest neighbors objects 
+- Compute Distance, Kernel matrices and k-nearest neighbors objects
 ```@contents 
 Pages = ["man/DistancesDensity.md"]
 Depth = 1

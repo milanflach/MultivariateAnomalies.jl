@@ -2,9 +2,9 @@
 
 using Documenter, MultivariateAnomalies
 
-makedocs(modules = [MultivariateAnomalies]
+makedocs(modules = [MultivariateAnomalies],
          #format   = Documenter.Formats.HTML,
-         #sitename = "MultivariateAnomalies.jl",
+         sitename = "MultivariateAnomalies.jl",
          #pages    = Any[
          #   "Home" =>  "index.md",
          #   "Manual" => Any[
