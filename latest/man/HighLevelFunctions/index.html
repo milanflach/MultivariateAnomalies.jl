@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="milanflach">
+  
+  <title>Anomaly Detection - convenience - MultivariateAnomalies.jl</title>
+  
+
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/highlight.css">
+  <link href="../../assets/Documenter.css" rel="stylesheet">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Anomaly Detection - convenience";
+    var mkdocs_page_input_path = "man/HighLevelFunctions.md";
+    var mkdocs_page_url = "/man/HighLevelFunctions/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+  <script src="../../js/theme.js"></script> 
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <script src="../../assets/mathjaxhelper.js"></script>
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> MultivariateAnomalies.jl</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Manual</span></li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Anomaly Detection - convenience</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#anomaly-detection-algorithms">Anomaly Detection Algorithms</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#high-level-functions">High Level Functions</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#index">Index</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../DetectionAlgorithms/">Anomaly Detection</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../DistancesDensity/">Distances and Densities</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Preprocessing/">Preprocessing</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Postprocessing/">Postprocessing</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../AUC/">AUC</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">MultivariateAnomalies.jl</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Manual &raquo;</li>
+        
+      
+    
+    <li>Anomaly Detection - convenience</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+          <a href="https://github.com/milanflach/MultivariateAnomalies.jl.git" class="icon icon-github"> Edit on GitHub</a>
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><a id='Anomaly-Detection-Algorithms-1'></a></p>
+<h2 id="anomaly-detection-algorithms">Anomaly Detection Algorithms</h2>
+<p>detect anomalies out of multivariate correlated data. </p>
+<p><a id='High-Level-Functions-1'></a></p>
+<h2 id="high-level-functions">High Level Functions</h2>
+<p><a id='MultivariateAnomalies.getParameters' href='#MultivariateAnomalies.getParameters'>#</a>
+<strong><code>MultivariateAnomalies.getParameters</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>getParameters(algorithms::Array{ASCIIString,1} = [&quot;REC&quot;, &quot;KDE&quot;], training_data::AbstractArray{tp, 2} = [NaN NaN])
+</code></pre>
+
+<p>return an object of type PARAMS, given the <code>algorithms</code> and some <code>training_data</code> as a matrix.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><code>algorithms</code>: Subset of <code>["REC", "KDE", "KNN_Gamma", "KNN_Delta", "SVDD", "KNFST", "T2"]</code></li>
+<li><code>training_data</code>: data for training the algorithms / for getting the Parameters.</li>
+<li><code>dist::ASCIIString = "Euclidean"</code></li>
+<li><code>sigma_quantile::Float64 = 0.5</code> (median): quantile of the distance matrix, used to compute the weighting parameter for the kernel matrix (<code>algorithms = ["SVDD", "KNFST", "KDE"]</code>)</li>
+<li><code>varepsilon_quantile</code> = <code>sigma_quantile</code> by default: quantile of the distance matrix to compute the radius of the hyperball in which the number of reccurences is counted (<code>algorihtms = ["REC"]</code>)</li>
+<li><code>k_perc::Float64 = 0.05</code>: percentage of the first dimension of <code>training_data</code> to estimmate the number of nearest neighbors (<code>algorithms = ["KNN-Gamma", "KNN_Delta"]</code>)</li>
+<li><code>nu::Float64 = 0.2</code>: use the maximal percentage of outliers for <code>algorithms = ["SVDD"]</code></li>
+<li><code>temp_excl::Int64 = 0</code>. Exclude temporal adjacent points from beeing count as recurrences of k-nearest neighbors <code>algorithms = ["REC", "KNN-Gamma", "KNN_Delta"]</code></li>
+<li><code>ensemble_method = "None"</code>: compute an ensemble of the used algorithms. Possible choices (given in <code>compute_ensemble()</code>) are "mean", "median", "max" and "min".</li>
+<li><code>quantiles = false</code>: convert the output scores of the algorithms into quantiles.</li>
+</ul>
+<p><strong>Examples</strong></p>
+<pre><code class="jlcon">julia&gt; training_data = randn(100, 2); testing_data = randn(100, 2);
+julia&gt; P = getParameters([&quot;REC&quot;, &quot;KDE&quot;, &quot;SVDD&quot;], training_data, quantiles = false);
+julia&gt; detectAnomalies(testing_data, P)
+</code></pre>
+
+<p><a id='MultivariateAnomalies.detectAnomalies' href='#MultivariateAnomalies.detectAnomalies'>#</a>
+<strong><code>MultivariateAnomalies.detectAnomalies</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
+detectAnomalies{tp, N}(data::AbstractArray{tp, N}, algorithms::Array{ASCIIString,1} = [&quot;REC&quot;, &quot;KDE&quot;]; mean = 0)
+</code></pre>
+
+<p>detect anomalies, given some Parameter object <code>P</code> of type PARAMS. Train the Parameters <code>P</code> with <code>getParameters()</code> beforehand on some training data. See <code>getParameters()</code>. Without training <code>P</code> beforehand, it is also possible to use <code>detectAnomalies(data, algorithms)</code> given some algorithms (except SVDD, KNFST). Some default parameters are used in this case to initialize <code>P</code> internally.</p>
+<p><strong>Examples</strong></p>
+<pre><code class="jlcon">julia&gt; training_data = randn(100, 2); testing_data = randn(100, 2);
+julia&gt; # compute the anoamly scores of the algorithms &quot;REC&quot;, &quot;KDE&quot;, &quot;T2&quot; and &quot;KNN_Gamma&quot;, their quantiles and return their ensemble scores
+julia&gt; P = getParameters([&quot;REC&quot;, &quot;KDE&quot;, &quot;T2&quot;, &quot;KNN_Gamma&quot;], training_data, quantiles = true, ensemble_method = &quot;mean&quot;);
+julia&gt; detectAnomalies(testing_data, P)
+</code></pre>
+
+<p><a id='MultivariateAnomalies.detectAnomalies!' href='#MultivariateAnomalies.detectAnomalies!'>#</a>
+<strong><code>MultivariateAnomalies.detectAnomalies!</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>detectAnomalies!{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
+</code></pre>
+
+<p>mutating version of <code>detectAnomalies()</code>. Directly writes the output into <code>P</code>.</p>
+<p><a id='MultivariateAnomalies.init_detectAnomalies' href='#MultivariateAnomalies.init_detectAnomalies'>#</a>
+<strong><code>MultivariateAnomalies.init_detectAnomalies</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>init_detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
+</code></pre>
+
+<p>initialize empty arrays in <code>P</code> for detecting the anomalies.</p>
+<p><a id='Index-1'></a></p>
+<h2 id="index">Index</h2>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../DetectionAlgorithms/" class="btn btn-neutral float-right" title="Anomaly Detection">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../.." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/milanflach/MultivariateAnomalies.jl.git" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../.." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../DetectionAlgorithms/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+</body>
+</html>
