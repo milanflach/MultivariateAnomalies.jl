@@ -3,9 +3,17 @@
 using Documenter, MultivariateAnomalies
 
 makedocs(modules = [MultivariateAnomalies],
+         #format   = Documenter.Formats.HTML,
              pages    = Any[
-        "man/FeatureExtraction.md", "man/DetectionAlgorithms.md", "man/DetectionAlgorithms.md", "man/DistDensity.md", "man/Scores.md"
-        ]
+           "Home" =>  "index.md",
+           "Manual" => Any[
+               "man/FeatureExtraction.md"
+             , "man/DetectionAlgorithms.md"
+             , "man/DetectionAlgorithms.md"
+             , "man/DistDensity.md"
+             , "man/Scores.md"
+             ]
+           ]
          )
 
 
