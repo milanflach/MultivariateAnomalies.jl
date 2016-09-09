@@ -24,5 +24,5 @@ deploydocs(
   osname = "osx",
   #target = "build", # not needed for mkdocs
   #make = nothing, # not needed for mkdocs
-  deps = Deps.pip("mkdocs", "python-markdown-math") #nothing, # change for mkdocs
+  deps = Deps.pip("mkdocs", "python-markdown-math") #nothing, # change to nothing for mkdocs
 )

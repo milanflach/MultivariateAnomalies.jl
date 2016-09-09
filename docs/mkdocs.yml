@@ -19,13 +19,3 @@ markdown_extensions:
   - mdx_math
 
 docs_dir: 'build'
-
-pages:
-  - Home: 'index.md'
-  - Manual: 
-        -'Feature Extraction Techniques': 'man/FeatureExtraction.md'
-        -'Anomaly Detection Algorithms':  'man/DetectionAlgorithms.md'
-        -'Distances and Densities':       'man/DistDensity.md'
-        -'AUC':                           'man/AUC.md'
-        -'Quantiles and Ensembles':       'man/Scores'
-        
