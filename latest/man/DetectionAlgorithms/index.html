@@ -204,7 +204,6 @@
 </code></pre>
 
 <p>Count the number of observations (recurrences) which fall into a radius <code>rec_threshold</code> of a distance matrix <code>D</code>. Exclude steps which are closer than <code>temp_excl</code> to be count as recurrences (default: <code>temp_excl = 5</code>)</p>
-<p>Marwan, N., Carmen Romano, M., Thiel, M., &amp; Kurths, J. (2007). Recurrence plots for the analysis of complex systems. Physics Reports, 438(5-6), 237–329. http://doi.org/10.1016/j.physrep.2006.11.001</p>
 <p><a id='MultivariateAnomalies.REC!' href='#MultivariateAnomalies.REC!'>#</a>
 <strong><code>MultivariateAnomalies.REC!</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>REC!(rec_out::AbstractArray, D::AbstractArray, rec_threshold::Float64, temp_excl::Int = 5)
@@ -218,6 +217,7 @@ init_REC(T::Int)
 </code></pre>
 
 <p>get object for memory efficient <code>REC!()</code> versions. Input can be a distance matrix <code>D</code> or the number of timesteps (observations) <code>T</code>.</p>
+<p>Marwan, N., Carmen Romano, M., Thiel, M., &amp; Kurths, J. (2007). Recurrence plots for the analysis of complex systems. Physics Reports, 438(5-6), 237–329. http://doi.org/10.1016/j.physrep.2006.11.001</p>
 <p><a id='Kernel-Density-Estimation-1'></a></p>
 <h3 id="kernel-density-estimation">Kernel Density Estimation</h3>
 <p><a id='MultivariateAnomalies.KDE' href='#MultivariateAnomalies.KDE'>#</a>
