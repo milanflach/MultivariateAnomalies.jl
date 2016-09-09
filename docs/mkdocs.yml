@@ -21,10 +21,11 @@ markdown_extensions:
 docs_dir: 'build'
 
 pages:
-  - Home: index.md
+  - Home: 'index.md'
   - Manual: 
-        -'Feature Extraction Techniques': man/FeatureExtraction.md
-        -'Anomaly Detection Algorithms':  man/DetectionAlgorithms.md
-        -'Distances and Densities':       man/DistDensity.md
-        -'AUC':                           man/AUC.md
-        -'Quantiles and Ensembles':       man/Scores
+        -'Feature Extraction Techniques': 'man/FeatureExtraction.md'
+        -'Anomaly Detection Algorithms':  'man/DetectionAlgorithms.md'
+        -'Distances and Densities':       'man/DistDensity.md'
+        -'AUC':                           'man/AUC.md'
+        -'Quantiles and Ensembles':       'man/Scores'
+        
