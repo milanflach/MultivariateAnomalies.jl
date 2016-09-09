@@ -287,7 +287,7 @@ init_MedianCycle(temporal_length::Int[, cycle_length::Int = 46])
 <pre><code>EWMA(dat,  λ)
 </code></pre>
 
-<p>Compute the exponential weighted moving average (EWMA) with the weighting parameter <code>λ</code> between 0 (full weighting) and 1 (no weighting) in the first dimension of <code>dat</code>. Supports N-dimensional Arrays.</p>
+<p>Compute the exponential weighted moving average (EWMA) with the weighting parameter <code>λ</code> between 0 (full weighting) and 1 (no weighting) along the first dimension of <code>dat</code>. Supports N-dimensional Arrays.</p>
 <p>Lowry, C. A., &amp; Woodall, W. H. (1992). A Multivariate Exponentially Weighted Moving Average Control Chart. Technometrics, 34, 46–53.</p>
 <pre><code class="jlcon">julia&gt; dc = rand(100,3,2)
 julia&gt; ewma_dc = EWMA(dc, 0.1)
