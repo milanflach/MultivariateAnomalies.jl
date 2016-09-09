@@ -18,31 +18,25 @@
 ## Package Features
 
 - Detect anomalies in your data with 
+
     - easy to use [high level functions]("man/HighLevelFunctions.md")
-    - individual [anomaly detection algorithms]("man/AnomalyDetection.md")
+    - individual [anomaly detection algorithms]("manAnomalyDetection.md")
+
 - [Feature Extraction](man/Preprocessing.md): Preprocess your data by extracting relevant features
 
 - [Similarities and Dissimilarities](man/DistancesDensity.md): Compute distance matrices, kernel matrices and k-nearest neighbor objects.
 
-- [Postprocessing](man/Postprocessing.md): Postprocess your anomaly scores, by computing their quantiles or ensembles, i.e. combinations of several algorithms.
+- [Postprocessing](man/Postprocessing.md): Postprocess your anomaly scores, by computing their quantiles or combinations of several algorithms (ensembles).
 
 - [AUC](man/AUC.md): Compute the area under the curve as external evaluation metric of your scores.
 
 ## Using the Package
 
-We provide high-level convenience functions for detecting the anomalies. Namely the pair of 
-
-`P = getParameters(algorithms, training_data)` 
-and
-`detectAnomalies(testing_data, P)`
-
-sets standard choices of the Parameters `P` and hands the parameters as well as the algorithms choice over to detect the anomalies. 
-
-Currently supported algorithms include Kernel Density Estimation (`algorithms = ["KDE"]`), Recurrences (`"REC"`), k-Nearest Neighbors algorithms (`"KNN-Gamma"`, `"KNN-Delta"`), Hotelling's T2 (`"T2"`), Support Vector Data Description (`"SVDD"`) and Kernel Null Foley Summon Transform (`"KNFST"`). With `getParameters()` it is also possible to compute output scores of multiple algorithms at once (`algorihtms = ["KDE", "T2"]`), quantiles of the output anomaly scores (`quantiles = true`) and ensembles of the selected algorithms (e.g. `ensemble_method = "mean"`). For more details about the detection algorithms and their usage please consider [high level functions]("man/HighLevelFunctions.md")
+For a quick start it might be useful to start with the [high-level convenience functions]("man/HighLevelFunctions.md") for detecting anomalies. They can be used in highly automized way. 
 
 ## Input Data
 
-Within MultivariateAnomalies we assume that observations/samples/time steps are stored along the first dimension of the data array (rows of a matrix) with the number of observations `T = size(data, 1)`. Variables/attributes are stored along the last dimension `N` of the data array (along the columns of a matrix) with the number of variables `VAR = size(data, N)`. We are interested in the question which observation(s) of the data are anomalous.
+*MultivariateAnomalies.jl* assumes that observations/samples/time steps are stored along the first dimension of the data array (rows of a matrix) with the number of observations `T = size(data, 1)`. Variables/attributes are stored along the last dimension `N` of the data array (along the columns of a matrix) with the number of variables `VAR = size(data, N)`. The implemented anomaly detection algorithms return anomaly scores indicating which observation(s) of the data are anomalous.
 
 ## Index
 
