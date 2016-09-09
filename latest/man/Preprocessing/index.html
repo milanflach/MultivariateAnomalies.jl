@@ -8,7 +8,7 @@
   
   <meta name="author" content="milanflach">
   
-  <title>FeatureExtraction - MultivariateAnomalies.jl</title>
+  <title>Preprocessing - MultivariateAnomalies.jl</title>
   
 
   <link rel="shortcut icon" href="../../img/favicon.ico">
@@ -24,9 +24,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "FeatureExtraction";
-    var mkdocs_page_input_path = "man/FeatureExtraction.md";
-    var mkdocs_page_url = "/man/FeatureExtraction/";
+    var mkdocs_page_name = "Preprocessing";
+    var mkdocs_page_input_path = "man/Preprocessing.md";
+    var mkdocs_page_url = "/man/Preprocessing/";
   </script>
   
   <script src="../../js/jquery-2.1.1.min.js"></script>
@@ -85,14 +85,21 @@
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../DistDensity/">DistDensity</a>
+        <a class="" href="../DistancesDensity/">DistancesDensity</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Postprocessing/">Postprocessing</a>
         
     </li>
 
         
             
     <li class="toctree-l1 current">
-        <a class="current" href="./">FeatureExtraction</a>
+        <a class="current" href="./">Preprocessing</a>
         
             <ul>
             
@@ -106,13 +113,6 @@
                 
             
             </ul>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../Scores/">Scores</a>
         
     </li>
 
@@ -146,7 +146,7 @@
         
       
     
-    <li>FeatureExtraction</li>
+    <li>Preprocessing</li>
     <li class="wy-breadcrumbs-aside">
       
         
@@ -283,64 +283,6 @@ init_MedianCycle(temporal_length::Int[, cycle_length::Int = 46])
 <p>initialises an init_MC object to be used as input for <code>get_MedianCycle!()</code>. Input is either some sample data or the temporal lenght of the expected input vector and the length of the annual cycle (presetting: <code>cycle_length = 46</code>)</p>
 <p><a id='Index-1'></a></p>
 <h2 id="index">Index</h2>
-<ul>
-<li><a href="./#MultivariateAnomalies.EWMA"><code>MultivariateAnomalies.EWMA</code></a></li>
-<li><a href="./#MultivariateAnomalies.EWMA!"><code>MultivariateAnomalies.EWMA!</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.KDE"><code>MultivariateAnomalies.KDE</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.KDE!"><code>MultivariateAnomalies.KDE!</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.KNFST_predict"><code>MultivariateAnomalies.KNFST_predict</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.KNFST_predict!"><code>MultivariateAnomalies.KNFST_predict!</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.KNFST_train"><code>MultivariateAnomalies.KNFST_train</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.KNN_Delta"><code>MultivariateAnomalies.KNN_Delta</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.KNN_Delta!"><code>MultivariateAnomalies.KNN_Delta!</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.KNN_Gamma"><code>MultivariateAnomalies.KNN_Gamma</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.KNN_Gamma!"><code>MultivariateAnomalies.KNN_Gamma!</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.REC"><code>MultivariateAnomalies.REC</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.REC!"><code>MultivariateAnomalies.REC!</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.SVDD_predict"><code>MultivariateAnomalies.SVDD_predict</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.SVDD_predict!"><code>MultivariateAnomalies.SVDD_predict!</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.SVDD_train"><code>MultivariateAnomalies.SVDD_train</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.T2"><code>MultivariateAnomalies.T2</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.T2!"><code>MultivariateAnomalies.T2!</code></a></li>
-<li><a href="./#MultivariateAnomalies.TDE"><code>MultivariateAnomalies.TDE</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.UNIV"><code>MultivariateAnomalies.UNIV</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.UNIV!"><code>MultivariateAnomalies.UNIV!</code></a></li>
-<li><a href="../AUC/#MultivariateAnomalies.auc"><code>MultivariateAnomalies.auc</code></a></li>
-<li><a href="../AUC/#MultivariateAnomalies.auc_fpr_tpr"><code>MultivariateAnomalies.auc_fpr_tpr</code></a></li>
-<li><a href="../AUC/#MultivariateAnomalies.boolevents"><code>MultivariateAnomalies.boolevents</code></a></li>
-<li><a href="../Scores/#MultivariateAnomalies.compute_ensemble"><code>MultivariateAnomalies.compute_ensemble</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.detectAnomalies"><code>MultivariateAnomalies.detectAnomalies</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.detectAnomalies!"><code>MultivariateAnomalies.detectAnomalies!</code></a></li>
-<li><a href="../DistDensity/#MultivariateAnomalies.dist_matrix"><code>MultivariateAnomalies.dist_matrix</code></a></li>
-<li><a href="../DistDensity/#MultivariateAnomalies.dist_matrix!"><code>MultivariateAnomalies.dist_matrix!</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.getParameters"><code>MultivariateAnomalies.getParameters</code></a></li>
-<li><a href="./#MultivariateAnomalies.get_MedianCycle"><code>MultivariateAnomalies.get_MedianCycle</code></a></li>
-<li><a href="./#MultivariateAnomalies.get_MedianCycle!"><code>MultivariateAnomalies.get_MedianCycle!</code></a></li>
-<li><a href="./#MultivariateAnomalies.get_MedianCycles"><code>MultivariateAnomalies.get_MedianCycles</code></a></li>
-<li><a href="../Scores/#MultivariateAnomalies.get_quantile_scores"><code>MultivariateAnomalies.get_quantile_scores</code></a></li>
-<li><a href="../Scores/#MultivariateAnomalies.get_quantile_scores!"><code>MultivariateAnomalies.get_quantile_scores!</code></a></li>
-<li><a href="./#MultivariateAnomalies.globalICA"><code>MultivariateAnomalies.globalICA</code></a></li>
-<li><a href="./#MultivariateAnomalies.globalPCA"><code>MultivariateAnomalies.globalPCA</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.init_KDE"><code>MultivariateAnomalies.init_KDE</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.init_KNFST"><code>MultivariateAnomalies.init_KNFST</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.init_KNN_Delta"><code>MultivariateAnomalies.init_KNN_Delta</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.init_KNN_Gamma"><code>MultivariateAnomalies.init_KNN_Gamma</code></a></li>
-<li><a href="./#MultivariateAnomalies.init_MedianCycle"><code>MultivariateAnomalies.init_MedianCycle</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.init_REC"><code>MultivariateAnomalies.init_REC</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.init_SVDD_predict"><code>MultivariateAnomalies.init_SVDD_predict</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.init_T2"><code>MultivariateAnomalies.init_T2</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.init_UNIV"><code>MultivariateAnomalies.init_UNIV</code></a></li>
-<li><a href="../DetectionAlgorithms/#MultivariateAnomalies.init_detectAnomalies"><code>MultivariateAnomalies.init_detectAnomalies</code></a></li>
-<li><a href="../DistDensity/#MultivariateAnomalies.init_dist_matrix"><code>MultivariateAnomalies.init_dist_matrix</code></a></li>
-<li><a href="../DistDensity/#MultivariateAnomalies.init_knn_dists"><code>MultivariateAnomalies.init_knn_dists</code></a></li>
-<li><a href="../DistDensity/#MultivariateAnomalies.kernel_matrix"><code>MultivariateAnomalies.kernel_matrix</code></a></li>
-<li><a href="../DistDensity/#MultivariateAnomalies.kernel_matrix!"><code>MultivariateAnomalies.kernel_matrix!</code></a></li>
-<li><a href="../DistDensity/#MultivariateAnomalies.knn_dists"><code>MultivariateAnomalies.knn_dists</code></a></li>
-<li><a href="../DistDensity/#MultivariateAnomalies.knn_dists!"><code>MultivariateAnomalies.knn_dists!</code></a></li>
-<li><a href="./#MultivariateAnomalies.mw_COR"><code>MultivariateAnomalies.mw_COR</code></a></li>
-<li><a href="./#MultivariateAnomalies.mw_VAR"><code>MultivariateAnomalies.mw_VAR</code></a></li>
-<li><a href="./#MultivariateAnomalies.sMSC"><code>MultivariateAnomalies.sMSC</code></a></li>
-</ul>
               
             </div>
           </div>
@@ -348,10 +290,8 @@ init_MedianCycle(temporal_length::Int[, cycle_length::Int = 46])
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../Scores/" class="btn btn-neutral float-right" title="Scores">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-      
-        <a href="../DistDensity/" class="btn btn-neutral" title="DistDensity"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../Postprocessing/" class="btn btn-neutral" title="Postprocessing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -379,10 +319,8 @@ init_MedianCycle(temporal_length::Int[, cycle_length::Int = 46])
           <a href="https://github.com/milanflach/MultivariateAnomalies.jl.git" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../DistDensity/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../Postprocessing/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-      
-        <span style="margin-left: 15px"><a href="../Scores/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

@@ -8,7 +8,7 @@
   
   <meta name="author" content="milanflach">
   
-  <title>AUC - MultivariateAnomalies.jl</title>
+  <title>Postprocessing - MultivariateAnomalies.jl</title>
   
 
   <link rel="shortcut icon" href="../../img/favicon.ico">
@@ -24,9 +24,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "AUC";
-    var mkdocs_page_input_path = "man/AUC.md";
-    var mkdocs_page_url = "/man/AUC/";
+    var mkdocs_page_name = "Postprocessing";
+    var mkdocs_page_input_path = "man/Postprocessing.md";
+    var mkdocs_page_url = "/man/Postprocessing/";
   </script>
   
   <script src="../../js/jquery-2.1.1.min.js"></script>
@@ -70,18 +70,8 @@
 
         
             
-    <li class="toctree-l1 current">
-        <a class="current" href="./">AUC</a>
-        
-            <ul>
-            
-                <li class="toctree-l3"><a href="#area-under-the-curve">Area Under the Curve</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#functions">Functions</a></li>
-                
-            
-            </ul>
+    <li class="toctree-l1 ">
+        <a class="" href="../AUC/">AUC</a>
         
     </li>
 
@@ -101,8 +91,21 @@
 
         
             
-    <li class="toctree-l1 ">
-        <a class="" href="../Postprocessing/">Postprocessing</a>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Postprocessing</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#scores">Scores</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#functions">Functions</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#index">Index</a></li>
+                
+            
+            </ul>
         
     </li>
 
@@ -143,7 +146,7 @@
         
       
     
-    <li>AUC</li>
+    <li>Postprocessing</li>
     <li class="wy-breadcrumbs-aside">
       
         
@@ -157,47 +160,44 @@
           <div role="main">
             <div class="section">
               
-                <p><a id='Area-Under-the-Curve-1'></a></p>
-<h2 id="area-under-the-curve">Area Under the Curve</h2>
-<p>Compute true positive rates, false positive rates and the area under the curve to evaulate the algorihtms performance. Efficient implementation according to</p>
-<p>Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters, 27(8), 861–874. http://doi.org/10.1016/j.patrec.2005.10.010</p>
+                <p><a id='Scores-1'></a></p>
+<h2 id="scores">Scores</h2>
+<p>Postprocess your anomaly scores by making different algorithms comparable and computing their ensemble.</p>
 <p><a id='Functions-1'></a></p>
 <h2 id="functions">Functions</h2>
-<p><a id='MultivariateAnomalies.auc' href='#MultivariateAnomalies.auc'>#</a>
-<strong><code>MultivariateAnomalies.auc</code></strong> &mdash; <em>Function</em>.</p>
-<pre><code>auc(scores, events, increasing = true)
+<p><a id='MultivariateAnomalies.get_quantile_scores' href='#MultivariateAnomalies.get_quantile_scores'>#</a>
+<strong><code>MultivariateAnomalies.get_quantile_scores</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>get_quantile_scores(scores, quantiles = 0.0:0.01:1.0)
 </code></pre>
 
-<p>compute the Area Under the receiver operator Curve (AUC), given some output <code>scores</code> array and some ground truth (<code>events</code>). By default, it is assumed, that the <code>scores</code> are ordered increasingly (<code>increasing = true</code>), i.e. high scores represent events.</p>
+<p>return the quantiles of the given N dimensional anomaly <code>scores</code> cube. <code>quantiles</code> (default: <code>quantiles = 0.0:0.01:1.0</code>) is a Float range of quantiles. Any score being greater or equal <code>quantiles[i]</code> and beeing smaller than <code>quantiles[i+1]</code> is assigned to the respective quantile <code>quantiles[i]</code>.</p>
 <p><strong>Examples</strong></p>
-<pre><code class="jlcon">julia&gt; scores = rand(10, 2)
-julia&gt; events = rand(0:1, 10, 2)
-julia&gt; auc(scores, events)
-julia&gt; auc(scores, boolevents(events))
+<pre><code class="jlcon">julia&gt; scores1 = rand(10, 2)
+julia&gt; quantile_scores1 = get_quantile_scores(scores1)
 </code></pre>
 
-<p><a id='MultivariateAnomalies.auc_fpr_tpr' href='#MultivariateAnomalies.auc_fpr_tpr'>#</a>
-<strong><code>MultivariateAnomalies.auc_fpr_tpr</code></strong> &mdash; <em>Function</em>.</p>
-<pre><code>auc_fpr_tpr(scores, events, quant = 0.9, increasing = true)
+<p><a id='MultivariateAnomalies.get_quantile_scores!' href='#MultivariateAnomalies.get_quantile_scores!'>#</a>
+<strong><code>MultivariateAnomalies.get_quantile_scores!</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>get_quantile_scores!{tp,N}(quantile_scores::AbstractArray{Float64, N}, scores::AbstractArray{tp,N}, quantiles::FloatRange{Float64} = 0.0:0.01:1.0)
 </code></pre>
 
-<p>Similar like <code>auc()</code>, but return additionally the true positive and false positive rate at a given quantile (default: <code>quant = 0.9</code>).</p>
+<p>return the quantiles of the given N dimensional <code>scores</code> array into a preallocated <code>quantile_scores</code> array, see <code>get_quantile_scores()</code>.</p>
+<p><a id='MultivariateAnomalies.compute_ensemble' href='#MultivariateAnomalies.compute_ensemble'>#</a>
+<strong><code>MultivariateAnomalies.compute_ensemble</code></strong> &mdash; <em>Function</em>.</p>
+<pre><code>compute_ensemble(m1_scores, m2_scores[, m3_scores, m4_scores]; ensemble = &quot;mean&quot;)
+</code></pre>
+
+<p>compute the mean (<code>ensemble = "mean"</code>), minimum (<code>ensemble = "min"</code>), maximum (<code>ensemble = "max"</code>) or median (<code>ensemble = "median"</code>) of the given anomaly scores. Supports between 2 and 4 scores input arrays (<code>m1_scores, ..., m4_scores</code>). The scores of the different anomaly detection algorithms should be somehow comparable, e.g., by using <code>get_quantile_scores()</code> before.</p>
 <p><strong>Examples</strong></p>
-<pre><code class="jlcon">julia&gt; scores = rand(10, 2)
-julia&gt; events = rand(0:1, 10, 2)
-julia&gt; auc_fpr_tpr(scores, events, 0.8)
+<pre><code class="jlcon">julia&gt; scores1 = rand(10, 2)
+julia&gt; scores2 = rand(10, 2)
+julia&gt; quantile_scores1 = get_quantile_scores(scores1)
+julia&gt; quantile_scores2 = get_quantile_scores(scores2)
+julia&gt; compute_ensemble(quantile_scores1, quantile_scores2, ensemble = &quot;max&quot;)
 </code></pre>
 
-<p><a id='MultivariateAnomalies.boolevents' href='#MultivariateAnomalies.boolevents'>#</a>
-<strong><code>MultivariateAnomalies.boolevents</code></strong> &mdash; <em>Function</em>.</p>
-<pre><code>boolevents(events)
-</code></pre>
-
-<p>convert an <code>events</code> array into a boolean array.</p>
-<p>Index</p>
-<pre><code>@index
-Pages = [&quot;man/AUC.md&quot;]
-</code></pre>
+<p><a id='Index-1'></a></p>
+<h2 id="index">Index</h2>
               
             </div>
           </div>
@@ -205,10 +205,10 @@ Pages = [&quot;man/AUC.md&quot;]
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../DetectionAlgorithms/" class="btn btn-neutral float-right" title="DetectionAlgorithms">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../Preprocessing/" class="btn btn-neutral float-right" title="Preprocessing">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../.." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../DistancesDensity/" class="btn btn-neutral" title="DistancesDensity"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -236,10 +236,10 @@ Pages = [&quot;man/AUC.md&quot;]
           <a href="https://github.com/milanflach/MultivariateAnomalies.jl.git" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../.." style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../DistancesDensity/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../DetectionAlgorithms/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../Preprocessing/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

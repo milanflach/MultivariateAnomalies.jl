@@ -102,21 +102,21 @@
         
             
     <li class="toctree-l1 ">
-        <a class="" href="man/DistDensity/">DistDensity</a>
+        <a class="" href="man/DistancesDensity/">DistancesDensity</a>
         
     </li>
 
         
             
     <li class="toctree-l1 ">
-        <a class="" href="man/FeatureExtraction/">FeatureExtraction</a>
+        <a class="" href="man/Postprocessing/">Postprocessing</a>
         
     </li>
 
         
             
     <li class="toctree-l1 ">
-        <a class="" href="man/Scores/">Scores</a>
+        <a class="" href="man/Preprocessing/">Preprocessing</a>
         
     </li>
 
@@ -177,39 +177,45 @@
 <p><a id='Package-Features-1'></a></p>
 <h2 id="package-features">Package Features</h2>
 <ul>
-<li>Extract the relevant features from the data  <code>@contents Pages = ["man/FeatureExtraction.md"]</code></li>
-<li>Compute Distance, Kernel matrices and k-nearest neighbors objects  <code>@contents Pages = ["man/DistDensity.md"]</code></li>
-<li>Detect the anomalies <code>@contents Pages = ["man/DetectionAlgorithms.md"]</code></li>
-<li>Postprocess your anomaly scores, by computing their quantiles or ensembles <code>@contents Pages = ["man/Scores.md"]</code></li>
-<li>Compute the area under the curve as external evaluation metric <code>@contents Pages = ["man/AUC.md"]</code></li>
+<li>Preprocess your data by extracting its relevant features <code>@contents  Pages = ["man/Preprocessing.md"] Depth = 1</code></li>
+<li>Compute Distance, Kernel matrices and k-nearest neighbors objects <code>@contents  Pages = ["man/DistancesDensity.md"] Depth = 1</code></li>
+<li>Detect the anomalies <code>@contents  Pages = ["man/DetectionAlgorithms.md"] Depth = 1</code></li>
+<li>
+<p>Postprocess your anomaly scores, by computing their quantiles or ensembles, i.e. combinations of several algorithms  <code>@contents  Pages = ["man/Postprocessing.md"] Depth = 1</code></p>
+</li>
+<li>
+<p>Compute the area under the curve as external evaluation metric of your scores <code>@contents  Pages = ["man/AUC.md"] Depth = 1</code></p>
+</li>
 </ul>
 <p><a id='Using-the-Package-1'></a></p>
 <h2 id="using-the-package">Using the Package</h2>
 <p>We provide high-level convenience functions for detecting the anomalies. Namely the pair of </p>
-<p><code>P = getParameters(algorithms, training_data)</code> and <code>detectAnomalies(testing_data, P)</code></p>
+<p><code>P = getParameters(algorithms, training_data)</code>  and <code>detectAnomalies(testing_data, P)</code></p>
 <p>sets standard choices of the Parameters <code>P</code> and hands the parameters as well as the algorithms choice over to detect the anomalies. </p>
-<p>Currently supported algorithms include Kernel Density Estimation (<code>algorithms = ["KDE"]</code>), Recurrences (<code>"REC"</code>), k-Nearest Neighbors algorithms (<code>"KNN-Gamma"</code>, <code>"KNN-Delta"</code>), Hotelling's T^2 (<code>"T2"</code>), Support Vector Data Description (<code>"SVDD"</code>) and Kernel Null Foley Summon Transform (<code>"KNFST"</code>). With <code>getParameters()</code> it is also possible to compute output scores of multiple algorithms at once (<code>algorihtms = ["KDE", "T2"]</code>), quantiles of the output anomaly scores (<code>quantiles = true</code>) and ensembles of the selected algorithms (e.g. <code>ensemble_method = "mean"</code>). For more details about the detection algorithms and their usage please consider </p>
-<pre><code>@contents Pages = [&quot;man/DetectionAlgorithms.md&quot;]
+<p>Currently supported algorithms include Kernel Density Estimation (<code>algorithms = ["KDE"]</code>), Recurrences (<code>"REC"</code>), k-Nearest Neighbors algorithms (<code>"KNN-Gamma"</code>, <code>"KNN-Delta"</code>), Hotelling's T2 (<code>"T2"</code>), Support Vector Data Description (<code>"SVDD"</code>) and Kernel Null Foley Summon Transform (<code>"KNFST"</code>). With <code>getParameters()</code> it is also possible to compute output scores of multiple algorithms at once (<code>algorihtms = ["KDE", "T2"]</code>), quantiles of the output anomaly scores (<code>quantiles = true</code>) and ensembles of the selected algorithms (e.g. <code>ensemble_method = "mean"</code>). For more details about the detection algorithms and their usage please consider </p>
+<pre><code>- [Anomaly Detection Algorithms](man/DetectionAlgorithms.md#Anomaly-Detection-Algorithms-1)
+- [High Level Functions](man/DetectionAlgorithms.md#High-Level-Functions-1)
+- [Functions](man/DetectionAlgorithms.md#Functions-1)
+- [Index](man/DetectionAlgorithms.md#Index-1)
 </code></pre>
-
 <p><a id='Input-Data-1'></a></p>
 <h2 id="input-data">Input Data</h2>
 <p>Within MultivariateAnomalies we assume that observations/samples/time steps are stored along the first dimension of the data array (rows of a matrix) with the number of observations <code>T = size(data, 1)</code>. Variables/attributes are stored along the last dimension <code>N</code> of the data array (along the columns of a matrix) with the number of variables <code>VAR = size(data, N)</code>. We are interested in the question which observation(s) of the data are anomalous.</p>
 <p><a id='Index-1'></a></p>
 <h2 id="index">Index</h2>
 <ul>
-<li><a href="man/FeatureExtraction/#MultivariateAnomalies.EWMA"><code>MultivariateAnomalies.EWMA</code></a></li>
-<li><a href="man/FeatureExtraction/#MultivariateAnomalies.EWMA!"><code>MultivariateAnomalies.EWMA!</code></a></li>
-<li><a href="man/FeatureExtraction/#MultivariateAnomalies.TDE"><code>MultivariateAnomalies.TDE</code></a></li>
-<li><a href="man/FeatureExtraction/#MultivariateAnomalies.get_MedianCycle"><code>MultivariateAnomalies.get_MedianCycle</code></a></li>
-<li><a href="man/FeatureExtraction/#MultivariateAnomalies.get_MedianCycle!"><code>MultivariateAnomalies.get_MedianCycle!</code></a></li>
-<li><a href="man/FeatureExtraction/#MultivariateAnomalies.get_MedianCycles"><code>MultivariateAnomalies.get_MedianCycles</code></a></li>
-<li><a href="man/FeatureExtraction/#MultivariateAnomalies.globalICA"><code>MultivariateAnomalies.globalICA</code></a></li>
-<li><a href="man/FeatureExtraction/#MultivariateAnomalies.globalPCA"><code>MultivariateAnomalies.globalPCA</code></a></li>
-<li><a href="man/FeatureExtraction/#MultivariateAnomalies.init_MedianCycle"><code>MultivariateAnomalies.init_MedianCycle</code></a></li>
-<li><a href="man/FeatureExtraction/#MultivariateAnomalies.mw_COR"><code>MultivariateAnomalies.mw_COR</code></a></li>
-<li><a href="man/FeatureExtraction/#MultivariateAnomalies.mw_VAR"><code>MultivariateAnomalies.mw_VAR</code></a></li>
-<li><a href="man/FeatureExtraction/#MultivariateAnomalies.sMSC"><code>MultivariateAnomalies.sMSC</code></a></li>
+<li><a href="man/Preprocessing/#MultivariateAnomalies.EWMA"><code>MultivariateAnomalies.EWMA</code></a></li>
+<li><a href="man/Preprocessing/#MultivariateAnomalies.EWMA!"><code>MultivariateAnomalies.EWMA!</code></a></li>
+<li><a href="man/Preprocessing/#MultivariateAnomalies.TDE"><code>MultivariateAnomalies.TDE</code></a></li>
+<li><a href="man/Preprocessing/#MultivariateAnomalies.get_MedianCycle"><code>MultivariateAnomalies.get_MedianCycle</code></a></li>
+<li><a href="man/Preprocessing/#MultivariateAnomalies.get_MedianCycle!"><code>MultivariateAnomalies.get_MedianCycle!</code></a></li>
+<li><a href="man/Preprocessing/#MultivariateAnomalies.get_MedianCycles"><code>MultivariateAnomalies.get_MedianCycles</code></a></li>
+<li><a href="man/Preprocessing/#MultivariateAnomalies.globalICA"><code>MultivariateAnomalies.globalICA</code></a></li>
+<li><a href="man/Preprocessing/#MultivariateAnomalies.globalPCA"><code>MultivariateAnomalies.globalPCA</code></a></li>
+<li><a href="man/Preprocessing/#MultivariateAnomalies.init_MedianCycle"><code>MultivariateAnomalies.init_MedianCycle</code></a></li>
+<li><a href="man/Preprocessing/#MultivariateAnomalies.mw_COR"><code>MultivariateAnomalies.mw_COR</code></a></li>
+<li><a href="man/Preprocessing/#MultivariateAnomalies.mw_VAR"><code>MultivariateAnomalies.mw_VAR</code></a></li>
+<li><a href="man/Preprocessing/#MultivariateAnomalies.sMSC"><code>MultivariateAnomalies.sMSC</code></a></li>
 <li><a href="man/DetectionAlgorithms/#MultivariateAnomalies.KDE"><code>MultivariateAnomalies.KDE</code></a></li>
 <li><a href="man/DetectionAlgorithms/#MultivariateAnomalies.KDE!"><code>MultivariateAnomalies.KDE!</code></a></li>
 <li><a href="man/DetectionAlgorithms/#MultivariateAnomalies.KNFST_predict"><code>MultivariateAnomalies.KNFST_predict</code></a></li>
@@ -240,20 +246,20 @@
 <li><a href="man/DetectionAlgorithms/#MultivariateAnomalies.init_T2"><code>MultivariateAnomalies.init_T2</code></a></li>
 <li><a href="man/DetectionAlgorithms/#MultivariateAnomalies.init_UNIV"><code>MultivariateAnomalies.init_UNIV</code></a></li>
 <li><a href="man/DetectionAlgorithms/#MultivariateAnomalies.init_detectAnomalies"><code>MultivariateAnomalies.init_detectAnomalies</code></a></li>
-<li><a href="man/Scores/#MultivariateAnomalies.compute_ensemble"><code>MultivariateAnomalies.compute_ensemble</code></a></li>
-<li><a href="man/Scores/#MultivariateAnomalies.get_quantile_scores"><code>MultivariateAnomalies.get_quantile_scores</code></a></li>
-<li><a href="man/Scores/#MultivariateAnomalies.get_quantile_scores!"><code>MultivariateAnomalies.get_quantile_scores!</code></a></li>
+<li><a href="man/Postprocessing/#MultivariateAnomalies.compute_ensemble"><code>MultivariateAnomalies.compute_ensemble</code></a></li>
+<li><a href="man/Postprocessing/#MultivariateAnomalies.get_quantile_scores"><code>MultivariateAnomalies.get_quantile_scores</code></a></li>
+<li><a href="man/Postprocessing/#MultivariateAnomalies.get_quantile_scores!"><code>MultivariateAnomalies.get_quantile_scores!</code></a></li>
 <li><a href="man/AUC/#MultivariateAnomalies.auc"><code>MultivariateAnomalies.auc</code></a></li>
 <li><a href="man/AUC/#MultivariateAnomalies.auc_fpr_tpr"><code>MultivariateAnomalies.auc_fpr_tpr</code></a></li>
 <li><a href="man/AUC/#MultivariateAnomalies.boolevents"><code>MultivariateAnomalies.boolevents</code></a></li>
-<li><a href="man/DistDensity/#MultivariateAnomalies.dist_matrix"><code>MultivariateAnomalies.dist_matrix</code></a></li>
-<li><a href="man/DistDensity/#MultivariateAnomalies.dist_matrix!"><code>MultivariateAnomalies.dist_matrix!</code></a></li>
-<li><a href="man/DistDensity/#MultivariateAnomalies.init_dist_matrix"><code>MultivariateAnomalies.init_dist_matrix</code></a></li>
-<li><a href="man/DistDensity/#MultivariateAnomalies.init_knn_dists"><code>MultivariateAnomalies.init_knn_dists</code></a></li>
-<li><a href="man/DistDensity/#MultivariateAnomalies.kernel_matrix"><code>MultivariateAnomalies.kernel_matrix</code></a></li>
-<li><a href="man/DistDensity/#MultivariateAnomalies.kernel_matrix!"><code>MultivariateAnomalies.kernel_matrix!</code></a></li>
-<li><a href="man/DistDensity/#MultivariateAnomalies.knn_dists"><code>MultivariateAnomalies.knn_dists</code></a></li>
-<li><a href="man/DistDensity/#MultivariateAnomalies.knn_dists!"><code>MultivariateAnomalies.knn_dists!</code></a></li>
+<li><a href="man/DistancesDensity/#MultivariateAnomalies.dist_matrix"><code>MultivariateAnomalies.dist_matrix</code></a></li>
+<li><a href="man/DistancesDensity/#MultivariateAnomalies.dist_matrix!"><code>MultivariateAnomalies.dist_matrix!</code></a></li>
+<li><a href="man/DistancesDensity/#MultivariateAnomalies.init_dist_matrix"><code>MultivariateAnomalies.init_dist_matrix</code></a></li>
+<li><a href="man/DistancesDensity/#MultivariateAnomalies.init_knn_dists"><code>MultivariateAnomalies.init_knn_dists</code></a></li>
+<li><a href="man/DistancesDensity/#MultivariateAnomalies.kernel_matrix"><code>MultivariateAnomalies.kernel_matrix</code></a></li>
+<li><a href="man/DistancesDensity/#MultivariateAnomalies.kernel_matrix!"><code>MultivariateAnomalies.kernel_matrix!</code></a></li>
+<li><a href="man/DistancesDensity/#MultivariateAnomalies.knn_dists"><code>MultivariateAnomalies.knn_dists</code></a></li>
+<li><a href="man/DistancesDensity/#MultivariateAnomalies.knn_dists!"><code>MultivariateAnomalies.knn_dists!</code></a></li>
 </ul>
               
             </div>
@@ -302,5 +308,5 @@
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2016-09-09 10:10:03.167793
+Build Date UTC : 2016-09-09 15:21:27.998573
 -->

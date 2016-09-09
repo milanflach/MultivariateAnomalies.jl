@@ -24,19 +24,19 @@
     </url>
         
     <url>
-     <loc>None/man/DistDensity/</loc>
+     <loc>None/man/DistancesDensity/</loc>
      <lastmod>2016-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>None/man/FeatureExtraction/</loc>
+     <loc>None/man/Postprocessing/</loc>
      <lastmod>2016-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>None/man/Scores/</loc>
+     <loc>None/man/Preprocessing/</loc>
      <lastmod>2016-09-09</lastmod>
      <changefreq>daily</changefreq>
     </url>
