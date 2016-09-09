@@ -22,4 +22,9 @@ docs_dir: 'build'
 
 pages:
   - Home: index.md
-  - Manual: man/FeatureExtraction.md, man/DetectionAlgorithms.md, man/DistDensity.md
+  - Manual: 
+        -'Feature Extraction Techniques': man/FeatureExtraction.md
+        -'Anomaly Detection Algorithms':  man/DetectionAlgorithms.md
+        -'Distances and Densities':       man/DistDensity.md
+        -'AUC':                           man/AUC.md
+        -'Quantiles and Ensembles':       man/Scores
