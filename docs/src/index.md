@@ -1,8 +1,6 @@
 # MultivariateAnomalies.jl 
 
-*Decting multivariate anomalies in Julia.*
-
-A package for detecting anomalies in multivariate data.
+*A julia package for detecting multivariate anomalies.*
 
 *Keywords: Novelty detection, Anomaly Detection, Outlier Detection, Statistical Process Control*
 
@@ -13,8 +11,8 @@ A package for detecting anomalies in multivariate data.
 - Julia `0.4`
 - `Distances`, `MultivariateStats`
 -  latest `LIBSVM` branch via:
-`Pkg.clone("https://github.com/milanflach/LIBSVM.jl.git")`
-`Pkg.checkout("LIBSVM", "mutating_versions")`
+`Pkg.clone("https://github.com/milanflach/LIBSVM.jl.git");`
+`Pkg.checkout("LIBSVM", "mutating_versions");`
 `Pkg.build("LIBSVM")`
 
 ## Package Features
