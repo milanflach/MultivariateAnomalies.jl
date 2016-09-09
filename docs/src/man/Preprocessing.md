@@ -22,5 +22,5 @@ init_MedianCycle
 ## Index
 
 ```@index
-Pages = ["man/FeatureExtraction.md"]
+Pages = ["man/Preprocessing.md"]
 ```
