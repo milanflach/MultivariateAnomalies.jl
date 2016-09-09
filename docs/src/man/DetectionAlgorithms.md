@@ -31,7 +31,7 @@ KDE!
 init_KDE
 ```
 
-### Hotelling's $T^2$ (Squared Mahalanobis Distance)
+### Hotelling's $T^2$
 ```@docs
 T2
 T2!

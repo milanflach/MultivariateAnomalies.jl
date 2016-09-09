@@ -32,7 +32,7 @@
 
 ## Using the Package
 
-For a quick start it might be useful to start with the [high-level convenience functions]("man/HighLevelFunctions.md") for detecting anomalies. They can be used in highly automized way. 
+For a quick start it might be useful to start with the [high level functions]("man/HighLevelFunctions.md") for detecting anomalies. They can be used in highly automized way. 
 
 ## Input Data
 
