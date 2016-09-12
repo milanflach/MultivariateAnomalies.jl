@@ -221,7 +221,7 @@
 <li>getting the median seasonal cycle (get_MedianCycles)</li>
 </ul>
 <p><a id='Functions-2'></a></p>
-<h3 id="functions_1">Functions</h3>
+<h4 id="functions_1">Functions</h4>
 <p><a id='MultivariateAnomalies.sMSC' href='#MultivariateAnomalies.sMSC'>#</a>
 <strong><code>MultivariateAnomalies.sMSC</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>sMSC(datacube, cycle_length)
@@ -281,7 +281,7 @@ init_MedianCycle(temporal_length::Int[, cycle_length::Int = 46])
 <h2 id="exponential-weighted-moving-average">Exponential Weighted Moving Average</h2>
 <p>One option to reduce the noise level in the data and detect more 'significant' anomalies is computing an exponential weighted moving average (EWMA)</p>
 <p><a id='Function-1'></a></p>
-<h3 id="function">Function</h3>
+<h4 id="function">Function</h4>
 <p><a id='MultivariateAnomalies.EWMA' href='#MultivariateAnomalies.EWMA'>#</a>
 <strong><code>MultivariateAnomalies.EWMA</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>EWMA(dat,  λ)
@@ -308,7 +308,7 @@ julia&gt; EWMA!(dc, dc, 0.1)
 <h2 id="time-delay-embedding">Time Delay Embedding</h2>
 <p>Increase the feature space (Variabales) with lagged observations. </p>
 <p><a id='Function-2'></a></p>
-<h3 id="function_1">Function</h3>
+<h4 id="function_1">Function</h4>
 <p><a id='MultivariateAnomalies.TDE' href='#MultivariateAnomalies.TDE'>#</a>
 <strong><code>MultivariateAnomalies.TDE</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>TDE{tp}(datacube::Array{tp, 4}, ΔT::Integer, DIM::Int = 3)
@@ -324,7 +324,7 @@ julia&gt; TDE(dc, 3, 2)
 <h2 id="moving-window-features">Moving Window Features</h2>
 <p>include the variance (mw_VAR) and correlations (mw_COR) in a moving window along the first dimension of the data.</p>
 <p><a id='Functions-3'></a></p>
-<h3 id="functions_2">Functions</h3>
+<h4 id="functions_2">Functions</h4>
 <p><a id='MultivariateAnomalies.mw_VAR' href='#MultivariateAnomalies.mw_VAR'>#</a>
 <strong><code>MultivariateAnomalies.mw_VAR</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>mw_VAR{tp,N}(datacube::Array{tp,N}, windowsize::Int = 10)

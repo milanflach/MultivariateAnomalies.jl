@@ -188,7 +188,7 @@
 <p>$D = d(X_{t_i}, X_{t_j})$</p>
 <p>i.e. the distance between vector $X$ of observation $t_i$ and $t_j$ for all observations $t_i,t_j = 1 \ldots T$.</p>
 <p><a id='Functions-1'></a></p>
-<h3 id="functions">Functions</h3>
+<h4 id="functions">Functions</h4>
 <p><a id='MultivariateAnomalies.dist_matrix' href='#MultivariateAnomalies.dist_matrix'>#</a>
 <strong><code>MultivariateAnomalies.dist_matrix</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>dist_matrix{tp, N}(data::AbstractArray{tp, N}; dist::ASCIIString = &quot;Euclidean&quot;, space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
@@ -224,7 +224,7 @@ init_dist_matrix(data, training_data)
 <h2 id="k-nearest-neighbor-objects">k-Nearest Neighbor Objects</h2>
 <p>k-Nearest Neighbor objects return the k nearest points and their distance out of a distance matrix <code>D</code>.</p>
 <p><a id='Functions-2'></a></p>
-<h3 id="functions_1">Functions</h3>
+<h4 id="functions_1">Functions</h4>
 <p><a id='MultivariateAnomalies.knn_dists' href='#MultivariateAnomalies.knn_dists'>#</a>
 <strong><code>MultivariateAnomalies.knn_dists</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>knn_dists(D, k::Int, temp_excl::Int = 5)
@@ -264,7 +264,7 @@ init_knn_dists(datacube::AbstractArray, k::Int)
 <p>A distance matrix <code>D</code> can be converted into a kernel matrix <code>K</code>, i.e. by computing pairwise dissimilarities using Gaussian kernels centered on each datapoint. </p>
 <p>$K= exp(-0.5 \cdot D \cdot \sigma^{-2})$</p>
 <p><a id='Functions-3'></a></p>
-<h3 id="functions_2">Functions</h3>
+<h4 id="functions_2">Functions</h4>
 <p><a id='MultivariateAnomalies.kernel_matrix' href='#MultivariateAnomalies.kernel_matrix'>#</a>
 <strong><code>MultivariateAnomalies.kernel_matrix</code></strong> &mdash; <em>Function</em>.</p>
 <pre><code>kernel_matrix(D::AbstractArray, σ::Float64 = 1.0[, kernel::ASCIIString = &quot;gauss&quot;, dimension::Int64 = 1])
