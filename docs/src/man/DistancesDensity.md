@@ -11,7 +11,7 @@ $D = d(X_{t_i}, X_{t_j})$
 
 i.e. the distance between vector $X$ of observation $t_i$ and $t_j$ for all observations $t_i,t_j = 1 \ldots T$.
 
-### Functions
+#### Functions
 
 ```@docs
 dist_matrix
@@ -23,7 +23,7 @@ init_dist_matrix
 
 k-Nearest Neighbor objects return the k nearest points and their distance out of a distance matrix `D`.
 
-### Functions
+#### Functions
 
 ```@docs
 knn_dists
@@ -37,7 +37,7 @@ A distance matrix `D` can be converted into a kernel matrix `K`, i.e. by computi
 
 $K= exp(-0.5 \cdot D \cdot \sigma^{-2})$
 
-### Functions
+#### Functions
 
 ```@docs
 kernel_matrix

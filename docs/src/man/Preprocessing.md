@@ -22,7 +22,7 @@ When dealing with time series, i.e. the observations are time steps, it might be
 - subtracting the median seasonal cycle (sMSC) and
 - getting the median seasonal cycle (get_MedianCycles)
 
-### Functions
+#### Functions
 
 ```@docs
 sMSC
@@ -36,7 +36,7 @@ init_MedianCycle
 
 One option to reduce the noise level in the data and detect more 'significant' anomalies is computing an exponential weighted moving average (EWMA)
 
-### Function
+#### Function
 
 ```@docs
 EWMA
@@ -47,7 +47,7 @@ EWMA!
 
 Increase the feature space (Variabales) with lagged observations. 
 
-### Function
+#### Function
 
 ```@docs
 TDE
@@ -57,7 +57,7 @@ TDE
 
 include the variance (mw_VAR) and correlations (mw_COR) in a moving window along the first dimension of the data.
 
-### Functions
+#### Functions
 
 ```@docs
 mw_VAR

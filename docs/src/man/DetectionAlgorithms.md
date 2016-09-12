@@ -31,7 +31,7 @@ KDE!
 init_KDE
 ```
 
-### Hotelling's $T^2$
+### Hotelling's T<sup>2</sup>
 ```@docs
 T2
 T2!

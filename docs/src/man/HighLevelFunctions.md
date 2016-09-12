@@ -23,5 +23,5 @@ init_detectAnomalies
 ## Index
 
 ```@index
-Pages = ["man/HighLevelFunctions.md"]
+Pages = ["HighLevelFunctions.md"]
 ```
