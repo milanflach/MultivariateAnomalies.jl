@@ -9,11 +9,15 @@
 ## Requirements
 
 - Julia `0.4`
-- `Distances`, `MultivariateStats`
--  latest `LIBSVM` branch via:
+- Julia packages `Distances`, `MultivariateStats` and `LIBSVM`.
+- Important to get the latest `LIBSVM` branch via:
 `Pkg.clone("https://github.com/milanflach/LIBSVM.jl.git");`
 `Pkg.checkout("LIBSVM", "mutating_versions");`
 `Pkg.build("LIBSVM")`
+
+## Installation
+
+- clone the package: `Pkg.clone("https://github.com/milanflach/MultivariateAnomalies.jl")`
 
 ## Package Features
 
@@ -34,6 +38,11 @@ For a quick start it might be useful to start with the [high level functions]("m
 ## Input Data
 
 *MultivariateAnomalies.jl* assumes that observations/samples/time steps are stored along the first dimension of the data array (rows of a matrix) with the number of observations `T = size(data, 1)`. Variables/attributes are stored along the last dimension `N` of the data array (along the columns of a matrix) with the number of variables `VAR = size(data, N)`. The implemented anomaly detection algorithms return anomaly scores indicating which observation(s) of the data are anomalous.
+
+## Authors
+
+The package was implemented by Milan Flach and Fabian Gans, Max Planck Institute for Biogeochemistry, Department Biogeochemical Integration, Jena.
+
 
 ## Index
 

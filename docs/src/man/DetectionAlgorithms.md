@@ -74,5 +74,5 @@ init_KNFST
 ## Index
 
 ```@index
-Pages = ["man/DetectionAlgorithms"]
+Pages = ["DetectionAlgorithms"]
 ```

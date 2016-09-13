@@ -16,5 +16,5 @@ boolevents
 Index
 
 ```@index
-Pages = ["man/AUC.md"]
+Pages = ["AUC.md"]
 ```

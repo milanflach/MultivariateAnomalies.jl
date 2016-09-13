@@ -67,5 +67,5 @@ mw_COR
 ## Index
 
 ```@index
-Pages = ["man/Preprocessing.md"]
+Pages = ["Preprocessing.md"]
 ```

@@ -30,14 +30,14 @@ function get_quantile_scores!{tp,N}(quantile_scores::AbstractArray{Float64, N}, 
   thresholds = quantile(pointer_to_array(pointer(scores), LENGTH), collect(quantiles))
   n_quants = size(thresholds, 1)
   for j = 1:LENGTH
-    if(scores[j] >= thresholds[1])
-      quantile_scores[j] = quantiles[1]
+      if(scores[j] <= thresholds[1])
+        quantile_scores[j] = quantiles[1]
+      end
       for i = 2:n_quants
-        if(scores[j] >= thresholds[i])
+        if(scores[j] > thresholds[i-1] && scores[j] <= thresholds[i])
           quantile_scores[j] = quantiles[i]
         end
       end
-    end
   end
   return(quantile_scores)
 end

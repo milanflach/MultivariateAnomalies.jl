@@ -14,5 +14,5 @@ compute_ensemble
 ## Index
 
 ```@index
-Pages = ["man/Postprocessing.md"]
+Pages = ["Postprocessing.md"]
 ```
