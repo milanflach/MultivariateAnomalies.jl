@@ -67,11 +67,15 @@
                 
                     <li><a class="toctree-l4" href="#requirements">Requirements</a></li>
                 
+                    <li><a class="toctree-l4" href="#installation">Installation</a></li>
+                
                     <li><a class="toctree-l4" href="#package-features">Package Features</a></li>
                 
                     <li><a class="toctree-l4" href="#using-the-package">Using the Package</a></li>
                 
                     <li><a class="toctree-l4" href="#input-data">Input Data</a></li>
+                
+                    <li><a class="toctree-l4" href="#authors">Authors</a></li>
                 
                     <li><a class="toctree-l4" href="#index">Index</a></li>
                 
@@ -178,8 +182,13 @@
 <h2 id="requirements">Requirements</h2>
 <ul>
 <li>Julia <code>0.4</code></li>
-<li><code>Distances</code>, <code>MultivariateStats</code></li>
-<li>latest <code>LIBSVM</code> branch via: <code>Pkg.clone("https://github.com/milanflach/LIBSVM.jl.git");</code> <code>Pkg.checkout("LIBSVM", "mutating_versions");</code> <code>Pkg.build("LIBSVM")</code></li>
+<li>Julia packages <code>Distances</code>, <code>MultivariateStats</code> and <code>LIBSVM</code>.</li>
+<li>Important to get the latest <code>LIBSVM</code> branch via: <code>Pkg.clone("https://github.com/milanflach/LIBSVM.jl.git");</code> <code>Pkg.checkout("LIBSVM", "mutating_versions");</code> <code>Pkg.build("LIBSVM")</code></li>
+</ul>
+<p><a id='Installation-1'></a></p>
+<h2 id="installation">Installation</h2>
+<ul>
+<li>clone the package: <code>Pkg.clone("https://github.com/milanflach/MultivariateAnomalies.jl")</code></li>
 </ul>
 <p><a id='Package-Features-1'></a></p>
 <h2 id="package-features">Package Features</h2>
@@ -206,6 +215,9 @@
 <p><a id='Input-Data-1'></a></p>
 <h2 id="input-data">Input Data</h2>
 <p><em>MultivariateAnomalies.jl</em> assumes that observations/samples/time steps are stored along the first dimension of the data array (rows of a matrix) with the number of observations <code>T = size(data, 1)</code>. Variables/attributes are stored along the last dimension <code>N</code> of the data array (along the columns of a matrix) with the number of variables <code>VAR = size(data, N)</code>. The implemented anomaly detection algorithms return anomaly scores indicating which observation(s) of the data are anomalous.</p>
+<p><a id='Authors-1'></a></p>
+<h2 id="authors">Authors</h2>
+<p>The package was implemented by Milan Flach and Fabian Gans, Max Planck Institute for Biogeochemistry, Department Biogeochemical Integration, Jena.</p>
 <p><a id='Index-1'></a></p>
 <h2 id="index">Index</h2>
 <ul>
@@ -309,5 +321,5 @@
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2016-09-12 08:04:55.649087
+Build Date UTC : 2016-09-13 09:17:47.638319
 -->
