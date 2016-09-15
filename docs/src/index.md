@@ -21,7 +21,7 @@
 
 ## Package Features
 
-- Detect anomalies in your data with easy to use [high level functions]("man/HighLevelFunctions.md") or individual [anomaly detection algorithms]("man/AnomalyDetection.md")
+- Detect anomalies in your data with easy to use [high level functions](man/HighLevelFunctions.md) or individual [anomaly detection algorithms](man/AnomalyDetection.md)
 
 - [Feature Extraction](man/Preprocessing.md): Preprocess your data by extracting relevant features
 
@@ -33,7 +33,7 @@
 
 ## Using the Package
 
-For a quick start it might be useful to start with the [high level functions]("man/HighLevelFunctions.md") for detecting anomalies. They can be used in highly automized way. 
+For a quick start it might be useful to start with the [high level functions](man/HighLevelFunctions.md) for detecting anomalies. They can be used in highly automized way. 
 
 ## Input Data
 
