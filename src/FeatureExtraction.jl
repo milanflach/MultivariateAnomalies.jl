@@ -200,11 +200,23 @@ julia> mw_VAR(dc, 15)
 function mw_VAR{tp,N}(datacube::Array{tp,N}, windowsize::Int = 10)
   out = fill(NaN, size(datacube))
   datacube0mean = datacube .- mean(datacube, 1)
-  T = size(datacube, 1)
-  for beg = 1:T:length(datacube)
+  mw_VAR!(out, datacube0mean, windowsize)
+  return(out)
+end
+
+"""
+    mw_VAR!{tp,N}(out::Array{tp, N}, datacube0mean::Array{tp,N}, windowsize::Int = 10)
+
+mutating version for `mw_VAR()`. The mean of the input data `datacube0mean` has to be 0. Initialize out properly: `out = datacube0mean` leads to wrong results.
+
+"""
+
+function mw_VAR!{tp,N}(out::Array{tp, N}, datacube0mean::Array{tp,N}, windowsize::Int = 10)
+  T = size(datacube0mean, 1)
+  for beg = 1:T:length(datacube0mean)
     inner_mw_VAR!(out, datacube0mean, windowsize, beg, T)
   end
-  out = out ./ windowsize
+   broadcast!(/, out, out, windowsize)
   return(out)
 end
 

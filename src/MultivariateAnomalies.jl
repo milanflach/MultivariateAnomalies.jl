@@ -50,6 +50,7 @@ module MultivariateAnomalies
     globalICA,
     TDE,
     mw_VAR,
+    mw_VAR!,
     mw_COR,
     EWMA,
     EWMA!,
