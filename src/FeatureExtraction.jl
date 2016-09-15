@@ -21,7 +21,7 @@ function sMSC(datacube, cycle_length)
 end
 
 # fast version of fabian to remove the mean seasonal cycle
-function removeMSC!{T,ndim}(xin::Array{T,ndim},xout::Array{T,ndim},NpY::Integer,itimedim::Integer;imscstart::Int=1)
+function removeMSC!{T,ndim}(xin::AbstractArray{T,ndim},xout::AbstractArray{T,ndim},NpY::Integer,itimedim::Integer;imscstart::Int=1)
    # Determine length of reshape dimensions
    s=size(xin)
    l1=itimedim==1 ? 1 : prod(s[1:(itimedim-1)])
@@ -144,7 +144,7 @@ julia> TDE(dc, 3, 2)
 ```
 """
 
-function TDE{tp}(datacube::Array{tp, 4}, ΔT::Integer, DIM::Int = 3)
+function TDE{tp}(datacube::AbstractArray{tp, 4}, ΔT::Integer, DIM::Int = 3)
     start = ((DIM-1)*ΔT+1)
     embedded_datacube = zeros(Float64, (size(datacube, 1) - start +1, size(datacube, 2), size(datacube, 3), size(datacube, 4) * DIM))
     for dim = 1:DIM
@@ -154,7 +154,7 @@ function TDE{tp}(datacube::Array{tp, 4}, ΔT::Integer, DIM::Int = 3)
     return(embedded_datacube)
 end
 
-function TDE{tp}(datacube::Array{tp, 3}, ΔT::Integer, DIM::Int = 3)
+function TDE{tp}(datacube::AbstractArray{tp, 3}, ΔT::Integer, DIM::Int = 3)
     start = ((DIM-1)*ΔT+1)
     embedded_datacube = zeros(Float64, (size(datacube, 1) - start +1, size(datacube, 2), size(datacube, 3) * DIM))
     for dim = 1:DIM
@@ -164,7 +164,7 @@ function TDE{tp}(datacube::Array{tp, 3}, ΔT::Integer, DIM::Int = 3)
     return(embedded_datacube)
 end
 
-function TDE{tp}(datacube::Array{tp, 2}, ΔT::Integer, DIM::Int = 3)
+function TDE{tp}(datacube::AbstractArray{tp, 2}, ΔT::Integer, DIM::Int = 3)
     start = ((DIM-1)*ΔT+1)
     embedded_datacube = zeros(Float64, (size(datacube, 1) - start +1,  size(datacube, 2) * DIM))
     for dim = 1:DIM
@@ -197,7 +197,7 @@ julia> mw_VAR(dc, 15)
 #   return(out)
 # end
 
-function mw_VAR{tp,N}(datacube::Array{tp,N}, windowsize::Int = 10)
+function mw_VAR{tp,N}(datacube::AbstractArray{tp,N}, windowsize::Int = 10)
   out = fill(NaN, size(datacube))
   datacube0mean = datacube .- mean(datacube, 1)
   mw_VAR!(out, datacube0mean, windowsize)
@@ -211,7 +211,7 @@ mutating version for `mw_VAR()`. The mean of the input data `datacube0mean` has 
 
 """
 
-function mw_VAR!{tp,N}(out::Array{tp, N}, datacube0mean::Array{tp,N}, windowsize::Int = 10)
+function mw_VAR!{tp,N}(out::AbstractArray{tp, N}, datacube0mean::AbstractArray{tp,N}, windowsize::Int = 10)
   T = size(datacube0mean, 1)
   for beg = 1:T:length(datacube0mean)
     inner_mw_VAR!(out, datacube0mean, windowsize, beg, T)
@@ -241,7 +241,7 @@ Accepts 4-dimensional datacubes.
 
 """
 
-function mw_COR{tp}(datacube::Array{tp, 4}, windowsize::Int = 10)
+function mw_COR{tp}(datacube::AbstractArray{tp, 4}, windowsize::Int = 10)
   comb = collect(combinations(1:size(datacube, 4), 2))
   out = zeros(Float64, size(datacube, 1), size(datacube, 2), size(datacube, 3), size(comb, 1))
   x = zeros(Float64, windowsize, 2)
@@ -324,7 +324,7 @@ initialises an init_MC object to be used as input for `get_MedianCycle!()`. Inpu
 and the length of the annual cycle (presetting: `cycle_length = 46`)
 """
 
-function init_MedianCycle{tp}(dat::Array{tp}, cycle_length::Int = 46)
+function init_MedianCycle{tp}(dat::AbstractArray{tp}, cycle_length::Int = 46)
   complete_years = Int(floor(size(dat, 1)/cycle_length))
   cycle_dat = zeros(tp, cycle_length, complete_years)
   cycle_medians = zeros(tp, cycle_length)
@@ -386,7 +386,7 @@ julia> cycles = get_MedianCycle(dat, 48)
 ```
 """
 
-function get_MedianCycle{tp}(dat::Array{tp,1}, cycle_length::Int = 46)
+function get_MedianCycle{tp}(dat::AbstractArray{tp,1}, cycle_length::Int = 46)
   init_MC = init_MedianCycle(dat, cycle_length)
   get_MedianCycle!(init_MC, dat)
   return(init_MC[3])
@@ -407,7 +407,7 @@ julia> cycles = get_MedianCycles(dc, 48)
 ```
 """
 
-function get_MedianCycles{tp}(datacube::Array{tp,4}, cycle_length::Int = 46)
+function get_MedianCycles{tp}(datacube::AbstractArray{tp,4}, cycle_length::Int = 46)
 dat = zeros(Float64, size(datacube, 1));
 init_MC = init_MedianCycle(dat, cycle_length);
 med_cycles_out = zeros(Float64, cycle_length, size(datacube, 2), size(datacube, 3), size(datacube, 4));
@@ -423,7 +423,7 @@ med_cycles_out = zeros(Float64, cycle_length, size(datacube, 2), size(datacube, 
   return(med_cycles_out)
 end
 
-function get_MedianCycles{tp}(datacube::Array{tp,3}, cycle_length::Int = 46)
+function get_MedianCycles{tp}(datacube::AbstractArray{tp,3}, cycle_length::Int = 46)
 dat = zeros(tp, size(datacube, 1));
 init_MC = init_MedianCycle(dat, cycle_length);
 med_cycles_out = zeros(tp, cycle_length, size(datacube, 2), size(datacube, 3));
@@ -438,7 +438,7 @@ med_cycles_out = zeros(tp, cycle_length, size(datacube, 2), size(datacube, 3));
 end
 
 
-function get_MedianCycles{tp}(datacube::Array{tp,2}, cycle_length::Int = 46)
+function get_MedianCycles{tp}(datacube::AbstractArray{tp,2}, cycle_length::Int = 46)
 dat = zeros(tp, size(datacube, 1));
 init_MC = init_MedianCycle(dat, cycle_length);
 med_cycles_out = zeros(tp, cycle_length, size(datacube, 2));
