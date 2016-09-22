@@ -1,5 +1,6 @@
 using Distances
-
+import Compat.ASCIIString
+import Compat.view
 
 """
     init_dist_matrix(data)
@@ -184,10 +185,10 @@ function knn_dists!(knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},A
     if ((k + temp_excl) > T-1) print("k has to be smaller size(D,1)") end
     maxD = maximum(D)
     for i = 1:T
-        copy!(v, sub(D,:,i))
+        copy!(v, view(D,:,i))
         for excl = -temp_excl:temp_excl
           if(i+excl > 0 && i+excl <= T)
-            copy!(sub(v, i+excl), maxD)
+            v[i+excl]= maxD
           end
         end
         sortperm!(ix, v)

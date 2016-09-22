@@ -1,3 +1,5 @@
+import Compat.ASCIIString
+import Compat.unsafe_wrap
 type PARAMS
   algorithms::Array{ASCIIString,1}
   training_data::Array{Float64,2}
@@ -119,7 +121,7 @@ function getParameters{tp, N}(algorithms::Array{ASCIIString,1} = ["REC", "KDE"],
   if(any(algorithms .== "REC") || any(algorithms .== "KDE") || any(algorithms .== "SVDD") || any(algorithms .== "KNFST"))
     D_train = dist_matrix(training_data, dist = P.dist, Q = P.Q)
     if(isnan(varepsilon_quantile)) varepsilon_quantile = sigma_quantile end
-    (P.K_sigma, P.REC_varepsilon) = quantile(pointer_to_array(pointer(D_train), length(D_train)), [sigma_quantile, varepsilon_quantile])
+    (P.K_sigma, P.REC_varepsilon) = quantile(unsafe_wrap(Array,pointer(D_train), length(D_train)), [sigma_quantile, varepsilon_quantile])
   end
   if(any(algorithms .== "KNN_Gamma") || any(algorithms .== "KNN_Delta"))
     P.KNN_k = Int(ceil(k_perc * T))
