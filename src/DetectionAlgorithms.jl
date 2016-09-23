@@ -1,4 +1,5 @@
 using LIBSVM
+import Compat.view
 
 # function input D is a distance matrix, K is a Kernel matrix
 # count number of recurrences per time point i
@@ -144,7 +145,7 @@ function T2!{tp}(t2_out::Tuple{Array{tp,1},Array{tp,2},Array{tp,2},Array{tp,2},A
     copy!(cdata, data .- mv')
   end
   USVt = svdfact(Q)
-  copy!(sub(diagS, diagind(diagS)), (USVt.S + 1e-10)  .^ (-0.5))
+  copy!(view(diagS, diagind(diagS)), (USVt.S + 1e-10)  .^ (-0.5))
   transpose!(Qinv, USVt.U * diagS * USVt.Vt)
   copy!(data_norm, cdata * Qinv)
   copy!(data_norm, data_norm .* data_norm)
@@ -261,7 +262,10 @@ function KNN_Delta!(KNN_Delta_out::Tuple{Array{Float64,1},Array{Float64,2},Array
     dists = 0.0
     for i = 1:T
         dists = 0.0
-        broadcast!(.-,d_x, sub(data, i,:), sub(data, collect(indices[i,:]),:))
+        inds=indices[i,:]
+        for k=1:length(inds), j=1:size(data,2)
+          d_x[k,j] = data[i,j] - data[inds[k],j]
+        end
         sum!(x_i, d_x)
         for j = 1:VAR
             dists += (x_i[1,j] / K)^2
@@ -587,18 +591,18 @@ function centerKernelMatrix(kernelMatrix)
   n = size(kernelMatrix, 1);
 
   ### get mean values of each row/column
-  columnMeans = mean(kernelMatrix,1); ### NOTE: columnMeans = rowMeans because kernelMatrix is symmetric
+  columnMeans = mean(kernelMatrix,2); ### NOTE: columnMeans = rowMeans because kernelMatrix is symmetric
   matrixMean = mean(columnMeans);
 
   centeredKernelMatrix = kernelMatrix;
 
   for k=1:n
-
-    centeredKernelMatrix[k,:] = centeredKernelMatrix[k,:] - columnMeans;
-    centeredKernelMatrix[:,k] = centeredKernelMatrix[:,k] - columnMeans';
-
+    for j=1:n
+      centeredKernelMatrix[k,j] -= columnMeans[j];
+      centeredKernelMatrix[j,k] -= columnMeans[j];
+    end
   end
-
+  #This line will not have any effect
   centeredKernelMatrix = centeredKernelMatrix + matrixMean;
 
 end
