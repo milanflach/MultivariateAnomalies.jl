@@ -214,7 +214,7 @@ function detectAnomalies!{tp}(data::AbstractArray{tp, 2}, P::PARAMS)
     if(any(ispartof(P.algorithms, ["KNFST"])))  KNFST_predict!(P.KNFST, P.KNFST_model, P.D_test[1]) end
     if(any(ispartof(P.algorithms, ["SVDD"])))
       SVDD_predict!(P.SVDD, P.SVDD_model, P.D_test[1])
-      broadcast!(*, P.SVDD[2], P.SVDD[2], -1)
+      broadcast!(*, P.SVDD.decvalues, P.SVDD.decvalues, -1)
     end
   end
 
@@ -222,7 +222,7 @@ function detectAnomalies!{tp}(data::AbstractArray{tp, 2}, P::PARAMS)
     if(any(ispartof(P.algorithms, ["T2"])))  P.T2_quantiles = get_quantile_scores(P.T2[1]) end
     if(any(ispartof(P.algorithms, ["REC"]))) P.REC_quantiles = get_quantile_scores(P.REC) end
     if(any(ispartof(P.algorithms, ["KDE"]))) P.KDE_quantiles = get_quantile_scores(P.KDE) end
-    if(any(ispartof(P.algorithms, ["SVDD"]))) P.SVDD_quantiles = squeeze(get_quantile_scores(P.SVDD[2]), 1) end
+    if(any(ispartof(P.algorithms, ["SVDD"]))) P.SVDD_quantiles = squeeze(get_quantile_scores(P.SVDD.decvalues), 1) end
     if(any(ispartof(P.algorithms, ["KNFST"]))) P.KNFST_quantiles = get_quantile_scores(P.KNFST[1]) end
     if(any(ispartof(P.algorithms, ["KNN_Gamma"]))) P.KNN_Gamma_quantiles = get_quantile_scores(P.KNN_Gamma) end
     if(any(ispartof(P.algorithms, ["KNN_Delta"]))) P.KNN_Delta_quantiles = get_quantile_scores(P.KNN_Delta[1]) end

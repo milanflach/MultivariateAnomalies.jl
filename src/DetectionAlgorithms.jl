@@ -373,7 +373,7 @@ predict the outlierness of an object given the testing Kernel matrix `K` and the
 Tax, D. M. J., & Duin, R. P. W. (1999). Support vector domain description. Pattern Recognition Letters, 20, 1191–1199.
 Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector Algorithms. Neural Computation, 12, 1207–1245.
 """
-function SVDD_predict(svdd_model, K::AbstractArray)
+function SVDD_predict(svdd_model::LIBSVM.SVMModel, K::AbstractArray)
     (predicted_labels, decision_values) = svmpredict(svdd_model, K)
 end
 
@@ -386,7 +386,29 @@ If `T` for prediction differs from T of the training data (`Ttrain`) use `Ttrain
 """
 function init_SVDD_predict(T::Int)
   instances = Array(Float64, 1, T)
-  SVDD_out = init_svmpredict(instances)
+  SVDD_out = init_svmpredict(instances, 1)
+  #predicted_labels = Array(Int64, T);
+  #decision_values = Array(Float64, 1, T);
+  #nodeptrs = Array(Ptr{LIBSVM.SVMNode}, T);
+  #nodes = Array(LIBSVM.SVMNode, Ttrain + 1, T);
+  #SVDD_out = (predicted_labels, decision_values, nodeptrs, nodes)
+  return(SVDD_out)
+end
+
+function init_SVDD_predict(T::Int, Ttrain::Int, svdd_model::LIBSVM.SVMModel)
+  instances = Array(Float64, Ttrain, T)
+  SVDD_out = init_svmpredict(instances, svdd_model)
+  #predicted_labels = Array(Int64, T);
+  #decision_values = Array(Float64, 1, T);
+  #nodes = Array(LIBSVM.SVMNode, Ttrain + 1, T);
+  #nodeptrs = Array(Ptr{LIBSVM.SVMNode}, T);
+  #SVDD_out = (predicted_labels, decision_values, nodes, nodeptrs)
+  return(SVDD_out)
+end
+
+function init_SVDD_predict(T::Int, svdd_model::LIBSVM.SVMModel)
+  instances = Array(Float64, 1, T)
+  SVDD_out = init_svmpredict(instances, svdd_model)
   #predicted_labels = Array(Int64, T);
   #decision_values = Array(Float64, 1, T);
   #nodeptrs = Array(Ptr{LIBSVM.SVMNode}, T);
@@ -397,7 +419,7 @@ end
 
 function init_SVDD_predict(T::Int, Ttrain::Int)
   instances = Array(Float64, Ttrain, T)
-  SVDD_out = init_svmpredict(instances)
+  SVDD_out = init_svmpredict(instances, 1)
   #predicted_labels = Array(Int64, T);
   #decision_values = Array(Float64, 1, T);
   #nodes = Array(LIBSVM.SVMNode, Ttrain + 1, T);
@@ -418,8 +440,7 @@ Memory efficient version of `SVDD_predict()`. Additional input argument is the `
 Compute `K`with `kernel_matrix()`.
 `SVDD_out[1]` are predicted labels, `SVDD_out[2]` decision_values. Requires LIBSVM.
 """
-function SVDD_predict!(SVDD_out::Tuple{Array{Any,1},Array{Float64,2},Array{LIBSVM.SVMNode,2},Array{Ptr{LIBSVM.SVMNode},1}}
-                       , svdd_model::LIBSVM.SVMModel{Int64}, K::AbstractArray)
+function SVDD_predict!(SVDD_out::LIBSVM.SVMTemp, svdd_model::LIBSVM.SVMModel{Int64}, K::AbstractArray)
     svmpredict!(SVDD_out, svdd_model, K)
 end
 

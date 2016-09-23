@@ -15,7 +15,7 @@ K = kernel_matrix(D, sigma)
 #####################
 # DetectionAlgorithms.jl
 # model
-# svdd_model = SVDD_train(K[1:4,1:4], 0.2);
+svdd_model = SVDD_train(K[1:4,1:4], 0.2);
 knfst_model = KNFST_train(K[1:4,1:4])
 # REC, checked manually
 @test all(REC(D, sigma, 0) .== [1,0,2,1,2])
@@ -32,7 +32,7 @@ using Distances
 
 # SVDD
 Ktest = exp(-0.5 * pairwise(Euclidean(), dat[1:4,:]', dat') ./ sigma^2)
-# @test all(SVDD_predict(svdd_model, Ktest)[1] .== [-1, 1, -1, -1, 1])
+@test all(SVDD_predict(svdd_model, Ktest)[1] .== [-1, 1, -1, -1, 1])
 # KNFST, last data point (not seen in training) should differ, i.e. have largest values
 @test sortperm(-KNFST_predict(knfst_model, Ktest)[1])[1] == 5
 
@@ -51,14 +51,14 @@ detectAnomalies(dat, P)
 @test round(P.KNN_Delta[1], 3) ==  round(KNN_Delta(knn_dists_out, dat), 3)
 @test round(P.T2[1], 3) ==  round(T2(dat, Q, mean(dat, 1)),3)
 
-algorithms = ["KNFST"]
-# algorithms = ["KNFST", "SVDD"]
+algorithms = ["KNFST", "SVDD"]
 P = getParameters(algorithms, dat[1:4,:])
 P.K_sigma = sigma
-# P.SVDD_model = svdd_model
+P.SVDD_model = svdd_model
 P.KNFST_model = knfst_model
 detectAnomalies(dat, P)
-# @test P.SVDD[1] == SVDD_predict(svdd_model, Ktest)[1]
+(labels, decvalues) = SVDD_predict(svdd_model, Ktest)
+@test P.SVDD.class == labels
 @test K[1:4,1:4] == P.D_train[1]
 @test Ktest == P.D_test[1]
 @test round(P.KNFST[1], 3) == round(KNFST_predict(knfst_model, Ktest)[1], 3)
