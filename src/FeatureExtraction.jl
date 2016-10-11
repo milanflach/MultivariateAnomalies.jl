@@ -222,7 +222,7 @@ end
 
 function inner_mw_VAR!(out, datacube, windowsize, beg, T) # mean already subtracted
   out_beg = Int(floor(windowsize * 0.5)) + beg - 1
-  for notavailable = 1:(out_beg-1)
+  for notavailable =  (beg):(out_beg-1)
     out[notavailable] = NaN
   end
   # init x
@@ -232,7 +232,7 @@ function inner_mw_VAR!(out, datacube, windowsize, beg, T) # mean already subtrac
     x = x - datacube[beg + i - 1]^2 + datacube[beg + i - 1 + windowsize - 1]^2
     out[out_beg + i] = x
   end
-  for notavailable = (out_beg + (T-windowsize +1) + 1):T
+  for notavailable = (out_beg + (T-windowsize +1) + 1):(beg+T-1)
     out[notavailable] = NaN
   end
   return(out)
