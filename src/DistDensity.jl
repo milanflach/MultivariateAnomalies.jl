@@ -1,6 +1,4 @@
 using Distances
-import Compat.ASCIIString
-import Compat.view
 
 """
     init_dist_matrix(data)
@@ -43,12 +41,12 @@ julia> D_out[1]
 ```
 """
 
-function dist_matrix!{tp, N}(D_out::Tuple{Array{Float64,2},Array{Float64,2},Array{Float64,2}}, data::AbstractArray{tp, N}; dist::ASCIIString = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
+function dist_matrix!{tp, N}(D_out::Tuple{Array{Float64,2},Array{Float64,2},Array{Float64,2}}, data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
   #@assert N == 2 || N == 3 || N  = 4
   (D, dat, tdat) = D_out
   if N == 2 copy!(dat, data) end
-  if N == 3 copy!(dat, sub(data, :, space, :)) end
-  if N == 4 copy!(dat, sub(data, :, lat, lon, :))  end
+  if N == 3 copy!(dat, view(data, :, space, :)) end
+  if N == 4 copy!(dat, view(data, :, lat, lon, :))  end
   transpose!(tdat, dat)
   if(dist == "Euclidean")         pairwise!(D, Euclidean(), tdat)
   elseif(dist == "SqEuclidean")   pairwise!(D, SqEuclidean(), tdat)
@@ -63,15 +61,15 @@ function dist_matrix!{tp, N}(D_out::Tuple{Array{Float64,2},Array{Float64,2},Arra
 end
 
 function dist_matrix!{tp, N}(D_out::Tuple{Array{Float64,2},Array{Float64,2},Array{Float64,2},Array{Float64,2},Array{Float64,2}},
-                             data::AbstractArray{tp, N}, training_data::AbstractArray{tp, N}; dist::ASCIIString = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
+                             data::AbstractArray{tp, N}, training_data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
   #@assert N == 2 || N == 3 || N  = 4
   (D, dat, tdat, traindat, ttraindat) = D_out
   if N == 2 copy!(dat, data) end
-  if N == 3 copy!(dat, sub(data, :, space, :)) end
-  if N == 4 copy!(dat, sub(data, :, lat, lon, :))  end
+  if N == 3 copy!(dat, view(data, :, space, :)) end
+  if N == 4 copy!(dat, view(data, :, lat, lon, :))  end
   if N == 2 copy!(traindat, training_data) end
-  if N == 3 copy!(traindat, sub(training_data, :, space, :)) end
-  if N == 4 copy!(traindat, sub(training_data, :, lat, lon, :))  end
+  if N == 3 copy!(traindat, view(training_data, :, space, :)) end
+  if N == 4 copy!(traindat, view(training_data, :, lat, lon, :))  end
   transpose!(tdat, dat)
   transpose!(ttraindat, traindat)
   if(dist == "Euclidean")         pairwise!(D, Euclidean(), ttraindat, tdat)
@@ -87,8 +85,8 @@ function dist_matrix!{tp, N}(D_out::Tuple{Array{Float64,2},Array{Float64,2},Arra
 end
 
 """
-    dist_matrix{tp, N}(data::AbstractArray{tp, N}; dist::ASCIIString = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
-    dist_matrix{tp, N}(data::AbstractArray{tp, N}, training_data; dist::ASCIIString = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
+    dist_matrix{tp, N}(data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
+    dist_matrix{tp, N}(data::AbstractArray{tp, N}, training_data; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
 
 compute the distance matrix of `data` or the distance matrix between data and training data i.e. the pairwise distances along the first dimension of data, using the last dimension as variables.
 `dist` is a distance metric, currently `Euclidean`(default), `SqEuclidean`, `Chebyshev`, `Cityblock`, `JSDivergence`, `Mahalanobis` and `SqMahalanobis` are supported.
@@ -102,13 +100,13 @@ julia> D = dist_matrix(dc, space = 2)
 ```
 """
 
-function dist_matrix{tp, N}(data::AbstractArray{tp, N}; dist::ASCIIString = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
+function dist_matrix{tp, N}(data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
   D_out = init_dist_matrix(data)
   dist_matrix!(D_out, data, dist = dist, space = space, lat = lat, lon = lon ,Q = Q)
   return(D_out[1])
 end
 
-function dist_matrix{tp, N}(data::AbstractArray{tp, N}, training_data::AbstractArray{tp, N}; dist::ASCIIString = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
+function dist_matrix{tp, N}(data::AbstractArray{tp, N}, training_data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
   D_out = init_dist_matrix(data, training_data)
   dist_matrix!(D_out, data, training_data, dist = dist, space = space, lat = lat, lon = lon ,Q = Q)
   return(D_out[1])
@@ -201,7 +199,7 @@ function knn_dists!(knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},A
 end
 
 """
-    kernel_matrix(D::AbstractArray, σ::Float64 = 1.0[, kernel::ASCIIString = "gauss", dimension::Int64 = 1])
+    kernel_matrix(D::AbstractArray, σ::Float64 = 1.0[, kernel::String = "gauss", dimension::Int64 = 1])
 
 compute a kernel matrix out of distance matrix `D`, given `σ`. Optionally normalized by the `dimension`, if `kernel = "normalized_gauss"`.
 compute `D` with `dist_matrix()`.
@@ -215,7 +213,7 @@ julia> K = kernel_matrix(D, 2.0)
 
 
 # compute kernel matrix from distance matrix
-function kernel_matrix(D::AbstractArray, σ::Float64 = 1.0, kernel::ASCIIString = "gauss", dimension::Int64 = 1)
+function kernel_matrix(D::AbstractArray, σ::Float64 = 1.0, kernel::String = "gauss", dimension::Int64 = 1)
     #if(size(D, 1) != size(D, 2)) print("D is not a distance matrix with equal dimensions")
     if(kernel == "normalized_gauss") # k integral gets one
         return(exp(-0.5 .* D/(σ^2))/((2*pi*σ*σ)^(dimension/2)))
@@ -225,7 +223,7 @@ function kernel_matrix(D::AbstractArray, σ::Float64 = 1.0, kernel::ASCIIString 
 end
 
 """
-    kernel_matrix!(K, D::AbstractArray, σ::Float64 = 1.0[, kernel::ASCIIString = "gauss", dimension::Int64 = 1])
+    kernel_matrix!(K, D::AbstractArray, σ::Float64 = 1.0[, kernel::String = "gauss", dimension::Int64 = 1])
 
 compute a kernel matrix out of distance matrix `D`. Similar to `kernel_matrix()`, but with preallocated Array K (`K = similar(D)`) for output.
 
@@ -237,7 +235,7 @@ julia> kernel_matrix!(D, D, 2.0) # overwrites distance matrix
 """
 
 # compute kernel matrix from distance matrix
-function kernel_matrix!{T,N}(K::AbstractArray{T,N}, D::AbstractArray{T,N}, σ::Real = 1.0, kernel::ASCIIString = "gauss", dimension::Int64 = 10)
+function kernel_matrix!{T,N}(K::AbstractArray{T,N}, D::AbstractArray{T,N}, σ::Real = 1.0, kernel::String = "gauss", dimension::Int64 = 10)
     #if(size(D, 1) != size(D, 2)) print("D is not a distance matrix with equal dimensions")
     σ = convert(T, σ)
     if(kernel == "normalized_gauss") # k integral gets one

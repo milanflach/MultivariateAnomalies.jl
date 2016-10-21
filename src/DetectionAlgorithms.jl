@@ -1,5 +1,4 @@
 using LIBSVM
-import Compat.view
 
 # function input D is a distance matrix, K is a Kernel matrix
 # count number of recurrences per time point i
@@ -326,8 +325,8 @@ function UNIV!{tp}(univ_out::Tuple{Array{tp,1},Array{Int64,2},Array{Int64,2}}
   @assert size(dc_ix_order, 2) == size(data, 2) == size(dc_ix_order2, 2)
   for variable = 1:size(data, 2)
     # copy with little allocation
-    copy!(var_dat, sub(data, :, variable))
-    sortperm!(sub(dc_ix_order, :, variable), var_dat, rev = false)
+    copy!(var_dat, view(data, :, variable))
+    sortperm!(view(dc_ix_order, :, variable), var_dat, rev = false)
     for t = 1:size(var_dat, 1) dc_ix_order2[dc_ix_order[t,variable],variable] = t end
   end
   mymed = median(dc_ix_order2)

@@ -226,7 +226,7 @@ function inner_mw_VAR!(out, datacube, windowsize, beg, T) # mean already subtrac
     out[notavailable] = NaN
   end
   # init x
-  x = sum(pointer_to_array(pointer(datacube, beg), windowsize).^2)
+  x = sum(unsafe_wrap(Array, pointer(datacube, beg), windowsize).^2)
   out[out_beg] = x
   @inbounds for i = 1:(T-windowsize +1)
     x = x - datacube[beg + i - 1]^2 + datacube[beg + i - 1 + windowsize - 1]^2
@@ -256,8 +256,8 @@ function mw_COR{tp}(datacube::AbstractArray{tp, 4}, windowsize::Int = 10)
       for lat = 1:size(datacube, 2)
         for t = 1:(size(datacube, 1)-windowsize)
           x = copy!(x, datacube[t:(t+windowsize-1),lat,lon,comb[icomb]])
-          copy!(sub(out, t + Int(round(windowsize * 0.5, 0)),lat,lon,icomb)
-                , cor(sub(x,:,1), sub(x,:,2)))
+          copy!(view(out, t + Int(round(windowsize * 0.5, 0)),lat,lon,icomb)
+                , cor(view(x,:,1), view(x,:,2)))
         end
       end
     end
@@ -364,14 +364,14 @@ julia> init_MC[3]
 """
 
 function get_MedianCycle!{tp}(init_MC::Tuple{Int64,Int64,Array{tp,1},Array{tp,2}}, dat::Array{tp,1})
-  copy!(init_MC[4], sub(dat, 1:(init_MC[2] * init_MC[1])))
+  copy!(init_MC[4], view(dat, 1:(init_MC[2] * init_MC[1])))
   for i = 1:init_MC[1]
-    if(all(!isnan(sub(init_MC[4], i, :))))
-      copy!(sub(init_MC[3], i), median(sub(init_MC[4], i, :)))
-    elseif(all(isnan(sub(init_MC[4], i, :))))
-        copy!(sub(init_MC[3], i), NaN)
+    if(all(!isnan(view(init_MC[4], i, :))))
+      copy!(view(init_MC[3], i), median(view(init_MC[4], i, :)))
+    elseif(all(isnan(view(init_MC[4], i, :))))
+        copy!(view(init_MC[3], i), NaN)
     else
-      copy!(sub(init_MC[3], i), median(sub(init_MC[4], i, squeeze(!isnan(sub(init_MC[4], i,:)), 1))))
+      copy!(view(init_MC[3], i), median(view(init_MC[4], i, squeeze(!isnan(view(init_MC[4], i,:)), 1))))
     end
   end
   return(init_MC[3])
@@ -421,8 +421,8 @@ med_cycles_out = zeros(Float64, cycle_length, size(datacube, 2), size(datacube, 
   for var = 1:size(datacube, 4)
     for lon = 1:size(datacube, 3)
       for lat = 1:size(datacube, 2)
-        copy!(dat, sub(datacube, :,lat,lon,var))
-        copy!(sub(med_cycles_out, :, lat, lon, var), get_MedianCycle!(init_MC, dat))
+        copy!(dat, view(datacube, :,lat,lon,var))
+        copy!(view(med_cycles_out, :, lat, lon, var), get_MedianCycle!(init_MC, dat))
       end
     end
   end
@@ -436,8 +436,8 @@ med_cycles_out = zeros(tp, cycle_length, size(datacube, 2), size(datacube, 3));
 # loop
   for var = 1:size(datacube, 3)
       for lat = 1:size(datacube, 2)
-        copy!(dat, sub(datacube, :, lat,var))
-        copy!(sub(med_cycles_out, :, lat, var), get_MedianCycle!(init_MC, dat))
+        copy!(dat, view(datacube, :, lat,var))
+        copy!(view(med_cycles_out, :, lat, var), get_MedianCycle!(init_MC, dat))
       end
   end
   return(med_cycles_out)
@@ -450,8 +450,8 @@ init_MC = init_MedianCycle(dat, cycle_length);
 med_cycles_out = zeros(tp, cycle_length, size(datacube, 2));
 # loop
   for var = 1:size(datacube, 2)
-        copy!(dat, sub(datacube, :, var))
-        copy!(sub(med_cycles_out, :, var), get_MedianCycle!(init_MC, dat))
+        copy!(dat, view(datacube, :, var))
+        copy!(view(med_cycles_out, :, var), get_MedianCycle!(init_MC, dat))
   end
   return(med_cycles_out)
 end

@@ -1,9 +1,7 @@
-import Compat.ASCIIString
-import Compat.unsafe_wrap
 type PARAMS
-  algorithms::Array{ASCIIString,1}
+  algorithms::Array{String,1}
   training_data::Array{Float64,2}
-  dist::ASCIIString
+  dist::String
   K_sigma::Float64
   KNN_k::Int64
   REC_varepsilon::Float64
@@ -35,7 +33,7 @@ type PARAMS
   SVDD_quantiles::Array{Float64,1}
   data
   temp_excl::Int64
-  ensemble_method::ASCIIString
+  ensemble_method::String
   ensemble
   quantiles::Bool
 end
@@ -49,7 +47,7 @@ function reshape_dims_except_N{tp, N}(datacube::AbstractArray{tp,N})
     return(X)
 end
 
-function ispartof(needle::Array{ASCIIString,1}, haystack::Array{ASCIIString,1})
+function ispartof(needle::Array{String,1}, haystack::Array{String,1})
   partof = fill(false, size(haystack, 1))
   for i = 1:size(needle, 1)
     partof[needle[i] .== haystack] = true
@@ -58,14 +56,14 @@ function ispartof(needle::Array{ASCIIString,1}, haystack::Array{ASCIIString,1})
 end
 
 """
-    getParameters(algorithms::Array{ASCIIString,1} = ["REC", "KDE"], training_data::AbstractArray{tp, 2} = [NaN NaN])
+    getParameters(algorithms::Array{String,1} = ["REC", "KDE"], training_data::AbstractArray{tp, 2} = [NaN NaN])
 
 return an object of type PARAMS, given the `algorithms` and some `training_data` as a matrix.
 
 # Arguments
 - `algorithms`: Subset of `["REC", "KDE", "KNN_Gamma", "KNN_Delta", "SVDD", "KNFST", "T2"]`
 - `training_data`: data for training the algorithms / for getting the Parameters.
-- `dist::ASCIIString = "Euclidean"`
+- `dist::String = "Euclidean"`
 - `sigma_quantile::Float64 = 0.5` (median): quantile of the distance matrix, used to compute the weighting parameter for the kernel matrix (`algorithms = ["SVDD", "KNFST", "KDE"]`)
 - `varepsilon_quantile` = `sigma_quantile` by default: quantile of the distance matrix to compute the radius of the hyperball in which the number of reccurences is counted (`algorihtms = ["REC"]`)
 - `k_perc::Float64 = 0.05`: percentage of the first dimension of `training_data` to estimmate the number of nearest neighbors (`algorithms = ["KNN-Gamma", "KNN_Delta"]`)
@@ -83,7 +81,7 @@ julia> detectAnomalies(testing_data, P)
 ```
 """
 
-function getParameters{tp, N}(algorithms::Array{ASCIIString,1} = ["REC", "KDE"], training_data::AbstractArray{tp, N} = [NaN NaN]; dist::ASCIIString = "Euclidean", sigma_quantile::Float64 = 0.5, varepsilon_quantile::Float64 = NaN, k_perc::Float64 = 0.05, nu::Float64 = 0.2, temp_excl::Int64 = 0, ensemble_method = "None", quantiles = false)
+function getParameters{tp, N}(algorithms::Array{String,1} = ["REC", "KDE"], training_data::AbstractArray{tp, N} = [NaN NaN]; dist::String = "Euclidean", sigma_quantile::Float64 = 0.5, varepsilon_quantile::Float64 = NaN, k_perc::Float64 = 0.05, nu::Float64 = 0.2, temp_excl::Int64 = 0, ensemble_method = "None", quantiles = false)
 
   allalgorithms = ["KDE", "REC", "KNN_Delta", "KNN_Gamma", "T2", "SVDD", "KNFST"]
   @assert any(ispartof(algorithms, allalgorithms))
@@ -249,7 +247,7 @@ end
 
 """
     detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
-    detectAnomalies{tp, N}(data::AbstractArray{tp, N}, algorithms::Array{ASCIIString,1} = ["REC", "KDE"]; mean = 0)
+    detectAnomalies{tp, N}(data::AbstractArray{tp, N}, algorithms::Array{String,1} = ["REC", "KDE"]; mean = 0)
 
 detect anomalies, given some Parameter object `P` of type PARAMS. Train the Parameters `P` with `getParameters()` beforehand on some training data. See `getParameters()`.
 Without training `P` beforehand, it is also possible to use `detectAnomalies(data, algorithms)` given some algorithms (except SVDD, KNFST).
@@ -295,13 +293,13 @@ function return_detectAnomalies(P::PARAMS)
 end
 
 
-function detectAnomalies{tp, N}(data::AbstractArray{tp, N}, algorithms::Array{ASCIIString,1} = ["REC", "KDE"]; mean = 0)
+function detectAnomalies{tp, N}(data::AbstractArray{tp, N}, algorithms::Array{String,1} = ["REC", "KDE"]; mean = 0)
   @assert !any(ispartof(algorithms, ["SVDD", "KNFST"]))
    Q = cov(reshape_dims_except_N(data))
    if(mean == 0) meanvec = zeros(Float64, 1, size(data, N))
    else  meanvec = mean(data, 1) end
    D = dist_matrix(data)
-   sigma =  median(pointer_to_array(pointer(D), length(D)))
+   sigma =  median(unsafe_wrap(Array, pointer(D), length(D)))
    P = PARAMS(algorithms, [NaN NaN], dist, sigma # sigma
              , Int(ceil(0.05 * size(data, 1))) # k
              , sigma # varepsilon

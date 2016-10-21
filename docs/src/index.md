@@ -8,7 +8,7 @@
 
 ## Requirements
 
-- Julia `0.4`
+- Julia `0.5`
 - Julia packages `Distances`, `MultivariateStats` and `LIBSVM`.
 - Important to get the latest `LIBSVM` branch via:
 `Pkg.clone("https://github.com/milanflach/LIBSVM.jl.git");`
@@ -21,7 +21,7 @@
 
 ## Package Features
 
-- Detect anomalies in your data with easy to use [high level functions](man/HighLevelFunctions.md) or individual [anomaly detection algorithms](man/AnomalyDetection.md)
+- Detect anomalies in your data with easy to use [high level functions](man/HighLevelFunctions.md) or individual [anomaly detection algorithms](man/DetectionAlgorithms.md)
 
 - [Feature Extraction](man/Preprocessing.md): Preprocess your data by extracting relevant features
 
