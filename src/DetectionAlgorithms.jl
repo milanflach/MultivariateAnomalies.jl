@@ -106,11 +106,11 @@ end
 initialize `t2_out` object for `T2!` either with number of variables `VAR` and observations/time steps `T` or with a two dimensional `data` matrix (time * variables)
 """
 function init_T2(VAR::Int, T::Int)
-  diagS =  zeros(Float64, VAR, VAR);
-  Qinv =  zeros(Float64, VAR, VAR);
-  data_norm = zeros(Float64, T, VAR);
-  cdata = zeros(Float64, T, VAR);
-  maha = zeros(Float64, T);
+  diagS =  zeros(tp, VAR, VAR);
+  Qinv =  zeros(tp, VAR, VAR);
+  data_norm = zeros(tp, T, VAR);
+  cdata = zeros(tp, T, VAR);
+  maha = zeros(tp, T);
   t2_out = (maha, diagS, cdata, Qinv, data_norm)
   return(t2_out)
 end
@@ -118,11 +118,11 @@ end
 function init_T2{tp}(data::AbstractArray{tp,2})
   VAR = size(data, 2)
   T = size(data, 1)
-  diagS =  zeros(Float64, VAR, VAR);
-  Qinv =  zeros(Float64, VAR, VAR);
-  data_norm = zeros(Float64, T, VAR);
-  cdata = zeros(Float64, T, VAR);
-  maha = zeros(Float64, T);
+  diagS =  zeros(tp, VAR, VAR);
+  Qinv =  zeros(tp, VAR, VAR);
+  data_norm = zeros(tp, T, VAR);
+  cdata = zeros(tp, T, VAR);
+  maha = zeros(tp, T);
   t2_out = (maha, diagS, cdata, Qinv, data_norm)
   return(t2_out)
 end
