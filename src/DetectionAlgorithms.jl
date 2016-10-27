@@ -306,7 +306,7 @@ end
 function init_UNIV{tp}(data::AbstractArray{tp, 2})
      T = size(data, 1)
      VAR = size(data, 2)
-     var_dat = zeros(Float64, T)
+     var_dat = zeros(tp, T)
      dc_ix_order = zeros(Int64,T, VAR)
      dc_ix_order2 = zeros(Int64,T, VAR)
      univ_out = (var_dat, dc_ix_order, dc_ix_order2)
