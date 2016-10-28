@@ -156,7 +156,7 @@ function init_detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
     if(any(P.algorithms .== "KNN_Delta")) P.KNN_Delta = init_KNN_Delta(T, VARs, P.KNN_k) end
   end
 
-  if(any(P.algorithms .== "T2")) P.T2 =  init_T2(VARs, T) end
+  if(any(P.algorithms .== "T2")) P.T2 =  init_T2(data) end
 
   if(any(P.algorithms .== "SVDD") || any(P.algorithms .== "KNFST"))
     P.D_train = init_dist_matrix(P.training_data)
