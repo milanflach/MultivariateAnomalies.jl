@@ -144,6 +144,7 @@ function init_detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
 # initialisation
   T = size(data, 1)
   VARs = size(data, N)
+  P.data = zeros(tp, T, VARs)
   P.D = init_dist_matrix(data)
   P.K = similar(P.D[1])
   if(any(P.algorithms .== "KDE")) P.KDE = init_KDE(T) end
@@ -174,7 +175,7 @@ end
 mutating version of `detectAnomalies()`. Directly writes the output into `P`.
 """
 function detectAnomalies!{tp}(data::AbstractArray{tp, 2}, P::PARAMS)
-  P.data = data
+  copy!(P.data, data)
   allalgorithms = ["KDE", "REC", "KNN_Delta", "KNN_Gamma", "T2", "SVDD", "KNFST"]
   @assert any(ispartof(P.algorithms, allalgorithms))
 
