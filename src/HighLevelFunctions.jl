@@ -31,7 +31,7 @@ type PARAMS
   T2_quantiles::Array{Float64,1}
   KNFST_quantiles::Array{Float64,1}
   SVDD_quantiles::Array{Float64,1}
-  data
+  data::Array{Float64,2}
   temp_excl::Int64
   ensemble_method::String
   ensemble
