@@ -41,7 +41,7 @@ julia> D_out[1]
 ```
 """
 
-function dist_matrix!{tp, N}(D_out::Tuple{Array{Float64,2},Array{Float64,2},Array{Float64,2}}, data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
+function dist_matrix!{tp, N}(D_out::Tuple{Array{tp,2},Array{tp,2},Array{tp,2}}, data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
   #@assert N == 2 || N == 3 || N  = 4
   (D, dat, tdat) = D_out
   if N == 2 copy!(dat, data) end
@@ -60,7 +60,7 @@ function dist_matrix!{tp, N}(D_out::Tuple{Array{Float64,2},Array{Float64,2},Arra
   return(D_out[1])
 end
 
-function dist_matrix!{tp, N}(D_out::Tuple{Array{Float64,2},Array{Float64,2},Array{Float64,2},Array{Float64,2},Array{Float64,2}},
+function dist_matrix!{tp, N}(D_out::Tuple{Array{tp,2},Array{tp,2},Array{tp,2},Array{tp,2},Array{tp,2}},
                              data::AbstractArray{tp, N}, training_data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0)
   #@assert N == 2 || N == 3 || N  = 4
   (D, dat, tdat, traindat, ttraindat) = D_out
