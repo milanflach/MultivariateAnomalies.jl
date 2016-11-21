@@ -184,12 +184,10 @@ function detectAnomalies!{tp}(data::AbstractArray{tp, 2}, P::PARAMS)
     if(any(ispartof(P.algorithms, ["KDE"])))
       kernel_matrix!(P.K, P.D[1], P.K_sigma)
       KDE!(P.KDE, P.K)
-      broadcast!(*, P.KDE, P.KDE, -1)
     end
 
      if(any(ispartof(P.algorithms, ["REC"])))
       REC!(P.REC, P.D[1], P.REC_varepsilon, P.temp_excl)
-      broadcast!(*, P.REC, P.REC, -1)
     end
 
     if(any(ispartof(P.algorithms, ["KNN_Gamma", "KNN_Delta"])))

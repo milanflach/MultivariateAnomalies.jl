@@ -71,7 +71,9 @@ Parzen, E. (1962). On Estimation of a Probability Density Function and Mode. The
 """
 
 function KDE(K::AbstractArray)
-    return(squeeze(mean(K, 1), 1))
+    KDEout = init_KDE(size(K, 1))
+    KDE!(KDEout, K)
+    return(KDEout)
 end
 
 """
@@ -98,6 +100,7 @@ Memory efficient version of `KDE()`. Additionally uses preallocated `KDE_out` ob
 function KDE!(KDE_out, K::AbstractArray)
   @assert size(K, 1) == size(KDE_out, 1)
   mean!(KDE_out, K)
+  broadcast!(-, KDE_out, 1.0, KDE_out)
   return(KDE_out)
 end
 
