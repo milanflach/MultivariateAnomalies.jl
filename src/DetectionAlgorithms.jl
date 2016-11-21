@@ -57,6 +57,8 @@ function REC!(rec_out::AbstractArray, D::AbstractArray, rec_threshold::Float64, 
       end
     end
   end
+  broadcast!(/, rec_out, rec_out, N)
+  broadcast!(-, rec_out, 1.0, rec_out)
   return(rec_out)
 end
 
@@ -115,8 +117,8 @@ function init_T2(VAR::Int, T::Int)
   return(t2_out)
 end
 
-function init_T2{tp}(data::AbstractArray{tp,2})
-  VAR = size(data, 2)
+function init_T2{tp, N}(data::AbstractArray{tp,N})
+  VAR = size(data, N)
   T = size(data, 1)
   diagS =  zeros(tp, VAR, VAR);
   Qinv =  zeros(tp, VAR, VAR);
