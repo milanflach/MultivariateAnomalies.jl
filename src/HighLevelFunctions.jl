@@ -1,36 +1,36 @@
-type PARAMS{tp}
+type PARAMS
   algorithms::Array{String,1}
-  training_data::Array{tp,2}
+  training_data::Array{Float64,2}
   dist::String
-  K_sigma::tp
+  K_sigma::Float64
   KNN_k::Int64
-  REC_varepsilon::tp
-  Q::Array{tp,2} #covariance matrix
-  mv::Array{tp,2} # mean vector
-  SVDD_nu::tp
+  REC_varepsilon::Float64
+  Q::Array{Float64,2} #covariance matrix
+  mv::Array{Float64,2} # mean vector
+  SVDD_nu::Float64
   SVDD_model
   KNFST_model
   # initialisation
-  D::Tuple{Array{tp,2},Array{tp,2},Array{tp,2}}
-  K::Array{tp,2}
+  D::Tuple{Array{Float64,2},Array{Float64,2},Array{Float64,2}}
+  K::Array{Float64,2}
   # algorithms
-  KDE::Array{tp,1}
-  REC::Array{tp,1}
-  KNN #::Tuple{Int64,Array{Int64,1},Array{tp,1},Array{Int64,2},Array{tp,2}}
-  KNN_Gamma::Array{tp,1}
-  KNN_Delta# ::Tuple{Array{tp,1},Array{tp,2},Array{tp,2}}
-  T2 #::Tuple{Array{tp,1},Array{tp,2},Array{tp,2},Array{tp,2},Array{tp,2}}
-  D_train::Tuple{Array{tp,2},Array{tp,2},Array{tp,2}}
-  D_test::Tuple{Array{tp,2},Array{tp,2},Array{tp,2},Array{tp,2},Array{tp,2}}
+  KDE::Array{Float64,1}
+  REC::Array{Float64,1}
+  KNN #::Tuple{Int64,Array{Int64,1},Array{Float64,1},Array{Int64,2},Array{Float64,2}}
+  KNN_Gamma::Array{Float64,1}
+  KNN_Delta# ::Tuple{Array{Float64,1},Array{Float64,2},Array{Float64,2}}
+  T2 #::Tuple{Array{Float64,1},Array{Float64,2},Array{Float64,2},Array{Float64,2},Array{Float64,2}}
+  D_train::Tuple{Array{Float64,2},Array{Float64,2},Array{Float64,2}}
+  D_test::Tuple{Array{Float64,2},Array{Float64,2},Array{Float64,2},Array{Float64,2},Array{Float64,2}}
   KNFST
-  SVDD # ::Tuple{Array{Any,1},Array{tp,2},Array{LIBSVM.SVMNode,2},Array{Ptr{LIBSVM.SVMNode},1}}
-  REC_quantiles::Array{tp,1}
-  KDE_quantiles::Array{tp,1}
-  KNN_Gamma_quantiles::Array{tp,1}
-  KNN_Delta_quantiles::Array{tp,1}
-  T2_quantiles::Array{tp,1}
-  KNFST_quantiles::Array{tp,1}
-  SVDD_quantiles::Array{tp,1}
+  SVDD # ::Tuple{Array{Any,1},Array{Float64,2},Array{LIBSVM.SVMNode,2},Array{Ptr{LIBSVM.SVMNode},1}}
+  REC_quantiles::Array{Float64,1}
+  KDE_quantiles::Array{Float64,1}
+  KNN_Gamma_quantiles::Array{Float64,1}
+  KNN_Delta_quantiles::Array{Float64,1}
+  T2_quantiles::Array{Float64,1}
+  KNFST_quantiles::Array{Float64,1}
+  SVDD_quantiles::Array{Float64,1}
   data
   temp_excl::Int64
   ensemble_method::String
