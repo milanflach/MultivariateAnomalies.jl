@@ -109,7 +109,7 @@ function getParameters{tp, N}(algorithms::Array{String,1} = ["REC", "KDE"], trai
                       , NaN # KNFST
                       , NaN # SVDD
                               , [NaN], [NaN], [NaN], [NaN], [NaN], [NaN], [NaN] # quantiles
-                      , NaN# data
+                      , [NaN NaN]# data
                       , temp_excl, ensemble_method, NaN, quantiles
                          )
   if(any(dist .== ["Mahalanobis", "SqMahalanobis"]) || any(algorithms .== "T2"))
