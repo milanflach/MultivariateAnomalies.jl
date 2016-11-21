@@ -308,9 +308,13 @@ function init_UNIV(T::Int, VAR::Int)
      return(univ_out)
 end
 
-function init_UNIV{tp}(data::AbstractArray{tp, 2})
-     T = size(data, 1)
-     VAR = size(data, 2)
+function init_UNIV{tp,N}(data::AbstractArray{tp, N})
+     dims = 1
+     for i = 1:(N-1) # multiply dimensions except the last one and save as dims
+       dims = size(data, i) * dims
+     end
+     T = dims
+     VAR = size(data, N)
      var_dat = zeros(tp, T)
      dc_ix_order = zeros(Int64,T, VAR)
      dc_ix_order2 = zeros(Int64,T, VAR)
@@ -323,9 +327,16 @@ end
 
 Memory efficient version of `UNIV()`, input an `univ_out` object from `init_UNIV()` and some `data` matrix observations * variables
 """
-function UNIV!{tp}(univ_out::Tuple{Array{tp,1},Array{Int64,2},Array{Int64,2}}
-                              , data::AbstractArray{tp, 2})
+function UNIV!{tp, N}(univ_out::Tuple{Array{tp,1},Array{Int64,2},Array{Int64,2}}
+                              , data::AbstractArray{tp, N})
   (var_dat, dc_ix_order, dc_ix_order2) = univ_out
+  dims = 1
+  olddims = zeros(Int64, N-1)
+  for i = 1:(N-1) # multiply dimensions except the last one and save as dims
+    dims = size(data, i) * dims
+    olddims[i] = size(data, i)
+  end
+  data = reshape(data, dims, size(data, N))
   @assert size(var_dat, 1) == size(dc_ix_order, 1) == size(data, 1) === size(dc_ix_order2, 1)
   @assert size(dc_ix_order, 2) == size(data, 2) == size(dc_ix_order2, 2)
   for variable = 1:size(data, 2)
@@ -337,8 +348,11 @@ function UNIV!{tp}(univ_out::Tuple{Array{tp,1},Array{Int64,2},Array{Int64,2}}
   mymed = median(dc_ix_order2)
   maxabs!(var_dat, dc_ix_order2 .- mymed)
   broadcast!(/, var_dat, var_dat, mymed)
-  return(var_dat)
+  return(reshape(var_dat, ntuple(i -> funct(i, olddims), size(olddims, 1))))
 end
+
+# samll helper
+function funct(i, x) return(x[i]) end
 
 """
     UNIV(data)
@@ -346,10 +360,9 @@ end
 order the values in each varaible and return their maximum, i.e. any of the variables in `data` (observations * variables) is above a given quantile,
 the highest quantile will be returned.
 """
-function UNIV{tp}(data::AbstractArray{tp, 2})
+function UNIV{tp, N}(data::AbstractArray{tp, N})
   univ_out = init_UNIV(data)
-  UNIV!(univ_out, data)
-  return(univ_out[1])
+  return(UNIV!(univ_out, data))
 end
 
 """
