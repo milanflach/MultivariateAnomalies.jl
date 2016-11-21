@@ -79,14 +79,16 @@ function globalPCA{tp, N}(datacube::AbstractArray{tp, N}, expl_var::Float64 = 0.
     Y = transform(M, X)
     Y = permutedims(Y, [2,1])
     num_expl_comp = findfirst(cumsum(principalvars(M))/tprincipalvar(M) .>= expl_var)
-    Y = Y[:,1:num_expl_comp]
     newsize[N] = num_expl_comp
-    Xout = similar(datacube)
-    Xout = Xout[:,:,:,1:num_expl_comp]
-    Xout[:] = Y[:]
-    Xout
+    Xout = zeros(tp, ntuple(i -> func(i, newsize), size(newsize, 1)))
+    copy!(Xout, unsafe_wrap(Array, pointer(Y),prod(newsize)))
     end
     return(Xout, principalvars(M)/tprincipalvar(M), cumsum(principalvars(M))/tprincipalvar(M), num_expl_comp)
+end
+
+#small helper
+function func(i,x)
+        return(x[i])
 end
 
 """
