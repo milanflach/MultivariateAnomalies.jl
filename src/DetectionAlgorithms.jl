@@ -214,7 +214,7 @@ end
 Memory efficient version of `KNN_Gamma`, to be used in a loop. Initialize `KNN_Gamma_out` with `init_KNN_Gamma()`.
 """
 
-function KNN_Gamma!(KNN_Gamma_out::Array{Float64, 1}, knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},Array{Int64,2},Array{Float64,2}})
+function KNN_Gamma!(KNN_Gamma_out, knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},Array{Int64,2},Array{Float64,2}})
   NNdists = knn_dists_out[5]
   @assert size(NNdists,1) ==  size(KNN_Gamma_out,1) || error("input size KNN_Gamma_out and NNdists not equal")
   N = size(NNdists,1)
