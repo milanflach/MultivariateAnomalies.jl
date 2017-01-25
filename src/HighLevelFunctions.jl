@@ -75,6 +75,7 @@ return an object of type PARAMS, given the `algorithms` and some `training_data`
 # Examples
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> training_data = randn(100, 2); testing_data = randn(100, 2);
 julia> P = getParameters(["REC", "KDE", "SVDD"], training_data, quantiles = false);
 julia> detectAnomalies(testing_data, P)

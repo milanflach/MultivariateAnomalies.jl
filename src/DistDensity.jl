@@ -34,6 +34,7 @@ end
 compute the distance matrix of `data`, similar to `dist_matrix()`. `D_out` object has to be preallocated, i.e. with `init_dist_matrix`.
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> dc = randn(10,4, 4,3)
 julia> D_out = init_dist_matrix(dc)
 julia> dist_matrix!(D_out, dc, lat = 2, lon = 2)
@@ -95,6 +96,7 @@ The latter two need a covariance matrix `Q` as input argument.
 # Examples
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> dc = randn(10, 4,3)
 julia> D = dist_matrix(dc, space = 2)
 ```
@@ -119,6 +121,7 @@ returns the k-nearest neighbors of a distance matrix `D`. Excludes `temp_excl` (
 from the main diagonal of `D` to be also nearest neighbors.
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> dc = randn(20, 4,3)
 julia> D = dist_matrix(dc, space = 2)
 julia> knn_dists_out = knn_dists(D, 3, 1)
@@ -168,6 +171,7 @@ returns the k-nearest neighbors of a distance matrix `D`. Similar to `knn_dists(
 Please note that the number of nearest neighbors `k` is not necessary, as it is already determined by the `knn_dists_out` object.
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> dc = randn(20, 4,3)
 julia> D = dist_matrix(dc, space = 2)
 julia> knn_dists_out = init_knn_dists(dc, 3)
@@ -205,6 +209,7 @@ compute a kernel matrix out of distance matrix `D`, given `σ`. Optionally norma
 compute `D` with `dist_matrix()`.
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> dc = randn(20, 4,3)
 julia> D = dist_matrix(dc, space = 2)
 julia> K = kernel_matrix(D, 2.0)
@@ -228,6 +233,7 @@ end
 compute a kernel matrix out of distance matrix `D`. Similar to `kernel_matrix()`, but with preallocated Array K (`K = similar(D)`) for output.
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> dc = randn(20, 4,3)
 julia> D = dist_matrix(dc, space = 2)
 julia> kernel_matrix!(D, D, 2.0) # overwrites distance matrix

@@ -141,6 +141,7 @@ end
 returns an embedded datacube by concatenating lagged versions of the 2-, 3- or 4-dimensional datacube with `ΔT` time steps in the past up to dimension `DIM` (presetting: `DIM = 3`)
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> dc = randn(50,3)
 julia> TDE(dc, 3, 2)
 ```
@@ -183,6 +184,7 @@ compute the variance in a moving window along the first dimension of the datacub
 Accepts N dimensional datacubes.
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> dc = randn(50,3,3,3)
 julia> mw_VAR(dc, 15)
 ```
@@ -285,6 +287,7 @@ Supports N-dimensional Arrays.
 Lowry, C. A., & Woodall, W. H. (1992). A Multivariate Exponentially Weighted Moving Average Control Chart. Technometrics, 34, 46–53.
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> dc = rand(100,3,2)
 julia> ewma_dc = EWMA(dc, 0.1)
 ```
@@ -309,6 +312,7 @@ use a preallocated output Z. `Z = similar(dat)` or `dat = dat` for overwriting i
 # Examples
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> dc = rand(100,3,2)
 julia> EWMA!(dc, dc, 0.1)
 ```
@@ -357,6 +361,7 @@ Can deal with some NaN values.
 # Examples
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> dat = rand(193) + 2* sin(0:pi/24:8*pi)
 julia> dat[100] = NaN
 julia> init_MC = init_MedianCycle(dat, 48)
@@ -388,6 +393,7 @@ Can deal with some NaN values.
 # Examples
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> dat = rand(193) + 2* sin(0:pi/24:8*pi)
 julia> dat[100] = NaN
 julia> cycles = get_MedianCycle(dat, 48)
@@ -410,6 +416,7 @@ The datacube can be 2, 3, 4-dimensional, time is stored along the first dimensio
 # Examples
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> dc = hcat(rand(193) + 2* sin(0:pi/24:8*pi), rand(193) + 2* sin(0:pi/24:8*pi))
 julia> cycles = get_MedianCycles(dc, 48)
 ```

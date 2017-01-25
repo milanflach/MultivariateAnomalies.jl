@@ -53,6 +53,7 @@ e.g., by using `get_quantile_scores()` before.
 # Examples
 
 ```jldoctest
+julia> using MultivariateAnomalies
 julia> scores1 = rand(10, 2)
 julia> scores2 = rand(10, 2)
 julia> quantile_scores1 = get_quantile_scores(scores1)
