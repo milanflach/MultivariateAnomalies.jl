@@ -25,7 +25,7 @@ end
 return the quantiles of the given N dimensional `scores` array into a preallocated `quantile_scores` array, see `get_quantile_scores()`.
 """
 
-function get_quantile_scores!{tp,N}(quantile_scores::AbstractArray{Float64, N}, scores::AbstractArray{tp,N}, quantiles::FloatRange{Float64} = 0.0:0.01:1.0)
+function get_quantile_scores!{tp,N}(quantile_scores::AbstractArray{Float64, N}, scores::AbstractArray{tp,N}, quantiles::FloatRange{Float64} = 0.0:0.01:1.0; return_thresholds::Bool = false)
   LENGTH = length(scores)
   thresholds = quantile(unsafe_wrap(Array, pointer(scores), LENGTH), collect(quantiles))
   n_quants = size(thresholds, 1)
@@ -39,7 +39,11 @@ function get_quantile_scores!{tp,N}(quantile_scores::AbstractArray{Float64, N}, 
         end
       end
   end
-  return(quantile_scores)
+  if return_thresholds == false
+    return(quantile_scores)
+  else
+    return(thresholds)
+  end
 end
 
 
