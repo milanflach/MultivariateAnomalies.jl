@@ -20,8 +20,7 @@ compute the Area Under the receiver operator Curve (AUC), given some output `sco
 By default, it is assumed, that the `scores` are ordered increasingly (`increasing = true`), i.e. high scores represent events.
 
 # Examples
-```jldoctest
-julia> using MultivariateAnomalies
+```
 julia> scores = rand(10, 2)
 julia> events = rand(0:1, 10, 2)
 julia> auc(scores, events)
@@ -71,8 +70,7 @@ Similar like `auc()`, but return additionally the true positive and false positi
 
 # Examples
 
-```jldoctest
-julia> using MultivariateAnomalies
+```
 julia> scores = rand(10, 2)
 julia> events = rand(0:1, 10, 2)
 julia> auc_fpr_tpr(scores, events, 0.8)

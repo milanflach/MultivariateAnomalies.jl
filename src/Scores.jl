@@ -5,8 +5,7 @@ return the quantiles of the given N dimensional anomaly `scores` cube. `quantile
 Any score being greater or equal `quantiles[i]` and beeing smaller than `quantiles[i+1]` is assigned to the respective quantile `quantiles[i]`.
 
 # Examples
-
-```jldoctest
+```
 julia> scores1 = rand(10, 2)
 julia> quantile_scores1 = get_quantile_scores(scores1)
 ```
@@ -55,8 +54,7 @@ Supports between 2 and 4 scores input arrays (`m1_scores, ..., m4_scores`). The 
 e.g., by using `get_quantile_scores()` before.
 
 # Examples
-
-```jldoctest
+```
 julia> using MultivariateAnomalies
 julia> scores1 = rand(10, 2)
 julia> scores2 = rand(10, 2)

@@ -73,8 +73,7 @@ return an object of type PARAMS, given the `algorithms` and some `training_data`
 - `quantiles = false`: convert the output scores of the algorithms into quantiles.
 
 # Examples
-
-```jldoctest
+```
 julia> using MultivariateAnomalies
 julia> training_data = randn(100, 2); testing_data = randn(100, 2);
 julia> P = getParameters(["REC", "KDE", "SVDD"], training_data, quantiles = false);
@@ -254,8 +253,7 @@ Without training `P` beforehand, it is also possible to use `detectAnomalies(dat
 Some default parameters are used in this case to initialize `P` internally.
 
 # Examples
-
-```jldoctest
+```
 julia> training_data = randn(100, 2); testing_data = randn(100, 2);
 julia> # compute the anoamly scores of the algorithms "REC", "KDE", "T2" and "KNN_Gamma", their quantiles and return their ensemble scores
 julia> P = getParameters(["REC", "KDE", "T2", "KNN_Gamma"], training_data, quantiles = true, ensemble_method = "mean");
