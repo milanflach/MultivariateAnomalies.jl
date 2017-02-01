@@ -3,7 +3,7 @@
 using Documenter, MultivariateAnomalies
 
 makedocs(modules = [MultivariateAnomalies]
-        , doctest = false
+#        , doctest = false
 #         , format   = Documenter.Formats.HTML,
 #          , sitename = "MultivariateAnomalies.jl",
 #          , pages    = Any[
