@@ -23,7 +23,7 @@ deploydocs(
   deps = Deps.pip("mkdocs", "python-markdown-math") #nothing # change to nothing for mkdocs
   , repo = "github.com/milanflach/MultivariateAnomalies.jl.git"
   , julia = "0.5"
-  , osname = "osx"
+  #, osname = "osx"
   #, target = "build" # not needed for mkdocs
   #, make = nothing # not needed for mkdocs
 )
