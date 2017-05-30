@@ -51,6 +51,8 @@ module MultivariateAnomalies
     TDE,
     mw_VAR,
     mw_VAR!,
+    mw_AVG,
+    mw_AVG!,
     mw_COR,
     EWMA,
     EWMA!,

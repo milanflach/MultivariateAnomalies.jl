@@ -189,19 +189,9 @@ julia> mw_VAR(dc, 15)
 ```
 """
 
-# accepts N- dimensional datacube as input
-# function mw_VAR{tp,N}(datacube::Array{tp,N}, windowsize::Int = 10)
-#   out = fill(NaN, size(datacube))
-#   var(datacube, 1)
-#         for t = 1:(size(datacube, 1)-windowsize)
-#           #print("i = $i, t = $t \n")
-#           copy!(sub(out, Int(t + round(windowsize * 0.5, 0)),:,:), var(sub(datacube,t:(t+windowsize-1),:, :), 1))
-#         end
-#   return(out)
-# end
-
 function mw_VAR{tp,N}(datacube::AbstractArray{tp,N}, windowsize::Int = 10)
-  out = fill(NaN, size(datacube))
+  out = zeros(tp, size(datacube))
+  for k = 1:length(out) out[k] = NaN end
   datacube0mean = datacube .- mean(datacube, 1)
   mw_VAR!(out, datacube0mean, windowsize)
   return(out)
@@ -223,6 +213,13 @@ function mw_VAR!{tp,N}(out::AbstractArray{tp, N}, datacube0mean::AbstractArray{t
   return(out)
 end
 
+"""
+    inner_mw_VAR!{tp,N}(out::Array{tp, N}, datacube0mean::Array{tp,N}, windowsize::Int = 10)
+
+internal function for mw_VAR!()
+
+"""
+
 function inner_mw_VAR!(out, datacube, windowsize, beg, T) # mean already subtracted
   out_beg = Int(floor(windowsize * 0.5)) + beg - 1
   for notavailable =  (beg):(out_beg-1)
@@ -240,6 +237,56 @@ function inner_mw_VAR!(out, datacube, windowsize, beg, T) # mean already subtrac
   end
   return(out)
 end
+
+"""
+    mw_AVG{tp,N}(datacube::AbstractArray{tp,N}, windowsize::Int = 10)
+
+compute the average in a moving window along the first dimension of the datacube (presetting: `windowsize = 10`).
+Accepts N dimensional datacubes.
+
+# Examples
+```
+julia> dc = randn(50,3,3,3)
+julia> mw_AVG(dc, 15)
+```
+"""
+
+function mw_AVG{tp,N}(datacube::AbstractArray{tp,N}, windowsize::Int = 10)
+  out = zeros(tp, size(datacube))
+  for k = 1:length(out) out[k] = NaN end
+  T = size(datacube, 1)
+  for beg = 1:T:length(datacube)
+    mw_AVG!(out, datacube, windowsize, beg, T)
+  end
+   broadcast!(/, out, out, windowsize)
+  return(out)
+end
+
+"""
+    mw_AVG!{tp,N}(out::Array{tp, N}, datacube::Array{tp,N}, windowsize::Int = 10)
+
+internal and mutating version for `mw_AVG()`. 
+
+"""
+
+function mw_AVG!{tp,N}(out::AbstractArray{tp, N}, datacube::AbstractArray{tp, N}, windowsize::Int, beg::Int, T::Int)
+  out_beg = Int(floor(windowsize * 0.5)) + beg - 1
+  for notavailable =  (beg):(out_beg-1)
+    out[notavailable] = NaN
+  end
+  # init x
+  x = sum(unsafe_wrap(Array, pointer(datacube, beg), windowsize))
+  out[out_beg] = x
+  @inbounds for i = 1:(T-windowsize +1)
+    x = x - datacube[beg + i - 1] + datacube[beg + i - 1 + windowsize - 1]
+    out[out_beg + i] = x
+  end
+  for notavailable = (out_beg + (T-windowsize +1) + 1):(beg+T-1)
+    out[notavailable] = NaN
+  end
+  return(out)
+end
+
 
 
 """
