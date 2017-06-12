@@ -256,7 +256,7 @@ function mw_AVG{tp,N}(datacube::AbstractArray{tp,N}, windowsize::Int = 10)
   for k = 1:length(out) out[k] = NaN end
   T = size(datacube, 1)
   for beg = 1:T:length(datacube)
-    mw_AVG!(out, datacube, windowsize, beg, T)
+    inner_mw_AVG!(out, datacube, windowsize, beg, T)
   end
    broadcast!(/, out, out, windowsize)
   return(out)
@@ -265,11 +265,21 @@ end
 """
     mw_AVG!{tp,N}(out::Array{tp, N}, datacube::Array{tp,N}, windowsize::Int = 10)
 
-internal and mutating version for `mw_AVG()`. 
+internal and mutating version for `mw_AVG()`.
 
 """
 
-function mw_AVG!{tp,N}(out::AbstractArray{tp, N}, datacube::AbstractArray{tp, N}, windowsize::Int, beg::Int, T::Int)
+function mw_AVG!{tp,N}(out::AbstractArray{tp,N}, datacube::AbstractArray{tp,N}, windowsize::Int = 10)
+  for k = 1:length(out) out[k] = NaN end
+  T = size(datacube, 1)
+  for beg = 1:T:length(datacube)
+    inner_mw_AVG!(out, datacube, windowsize, beg, T)
+  end
+   broadcast!(/, out, out, windowsize)
+  return(out)
+end
+
+function inner_mw_AVG!{tp,N}(out::AbstractArray{tp, N}, datacube::AbstractArray{tp, N}, windowsize::Int, beg::Int, T::Int)
   out_beg = Int(floor(windowsize * 0.5)) + beg - 1
   for notavailable =  (beg):(out_beg-1)
     out[notavailable] = NaN
