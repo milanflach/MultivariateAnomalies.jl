@@ -86,6 +86,8 @@ include("FeatureExtraction.jl")
 include("Scores.jl")
 # high level functions
 include("HighLevelFunctions.jl")
+# online algorithms
+include("OnlineAlgorithms.jl")
 
 #######################
 end

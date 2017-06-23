@@ -169,7 +169,7 @@ Lowry, C. A., & Woodall, W. H. (1992). A Multivariate Exponentially Weighted Mov
 
 # Hotelling's T^2 (Mahalanobis distance to the data mean)
 # input is time * var data matrix
-function T2{tp}(data::AbstractArray{tp,2}, Q::AbstractArray, mv = 0)
+function T2{tp}(data::AbstractArray{tp,2}, Q::AbstractArray{tp, 2}, mv = 0)
   t2_out = init_T2(data)
   T2!(t2_out, data, Q, mv)
   return(t2_out[1])
@@ -376,9 +376,10 @@ Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector 
 """
 function SVDD_train(K::AbstractArray, nu::Float64)
 # function in LIBSVM.jl for optional parameter settings.
-    svdd_model = svmtrain(fill(1, size(K, 1)), K
-                    , kernel_type = Int32(4), svm_type  = Int32(2), nu = nu
-                    , probability_estimates = false);
+#    svdd_model = svmtrain(fill(1, size(K, 1)), K
+#                    , kernel_type = Int32(4), svm_type  = Int32(2), nu = nu
+#                    , probability_estimates = false);
+  svdd_model = svmtrain(K,  svmtype = OneClassSVM, nu = nu, kernel = Kernel.Precomputed);
   return(svdd_model)
 end
 
@@ -680,7 +681,23 @@ function KNFST_train(K)
 
 end
 
+"""
+    Dist2Centers{tp}(centers::AbstractArray{tp, 2})
 
+Compute the distance to the nearest centers of i.e. a K-means clustering output.
+Large Distances to the nearest center are anomalies.
+# Example
+`(proj, targetValue)`
+
+"""
+function Dist2Centers{tp}(data::AbstractArray{tp,2}, centers::AbstractArray{tp,2})
+  (minD, minDIdx) = findmin(pairwise(Euclidean(), data', centers'), 2)
+  clustassgin = zeros(Int, size(data, 1))
+  for i = 1:size(data, 1)
+    (u, clustassgin[i]) = ind2sub((size(data, 1), size(centers, 1)), minDIdx[i])
+  end
+  return minD, clustassgin
+end
 
 
 ###################################
