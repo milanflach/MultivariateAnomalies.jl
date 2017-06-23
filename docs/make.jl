@@ -27,18 +27,17 @@ using Documenter, MultivariateAnomalies
               pages    = Any[ # Compat: `Any` for 0.4 compat
                   "Home" => "index.md",
                   "Manual" => Any[
-                      "man/AUC.md",
-                      "man/DetectionAlgorithms.md",
-                      "man/DistancesDensity.md",
-                      "man/HighLevelFunctions.md",
-                      "man/Postprocessing.md",
-                      "man/Preprocessing.md"
+                    "High Level Functions" => "man/HighLevelFunctions.md",
+                    "Anomaly Detection Algorithms" => "man/DetectionAlgorithms.md",
+                    "Distance and Densities" =>  "man/DistancesDensity.md",
+                    "Postprocessing" => "man/Postprocessing.md",
+                    "Preprocessing" =>  "man/Preprocessing.md",
+                    "AUC" => "man/AUC.md"
                   ]
                   ]
           )
 
           deploydocs(
-              #deps   = Deps.pip("mkdocs", "python-markdown-math"),
               repo   = "github.com/milanflach/MultivariateAnomalies.jl.git",
               julia  = "0.5",
               deps   = nothing,
