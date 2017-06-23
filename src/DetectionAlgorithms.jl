@@ -376,10 +376,10 @@ Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector 
 """
 function SVDD_train(K::AbstractArray, nu::Float64)
 # function in LIBSVM.jl for optional parameter settings.
-#    svdd_model = svmtrain(fill(1, size(K, 1)), K
-#                    , kernel_type = Int32(4), svm_type  = Int32(2), nu = nu
-#                    , probability_estimates = false);
-  svdd_model = svmtrain(K,  svmtype = OneClassSVM, nu = nu, kernel = Kernel.Precomputed);
+  svdd_model = svmtrain(fill(1, size(K, 1)), K
+                    , kernel_type = Int32(4), svm_type  = Int32(2), nu = nu
+                    , probability_estimates = false);
+  #svdd_model = svmtrain(K,  svmtype = OneClassSVM, nu = nu, kernel = Kernel.Precomputed);
   return(svdd_model)
 end
 
