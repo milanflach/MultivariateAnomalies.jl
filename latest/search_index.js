@@ -925,7 +925,7 @@ var documenterSearchIndex = {"docs": [
     "page": "OnlineAlgorithms",
     "title": "Online Algorithms",
     "category": "section",
-    "text": "We provide online some functions, which are tuned to allocate minimal amounts of memory. Implemented so far: Euclidean distance\nSigma estimation for KDE\nKDE\nREC (in progress)\nKNN-Gamma (in progress)"
+    "text": "We provide online some functions, which are tuned to allocate minimal amounts of memory. Implemented so far: Euclidean distance\nSigma estimation for KDE / REC\nKDE\nREC\nKNN-Gamma "
 },
 
 {
@@ -953,11 +953,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "man/OnlineAlgorithms.html#MultivariateAnomalies.REConline!",
+    "page": "OnlineAlgorithms",
+    "title": "MultivariateAnomalies.REConline!",
+    "category": "Function",
+    "text": "REConline!{tp}(recscores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}, ɛ::tp, dim::Int = 1)\n\ncompute recurrence scores from x and write it to recscores with dim being the dimension of the observations.\n\n\n\n"
+},
+
+{
+    "location": "man/OnlineAlgorithms.html#MultivariateAnomalies.KNNonline!",
+    "page": "OnlineAlgorithms",
+    "title": "MultivariateAnomalies.KNNonline!",
+    "category": "Function",
+    "text": "KNNonline!{tp}(knnscores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}, k::Int, dim::Int = 1)\n\ncompute k-nearest neighbor (gamma) scores from x and write it to knnscores with dim being the dimension of the observations.\n\n\n\n"
+},
+
+{
     "location": "man/OnlineAlgorithms.html#Functions-1",
     "page": "OnlineAlgorithms",
     "title": "Functions",
     "category": "section",
-    "text": "Euclidean_distance!\nSigmaOnline!\nKDEonline!"
+    "text": "Euclidean_distance!\nSigmaOnline!\nKDEonline!\nREConline!\nKNNonline!"
 },
 
 {
