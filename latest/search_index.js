@@ -13,7 +13,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "MultivariateAnomalies.jl",
     "category": "section",
-    "text": "A julia package for detecting multivariate anomalies.Keywords: Novelty detection, Anomaly Detection, Outlier Detection, Statistical Process ControlPlease cite this package as ..."
+    "text": "A julia package for detecting multivariate anomalies.Keywords: Novelty detection, Anomaly Detection, Outlier Detection, Statistical Process ControlPlease cite this package as: Flach, M., Gans, F., Brenning, A., Denzler, J., Reichstein, M., Rodner, E., Bathiany, S., Bodesheim, P., Guanche, Y., Sippel, S., and Mahecha, M. D.: Multivariate Anomaly Detection for Earth Observations: A Comparison of Algorithms and Feature Extraction Techniques, Earth Syst. Dynam. Discuss., in review, 2016. doi:10.5194/esd-2016-51."
 },
 
 {
@@ -37,7 +37,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Package Features",
     "category": "section",
-    "text": "Detect anomalies in your data with easy to use high level functions or individual anomaly detection algorithms\nFeature Extraction: Preprocess your data by extracting relevant features\nSimilarities and Dissimilarities: Compute distance matrices, kernel matrices and k-nearest neighbor objects.\nPostprocessing: Postprocess your anomaly scores, by computing their quantiles or combinations of several algorithms (ensembles).\nAUC: Compute the area under the curve as external evaluation metric of your scores."
+    "text": "Detect anomalies in your data with easy to use high level functions or individual anomaly detection algorithms\nFeature Extraction: Preprocess your data by extracting relevant features\nSimilarities and Dissimilarities: Compute distance matrices, kernel matrices and k-nearest neighbor objects.\nPostprocessing: Postprocess your anomaly scores, by computing their quantiles or combinations of several algorithms (ensembles).\nAUC: Compute the area under the curve as external evaluation metric of your scores.\nOnline Algorithms: Algorithms tuned for little memory allocation."
 },
 
 {
@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Index",
     "category": "section",
-    "text": "Pages = [\"man/Preprocessing.md\", \"man/DetectionAlgorithms.md\", \"man/Postprocessing.md\", \"man/AUC.md\", \"man/DistancesDensity.md\"]"
+    "text": "Pages = [\"man/Preprocessing.md\", \"man/DetectionAlgorithms.md\", \"man/Postprocessing.md\", \"man/AUC.md\", \"man/DistancesDensity.md\", \"man/OnlineAlgorithms.md\"]"
 },
 
 {
@@ -422,6 +422,22 @@ var documenterSearchIndex = {"docs": [
     "title": "Kernel Null Foley Summon Transform",
     "category": "section",
     "text": "KNFST_train\nKNFST_predict\nKNFST_predict!\ninit_KNFST  "
+},
+
+{
+    "location": "man/DetectionAlgorithms.html#MultivariateAnomalies.Dist2Centers",
+    "page": "Anomaly Detection Algorithms",
+    "title": "MultivariateAnomalies.Dist2Centers",
+    "category": "Function",
+    "text": "Dist2Centers{tp}(centers::AbstractArray{tp, 2})\n\nCompute the distance to the nearest centers of i.e. a K-means clustering output. Large Distances to the nearest center are anomalies. data: Observations * Variables.\n\nExample\n\n(proj, targetValue)\n\n\n\n"
+},
+
+{
+    "location": "man/DetectionAlgorithms.html#Distance-to-some-Centers-1",
+    "page": "Anomaly Detection Algorithms",
+    "title": "Distance to some Centers",
+    "category": "section",
+    "text": "Dist2Centers"
 },
 
 {
@@ -801,6 +817,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "man/Preprocessing.html#MultivariateAnomalies.mw_VAR!",
+    "page": "Preprocessing",
+    "title": "MultivariateAnomalies.mw_VAR!",
+    "category": "Function",
+    "text": "mw_VAR!{tp,N}(out::Array{tp, N}, datacube0mean::Array{tp,N}, windowsize::Int = 10)\n\nmutating version for mw_VAR(). The mean of the input data datacube0mean has to be 0. Initialize out properly: out = datacube0mean leads to wrong results.\n\n\n\n"
+},
+
+{
     "location": "man/Preprocessing.html#MultivariateAnomalies.mw_COR",
     "page": "Preprocessing",
     "title": "MultivariateAnomalies.mw_COR",
@@ -809,11 +833,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "man/Preprocessing.html#MultivariateAnomalies.mw_AVG",
+    "page": "Preprocessing",
+    "title": "MultivariateAnomalies.mw_AVG",
+    "category": "Function",
+    "text": "mw_AVG{tp,N}(datacube::AbstractArray{tp,N}, windowsize::Int = 10)\n\ncompute the average in a moving window along the first dimension of the datacube (presetting: windowsize = 10). Accepts N dimensional datacubes.\n\nExamples\n\njulia> dc = randn(50,3,3,3)\njulia> mw_AVG(dc, 15)\n\n\n\n"
+},
+
+{
+    "location": "man/Preprocessing.html#MultivariateAnomalies.mw_AVG!",
+    "page": "Preprocessing",
+    "title": "MultivariateAnomalies.mw_AVG!",
+    "category": "Function",
+    "text": "mw_AVG!{tp,N}(out::Array{tp, N}, datacube::Array{tp,N}, windowsize::Int = 10)\n\ninternal and mutating version for mw_AVG().\n\n\n\n"
+},
+
+{
     "location": "man/Preprocessing.html#Functions-3",
     "page": "Preprocessing",
     "title": "Functions",
     "category": "section",
-    "text": "mw_VAR\nmw_COR"
+    "text": "mw_VAR\nmw_VAR!\nmw_COR\nmw_AVG\nmw_AVG!"
 },
 
 {
@@ -870,6 +910,62 @@ var documenterSearchIndex = {"docs": [
     "title": "Functions",
     "category": "section",
     "text": "auc\nauc_fpr_tpr\nbooleventsIndexPages = [\"AUC.md\"]"
+},
+
+{
+    "location": "man/OnlineAlgorithms.html#",
+    "page": "OnlineAlgorithms",
+    "title": "OnlineAlgorithms",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "man/OnlineAlgorithms.html#Online-Algorithms-1",
+    "page": "OnlineAlgorithms",
+    "title": "Online Algorithms",
+    "category": "section",
+    "text": "We provide online some functions, which are tuned to allocate minimal amounts of memory. Implemented so far: Euclidean distance\nSigma estimation for KDE\nKDE\nREC (in progress)\nKNN-Gamma (in progress)"
+},
+
+{
+    "location": "man/OnlineAlgorithms.html#MultivariateAnomalies.Euclidean_distance!",
+    "page": "OnlineAlgorithms",
+    "title": "MultivariateAnomalies.Euclidean_distance!",
+    "category": "Function",
+    "text": "Euclidean_distance!{tp}(d::Array{tp, 1}, x::AbstractArray{tp, 2}, i::Int, j::Int, dim::Int = 1)\n\ncompute the Euclidean distance between x[i,:] and x[j,:] and write the result to d. Memory efficient. dim is the dimension of i and j.\n\n\n\n"
+},
+
+{
+    "location": "man/OnlineAlgorithms.html#MultivariateAnomalies.SigmaOnline!",
+    "page": "OnlineAlgorithms",
+    "title": "MultivariateAnomalies.SigmaOnline!",
+    "category": "Function",
+    "text": "SigmaOnline!{tp}(sigma::Array{tp, 1}, x::AbstractArray{tp, 2}, samplesize::Int = 250, dim::Int = 1)\n\ncompute sigma parameter as mean of the distances of samplesize randomly sampled points along dim.\n\n\n\n"
+},
+
+{
+    "location": "man/OnlineAlgorithms.html#MultivariateAnomalies.KDEonline!",
+    "page": "OnlineAlgorithms",
+    "title": "MultivariateAnomalies.KDEonline!",
+    "category": "Function",
+    "text": "KDEonline!{tp}(kdescores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}, σ::tp, dim::Int = 1)\n\ncompute (1.0 - Kernel Density Estimates) from x and write it to kdescores with dim being the dimension of the observations.\n\n\n\n"
+},
+
+{
+    "location": "man/OnlineAlgorithms.html#Functions-1",
+    "page": "OnlineAlgorithms",
+    "title": "Functions",
+    "category": "section",
+    "text": "Euclidean_distance!\nSigmaOnline!\nKDEonline!"
+},
+
+{
+    "location": "man/OnlineAlgorithms.html#Index-1",
+    "page": "OnlineAlgorithms",
+    "title": "Index",
+    "category": "section",
+    "text": "Pages = [\"OnlineAlgorithms.md\"]"
 },
 
 ]}
