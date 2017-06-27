@@ -71,6 +71,12 @@ KNFST_predict!
 init_KNFST  
 ```
 
+### Distance to some Centers
+
+```@docs
+Dist2Centers
+```
+
 ## Index
 
 ```@index

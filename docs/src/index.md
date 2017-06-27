@@ -4,8 +4,8 @@
 
 *Keywords: Novelty detection, Anomaly Detection, Outlier Detection, Statistical Process Control*
 
-    Please cite this package as ...
-
+**Please cite this package as:**
+Flach, M., Gans, F., Brenning, A., Denzler, J., Reichstein, M., Rodner, E., Bathiany, S., Bodesheim, P., Guanche, Y., Sippel, S., and Mahecha, M. D.: Multivariate Anomaly Detection for Earth Observations: A Comparison of Algorithms and Feature Extraction Techniques, Earth Syst. Dynam. Discuss., in review, 2016. [doi:10.5194/esd-2016-51.](https://doi.org/10.5194/esd-2016-51)
 ## Requirements
 
 - Julia `0.5`
@@ -31,6 +31,8 @@
 
 - [AUC](man/AUC.md): Compute the area under the curve as external evaluation metric of your scores.
 
+- [Online Algorithms](man/OnlineAlgorithms.md): Algorithms tuned for little memory allocation.
+
 ## Using the Package
 
 For a quick start it might be useful to start with the [high level functions](man/HighLevelFunctions.md) for detecting anomalies. They can be used in highly automized way. 
@@ -47,5 +49,5 @@ The package was implemented by Milan Flach and Fabian Gans, Max Planck Institute
 ## Index
 
 ```@index
-Pages = ["man/Preprocessing.md", "man/DetectionAlgorithms.md", "man/Postprocessing.md", "man/AUC.md", "man/DistancesDensity.md"]
+Pages = ["man/Preprocessing.md", "man/DetectionAlgorithms.md", "man/Postprocessing.md", "man/AUC.md", "man/DistancesDensity.md", "man/OnlineAlgorithms.md"]
 ```

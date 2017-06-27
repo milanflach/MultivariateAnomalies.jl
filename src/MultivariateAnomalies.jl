@@ -44,6 +44,7 @@ module MultivariateAnomalies
     KNFST_predict,
     KNFST_predict!,
     init_KNFST,
+    Dist2Centers,
 # FeatureExtraction
     sMSC,
     globalPCA,
@@ -72,7 +73,11 @@ module MultivariateAnomalies
     getParameters,
     detectAnomalies,
     init_detectAnomalies,
-    detectAnomalies!
+    detectAnomalies!,
+# online algorithms
+    Euclidean_distance!,
+    SigmaOnline!,
+    KDEonline!
 
 # Distance and Density Estimation
 include("DistDensity.jl")

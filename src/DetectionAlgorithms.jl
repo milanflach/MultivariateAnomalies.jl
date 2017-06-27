@@ -685,7 +685,7 @@ end
     Dist2Centers{tp}(centers::AbstractArray{tp, 2})
 
 Compute the distance to the nearest centers of i.e. a K-means clustering output.
-Large Distances to the nearest center are anomalies.
+Large Distances to the nearest center are anomalies. data: Observations * Variables.
 # Example
 `(proj, targetValue)`
 

@@ -61,7 +61,10 @@ include the variance (mw_VAR) and correlations (mw_COR) in a moving window along
 
 ```@docs
 mw_VAR
+mw_VAR!
 mw_COR
+mw_AVG
+mw_AVG!
 ```
 
 ## Index

@@ -20,6 +20,5 @@
 
 # Documentation
 
-The Documentation is available [here]
-(https://milanflach.github.io/MultivariateAnomalies.jl/latest).
+The Documentation is available [here](https://milanflach.github.io/MultivariateAnomalies.jl/latest).
 
