@@ -3,10 +3,10 @@
 We provide online some functions, which are tuned to allocate minimal amounts of memory. Implemented so far: 
 
 - Euclidean distance
-- Sigma estimation for KDE
+- Sigma estimation for KDE / REC
 - KDE
-- REC (in progress)
-- KNN-Gamma (in progress)
+- REC
+- KNN-Gamma 
 
 #### Functions
 
@@ -14,6 +14,8 @@ We provide online some functions, which are tuned to allocate minimal amounts of
 Euclidean_distance!
 SigmaOnline!
 KDEonline!
+REConline!
+KNNonline!
 ```
 
 ## Index

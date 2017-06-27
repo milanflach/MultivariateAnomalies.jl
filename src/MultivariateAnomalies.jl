@@ -77,7 +77,9 @@ module MultivariateAnomalies
 # online algorithms
     Euclidean_distance!,
     SigmaOnline!,
-    KDEonline!
+    KDEonline!,
+    KNNonline!,
+    REConline!
 
 # Distance and Density Estimation
 include("DistDensity.jl")
