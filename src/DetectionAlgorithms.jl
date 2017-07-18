@@ -376,10 +376,10 @@ Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector 
 """
 function SVDD_train(K::AbstractArray, nu::Float64)
 # function in LIBSVM.jl for optional parameter settings.
-  svdd_model = svmtrain(fill(1, size(K, 1)), K
-                    , kernel_type = Int32(4), svm_type  = Int32(2), nu = nu
-                    , probability_estimates = false);
-  #svdd_model = svmtrain(K,  svmtype = OneClassSVM, nu = nu, kernel = Kernel.Precomputed);
+  #svdd_model = svmtrain(fill(1, size(K, 1)), K
+  #                  , kernel_type = Int32(4), svm_type  = Int32(2), nu = nu
+  #                  , probability_estimates = false);
+  svdd_model = svmtrain(K,  svmtype = OneClassSVM, nu = nu, kernel = Kernel.Precomputed);
   return(svdd_model)
 end
 
@@ -393,6 +393,17 @@ Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector 
 """
 function SVDD_predict(svdd_model::LIBSVM.SVMModel, K::AbstractArray)
     (predicted_labels, decision_values) = svmpredict(svdd_model, K)
+end
+
+"""
+    SVDD_predict!(SVDD_out, svdd_model, K)
+
+Memory efficient version of `SVDD_predict()`. Additional input argument is the `SVDD_out` object from `init_SVDD_predict()`.
+Compute `K`with `kernel_matrix()`.
+`SVDD_out[1]` are predicted labels, `SVDD_out[2]` decision_values. Requires LIBSVM.
+"""
+function SVDD_predict!(SVDD_out::LIBSVM.SVMTemp, svdd_model::LIBSVM.SVMModel{Int64}, K::AbstractArray)
+    svmpredict!(SVDD_out, svdd_model, K)
 end
 
 """
@@ -449,17 +460,6 @@ end
 function init_SVDD_predict(instances::AbstractArray{Float64,2})
   SVDD_out = init_svmpredict(instances)
   return(SVDD_out)
-end
-
-"""
-    SVDD_predict!(SVDD_out, svdd_model, K)
-
-Memory efficient version of `SVDD_predict()`. Additional input argument is the `SVDD_out` object from `init_SVDD_predict()`.
-Compute `K`with `kernel_matrix()`.
-`SVDD_out[1]` are predicted labels, `SVDD_out[2]` decision_values. Requires LIBSVM.
-"""
-function SVDD_predict!(SVDD_out::LIBSVM.SVMTemp, svdd_model::LIBSVM.SVMModel{Int64}, K::AbstractArray)
-    svmpredict!(SVDD_out, svdd_model, K)
 end
 
 """
