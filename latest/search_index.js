@@ -13,7 +13,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "MultivariateAnomalies.jl",
     "category": "section",
-    "text": "A julia package for detecting multivariate anomalies.Keywords: Novelty detection, Anomaly Detection, Outlier Detection, Statistical Process ControlPlease cite this package as: Flach, M., Gans, F., Brenning, A., Denzler, J., Reichstein, M., Rodner, E., Bathiany, S., Bodesheim, P., Guanche, Y., Sippel, S., and Mahecha, M. D.: Multivariate Anomaly Detection for Earth Observations: A Comparison of Algorithms and Feature Extraction Techniques, Earth Syst. Dynam. Discuss., in review, 2016. doi:10.5194/esd-2016-51."
+    "text": "A julia package for detecting multivariate anomalies.Keywords: Novelty detection, Anomaly Detection, Outlier Detection, Statistical Process ControlPlease cite this package as: Flach, M., Gans, F., Brenning, A., Denzler, J., Reichstein, M., Rodner, E., Bathiany, S., Bodesheim, P., Guanche, Y., Sippel, S., and Mahecha, M. D. (2017): Multivariate anomaly detection for Earth observations: a comparison of algorithms and feature extraction techniques, Earth Syst. Dynam., 8, 677-696, doi:10.5194/esd-8-677-2017."
 },
 
 {
@@ -21,7 +21,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Requirements",
     "category": "section",
-    "text": "Julia 0.5\nJulia packages Distances, MultivariateStats and LIBSVM.\nImportant to get the latest LIBSVM branch via:Pkg.clone(\"https://github.com/milanflach/LIBSVM.jl.git\"); Pkg.checkout(\"LIBSVM\", \"mutating_versions\"); Pkg.build(\"LIBSVM\")"
+    "text": "Julia 0.5\nJulia packages Distances, MultivariateStats and LIBSVM."
 },
 
 {
@@ -342,38 +342,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Univariate Approach",
     "category": "section",
     "text": "UNIV\nUNIV!\ninit_UNIV"
-},
-
-{
-    "location": "man/DetectionAlgorithms.html#MultivariateAnomalies.SVDD_train",
-    "page": "Anomaly Detection Algorithms",
-    "title": "MultivariateAnomalies.SVDD_train",
-    "category": "Function",
-    "text": "SVDD_train(K, nu)\n\ntrain a one class support vecort machine model (i.e. support vector data description), given a kernel matrix K and and the highest possible percentage of outliers nu. Returns the model object (svdd_model). Requires LIBSVM.\n\nTax, D. M. J., & Duin, R. P. W. (1999). Support vector domain description. Pattern Recognition Letters, 20, 1191–1199. Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector Algorithms. Neural Computation, 12, 1207–1245.\n\n\n\n"
-},
-
-{
-    "location": "man/DetectionAlgorithms.html#MultivariateAnomalies.SVDD_predict",
-    "page": "Anomaly Detection Algorithms",
-    "title": "MultivariateAnomalies.SVDD_predict",
-    "category": "Function",
-    "text": "SVDD_predict(svdd_model, K)\n\npredict the outlierness of an object given the testing Kernel matrix K and the svdd_model from SVDD_train(). Requires LIBSVM.\n\nTax, D. M. J., & Duin, R. P. W. (1999). Support vector domain description. Pattern Recognition Letters, 20, 1191–1199. Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector Algorithms. Neural Computation, 12, 1207–1245.\n\n\n\n"
-},
-
-{
-    "location": "man/DetectionAlgorithms.html#MultivariateAnomalies.SVDD_predict!",
-    "page": "Anomaly Detection Algorithms",
-    "title": "MultivariateAnomalies.SVDD_predict!",
-    "category": "Function",
-    "text": "SVDD_predict!(SVDD_out, svdd_model, K)\n\nMemory efficient version of SVDD_predict(). Additional input argument is the SVDD_out object from init_SVDD_predict(). Compute Kwith kernel_matrix(). SVDD_out[1] are predicted labels, SVDD_out[2] decision_values. Requires LIBSVM.\n\n\n\n"
-},
-
-{
-    "location": "man/DetectionAlgorithms.html#MultivariateAnomalies.init_SVDD_predict",
-    "page": "Anomaly Detection Algorithms",
-    "title": "MultivariateAnomalies.init_SVDD_predict",
-    "category": "Function",
-    "text": "init_SVDD_predict(T::Int)\ninit_SVDD_predict(T::Int, Ttrain::Int)\n\ninitializes a SVDD_out object to be used in SVDD_predict!(). Input is the number of time steps T (in prediction mode). If T for prediction differs from T of the training data (Ttrain) use Ttrain as additional argument.\n\n\n\n"
 },
 
 {
