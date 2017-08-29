@@ -391,76 +391,10 @@ predict the outlierness of an object given the testing Kernel matrix `K` and the
 Tax, D. M. J., & Duin, R. P. W. (1999). Support vector domain description. Pattern Recognition Letters, 20, 1191–1199.
 Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector Algorithms. Neural Computation, 12, 1207–1245.
 """
-function SVDD_predict(svdd_model::LIBSVM.SVMModel, K::AbstractArray)
+function SVDD_predict(svdd_model::LIBSVM.SVM, K::AbstractArray)
     (predicted_labels, decision_values) = svmpredict(svdd_model, K)
 end
 
-"""
-    SVDD_predict!(SVDD_out, svdd_model, K)
-
-Memory efficient version of `SVDD_predict()`. Additional input argument is the `SVDD_out` object from `init_SVDD_predict()`.
-Compute `K`with `kernel_matrix()`.
-`SVDD_out[1]` are predicted labels, `SVDD_out[2]` decision_values. Requires LIBSVM.
-"""
-function SVDD_predict!(SVDD_out::LIBSVM.SVMTemp, svdd_model::LIBSVM.SVMModel{Int64}, K::AbstractArray)
-    svmpredict!(SVDD_out, svdd_model, K)
-end
-
-"""
-    init_SVDD_predict(T::Int)
-    init_SVDD_predict(T::Int, Ttrain::Int)
-
-initializes a `SVDD_out` object to be used in `SVDD_predict!()`. Input is the number of time steps `T` (in prediction mode).
-If `T` for prediction differs from T of the training data (`Ttrain`) use `Ttrain` as additional argument.
-"""
-function init_SVDD_predict(T::Int)
-  instances = Array(Float64, 1, T)
-  SVDD_out = init_svmpredict(instances, 1)
-  #predicted_labels = Array(Int64, T);
-  #decision_values = Array(Float64, 1, T);
-  #nodeptrs = Array(Ptr{LIBSVM.SVMNode}, T);
-  #nodes = Array(LIBSVM.SVMNode, Ttrain + 1, T);
-  #SVDD_out = (predicted_labels, decision_values, nodeptrs, nodes)
-  return(SVDD_out)
-end
-
-function init_SVDD_predict(T::Int, Ttrain::Int, svdd_model::LIBSVM.SVMModel)
-  instances = Array(Float64, Ttrain, T)
-  SVDD_out = init_svmpredict(instances, svdd_model)
-  #predicted_labels = Array(Int64, T);
-  #decision_values = Array(Float64, 1, T);
-  #nodes = Array(LIBSVM.SVMNode, Ttrain + 1, T);
-  #nodeptrs = Array(Ptr{LIBSVM.SVMNode}, T);
-  #SVDD_out = (predicted_labels, decision_values, nodes, nodeptrs)
-  return(SVDD_out)
-end
-
-function init_SVDD_predict(T::Int, svdd_model::LIBSVM.SVMModel)
-  instances = Array(Float64, 1, T)
-  SVDD_out = init_svmpredict(instances, svdd_model)
-  #predicted_labels = Array(Int64, T);
-  #decision_values = Array(Float64, 1, T);
-  #nodeptrs = Array(Ptr{LIBSVM.SVMNode}, T);
-  #nodes = Array(LIBSVM.SVMNode, Ttrain + 1, T);
-  #SVDD_out = (predicted_labels, decision_values, nodeptrs, nodes)
-  return(SVDD_out)
-end
-
-function init_SVDD_predict(T::Int, Ttrain::Int)
-  instances = Array(Float64, Ttrain, T)
-  SVDD_out = init_svmpredict(instances, 1)
-  #predicted_labels = Array(Int64, T);
-  #decision_values = Array(Float64, 1, T);
-  #nodes = Array(LIBSVM.SVMNode, Ttrain + 1, T);
-  #nodeptrs = Array(Ptr{LIBSVM.SVMNode}, T);
-  #SVDD_out = (predicted_labels, decision_values, nodes, nodeptrs)
-  return(SVDD_out)
-end
-
-function init_SVDD_predict(instances::AbstractArray{Float64,2})
-  SVDD_out = init_svmpredict(instances)
-  return(SVDD_out)
-end
 
 """
     KNFST_predict(model, K)

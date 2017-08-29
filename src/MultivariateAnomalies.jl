@@ -38,8 +38,6 @@ module MultivariateAnomalies
     init_UNIV,
     SVDD_train,
     SVDD_predict,
-    SVDD_predict!,
-    init_SVDD_predict,
     KNFST_train,
     KNFST_predict,
     KNFST_predict!,

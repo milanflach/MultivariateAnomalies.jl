@@ -163,7 +163,7 @@ function init_detectAnomalies{tp, N}(data::AbstractArray{tp, N}, P::PARAMS)
     P.D_train = init_dist_matrix(P.training_data)
     P.D_test = init_dist_matrix(data, P.training_data)
     if(any(P.algorithms .== "KNFST")) P.KNFST = init_KNFST(T, P.KNFST_model) end
-    if(any(P.algorithms .== "SVDD"))  P.SVDD = init_SVDD_predict(T, size(P.training_data, 1)) end
+    #if(any(P.algorithms .== "SVDD"))  P.SVDD = init_SVDD_predict(T, size(P.training_data, 1)) end
   end
 
   return(P)
@@ -210,8 +210,8 @@ function detectAnomalies!{tp}(data::AbstractArray{tp, 2}, P::PARAMS)
     kernel_matrix!(P.D_test[1], P.D_test[1], P.K_sigma) # transform distance to kernel matrix
     if(any(ispartof(P.algorithms, ["KNFST"])))  KNFST_predict!(P.KNFST, P.KNFST_model, P.D_test[1]) end
     if(any(ispartof(P.algorithms, ["SVDD"])))
-      SVDD_predict!(P.SVDD, P.SVDD_model, P.D_test[1])
-      broadcast!(*, P.SVDD.decvalues, P.SVDD.decvalues, -1)
+      (predicted_labels, decision_values) = SVDD_predict(P.SVDD_model, P.D_test[1])
+      P.SVDD = decision_values .* -1
     end
   end
 
@@ -219,7 +219,7 @@ function detectAnomalies!{tp}(data::AbstractArray{tp, 2}, P::PARAMS)
     if(any(ispartof(P.algorithms, ["T2"])))  P.T2_quantiles = get_quantile_scores(P.T2[1]) end
     if(any(ispartof(P.algorithms, ["REC"]))) P.REC_quantiles = get_quantile_scores(P.REC) end
     if(any(ispartof(P.algorithms, ["KDE"]))) P.KDE_quantiles = get_quantile_scores(P.KDE) end
-    if(any(ispartof(P.algorithms, ["SVDD"]))) P.SVDD_quantiles = squeeze(get_quantile_scores(P.SVDD.decvalues), 1) end
+    if(any(ispartof(P.algorithms, ["SVDD"]))) P.SVDD_quantiles = squeeze(get_quantile_scores(P.SVDD), 1) end
     if(any(ispartof(P.algorithms, ["KNFST"]))) P.KNFST_quantiles = get_quantile_scores(P.KNFST[1]) end
     if(any(ispartof(P.algorithms, ["KNN_Gamma"]))) P.KNN_Gamma_quantiles = get_quantile_scores(P.KNN_Gamma) end
     if(any(ispartof(P.algorithms, ["KNN_Delta"]))) P.KNN_Delta_quantiles = get_quantile_scores(P.KNN_Delta[1]) end

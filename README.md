@@ -10,9 +10,8 @@
 
 # Installation
 
-- clone latest LIBSVM branch and checkout branch mutating_versions:
-`Pkg.clone("https://github.com/milanflach/LIBSVM.jl.git");`
-`Pkg.checkout("LIBSVM", "mutating_versions");`
+- add and build LIBSVM:
+`Pkg.add("LIBSVM");`
 `Pkg.build("LIBSVM")`
 
 - clone MultivariateAnomalies.jl:

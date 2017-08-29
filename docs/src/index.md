@@ -5,15 +5,11 @@
 *Keywords: Novelty detection, Anomaly Detection, Outlier Detection, Statistical Process Control*
 
 **Please cite this package as:**
-Flach, M., Gans, F., Brenning, A., Denzler, J., Reichstein, M., Rodner, E., Bathiany, S., Bodesheim, P., Guanche, Y., Sippel, S., and Mahecha, M. D.: Multivariate Anomaly Detection for Earth Observations: A Comparison of Algorithms and Feature Extraction Techniques, Earth Syst. Dynam. Discuss., in review, 2016. [doi:10.5194/esd-2016-51.](https://doi.org/10.5194/esd-2016-51)
+Flach, M., Gans, F., Brenning, A., Denzler, J., Reichstein, M., Rodner, E., Bathiany, S., Bodesheim, P., Guanche, Y., Sippel, S., and Mahecha, M. D. (2017): Multivariate anomaly detection for Earth observations: a comparison of algorithms and feature extraction techniques, Earth Syst. Dynam., 8, 677-696, [doi:10.5194/esd-8-677-2017](https://doi.org/10.5194/esd-8-677-2017).
 ## Requirements
 
 - Julia `0.5`
 - Julia packages `Distances`, `MultivariateStats` and `LIBSVM`.
-- Important to get the latest `LIBSVM` branch via:
-`Pkg.clone("https://github.com/milanflach/LIBSVM.jl.git");`
-`Pkg.checkout("LIBSVM", "mutating_versions");`
-`Pkg.build("LIBSVM")`
 
 ## Installation
 

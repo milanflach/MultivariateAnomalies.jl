@@ -32,7 +32,7 @@ using Distances
 
 # SVDD
 Ktest = exp(-0.5 * pairwise(Euclidean(), dat[1:4,:]', dat') ./ sigma^2)
-@test all(SVDD_predict(svdd_model, Ktest)[1] .== [-1, 1, -1, -1, 1])
+@test all(SVDD_predict(svdd_model, Ktest)[1] .== [0, 1, 0, 0, 1])
 # KNFST, last data point (not seen in training) should differ, i.e. have largest values
 @test sortperm(-KNFST_predict(knfst_model, Ktest)[1])[1] == 5
 
@@ -58,7 +58,7 @@ P.SVDD_model = svdd_model
 P.KNFST_model = knfst_model
 detectAnomalies(dat, P)
 (labels, decvalues) = SVDD_predict(svdd_model, Ktest)
-@test P.SVDD.class == labels
+@test round(P.SVDD, 3) == round(decvalues, 3) * -1
 @test K[1:4,1:4] == P.D_train[1]
 @test Ktest == P.D_test[1]
 @test round(P.KNFST[1], 3) == round(KNFST_predict(knfst_model, Ktest)[1], 3)
