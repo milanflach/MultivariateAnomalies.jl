@@ -8,8 +8,8 @@
 Flach, M., Gans, F., Brenning, A., Denzler, J., Reichstein, M., Rodner, E., Bathiany, S., Bodesheim, P., Guanche, Y., Sippel, S., and Mahecha, M. D. (2017): Multivariate anomaly detection for Earth observations: a comparison of algorithms and feature extraction techniques, Earth Syst. Dynam., 8, 677-696, [doi:10.5194/esd-8-677-2017](https://doi.org/10.5194/esd-8-677-2017).
 ## Requirements
 
-- Julia `0.5`
-- Julia packages `Distances`, `MultivariateStats` and `LIBSVM`.
+- Julia `0.6`
+- Julia packages `Distances`, `Combinatorics`, `MultivariateStats` and `LIBSVM`.
 
 ## Installation
 
