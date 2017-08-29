@@ -10,10 +10,6 @@
 
 # Installation
 
-- add and build LIBSVM:
-`Pkg.add("LIBSVM");`
-`Pkg.build("LIBSVM")`
-
 - clone MultivariateAnomalies.jl:
 `Pkg.clone("https://github.com/milanflach/MultivariateAnomalies.jl")`
 
