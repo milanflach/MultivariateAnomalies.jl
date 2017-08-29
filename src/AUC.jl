@@ -106,7 +106,7 @@ function auc_fpr_tpr(scores,events, quant = 0.90; increasing = true)
         else
             fp+=1
         end
-        if i == Int(round(quant * length(L), 0))
+        if i == round(Int, quant * length(L))
             fpr = fp/N
             tpr = tp/P
         end

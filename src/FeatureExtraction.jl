@@ -1,4 +1,5 @@
-using MultivariateStats
+import MultivariateStats
+import Combinatorics
 
 
 """
@@ -74,15 +75,16 @@ function globalPCA{tp, N}(datacube::AbstractArray{tp, N}, expl_var::Float64 = 0.
     end
     X = reshape(datacube, dims, size(datacube, N)) # reshape according to dims
     X = permutedims(X, [2,1]) # permute as PCA expectes other input format
-    M = fit(PCA, X, pratio = 0.999, method = :svd)
-    Y = transform(M, X)
+    M = MultivariateStats.fit(MultivariateStats.PCA, X, pratio = 0.999, method = :svd)
+    Y = MultivariateStats.transform(M, X)
     Y = permutedims(Y, [2,1])
-    num_expl_comp = findfirst(cumsum(principalvars(M))/tprincipalvar(M) .>= expl_var)
+    num_expl_comp = findfirst(cumsum(MultivariateStats.principalvars(M))/MultivariateStats.tprincipalvar(M) .>= expl_var)
     newsize[N] = num_expl_comp
     Xout = zeros(tp, ntuple(i -> func(i, newsize), size(newsize, 1)))
     copy!(Xout, unsafe_wrap(Array, pointer(Y),prod(newsize)))
     end
-    return(Xout, principalvars(M)/tprincipalvar(M), cumsum(principalvars(M))/tprincipalvar(M), num_expl_comp)
+    return(Xout, MultivariateStats.principalvars(M)/MultivariateStats.tprincipalvar(M),
+    cumsum(MultivariateStats.principalvars(M))/MultivariateStats.tprincipalvar(M), num_expl_comp)
 end
 
 #small helper
@@ -114,14 +116,14 @@ function globalICA{tp, N}(datacube::AbstractArray{tp, N}, mode = "expl_var"; exp
       if(expl_var > 1.0 || expl_var < 0.0) print("Stop: expl_var has to be within range(0.0, 1.0) but is $expl_var")
         else
         # explaining variance, estimate number of components to a certain variance with PCA
-        M = fit(PCA, X, pratio = 0.99, method = :svd)
-        num_comp = findfirst(cumsum(principalvars(M))/tprincipalvar(M) .>= expl_var)
+        M = MultivariateStats.fit(MultivariateStats.PCA, X, pratio = 0.99, method = :svd)
+        num_comp = findfirst(cumsum(MultivariateStats.principalvars(M))/MultivariateStats.tprincipalvar(M) .>= expl_var)
       end
     end
     if(num_comp > size(datacube, N)) print("Stop: num_comp has to be smaller than size(datacube, N) = $(size(datacube, N)) but is $num_comp")
       else
-        M = fit(ICA, X, num_comp, do_whiten = true, mean = 0.0) # without whitening --> get orthonormal vectors before
-        Y = transform(M, X)
+        M = MultivariateStats.fit(MultivariateStats.ICA, X, num_comp, do_whiten = true, mean = 0.0) # without whitening --> get orthonormal vectors before
+        Y = MultivariateStats.transform(M, X)
         Y = permutedims(Y, [2,1])
         newsize[N] = num_comp
         Xout = similar(datacube)
@@ -129,7 +131,7 @@ function globalICA{tp, N}(datacube::AbstractArray{tp, N}, mode = "expl_var"; exp
         Xout[:] = Y[:]
         Xout
     end
-    return(Xout, principalvars(M)/tprincipalvar(M), cumsum(principalvars(M))/tprincipalvar(M), num_comp)
+    return(Xout, num_comp)
     end
 end
 
@@ -308,7 +310,7 @@ Accepts 4-dimensional datacubes.
 """
 
 function mw_COR{tp}(datacube::AbstractArray{tp, 4}, windowsize::Int = 10)
-  comb = collect(combinations(1:size(datacube, 4), 2))
+  comb = collect(Combinatorics.combinations(1:size(datacube, 4), 2))
   out = zeros(Float64, size(datacube, 1), size(datacube, 2), size(datacube, 3), size(comb, 1))
   x = zeros(Float64, windowsize, 2)
   for icomb = 1:size(comb, 1)
@@ -316,7 +318,7 @@ function mw_COR{tp}(datacube::AbstractArray{tp, 4}, windowsize::Int = 10)
       for lat = 1:size(datacube, 2)
         for t = 1:(size(datacube, 1)-windowsize)
           x = copy!(x, datacube[t:(t+windowsize-1),lat,lon,comb[icomb]])
-          copy!(view(out, t + Int(round(windowsize * 0.5, 0)),lat,lon,icomb)
+          copy!(view(out, t + round.(Int, windowsize * 0.5),lat,lon,icomb)
                 , cor(view(x,:,1), view(x,:,2)))
         end
       end
@@ -426,12 +428,12 @@ julia> init_MC[3]
 function get_MedianCycle!{tp}(init_MC::Tuple{Int64,Int64,Array{tp,1},Array{tp,2}}, dat::Array{tp,1})
   copy!(init_MC[4], view(dat, 1:(init_MC[2] * init_MC[1])))
   for i = 1:init_MC[1]
-    if(all(!isnan(view(init_MC[4], i, :))))
+    if(all(.!isnan.(view(init_MC[4], i, :))))
       copy!(view(init_MC[3], i), median(view(init_MC[4], i, :)))
-    elseif(all(isnan(view(init_MC[4], i, :))))
+    elseif(all(isnan.(view(init_MC[4], i, :))))
         copy!(view(init_MC[3], i), NaN)
     else
-      copy!(view(init_MC[3], i), median(view(init_MC[4], i, squeeze(!isnan(view(init_MC[4], i,:)), 1))))
+      copy!(view(init_MC[3], i), median(view(init_MC[4], i, squeeze(!isnan.(view(init_MC[4], i,:)), 1))))
     end
   end
   return(init_MC[3])

@@ -152,7 +152,7 @@ function T2!{tp}(t2_out::Tuple{Array{tp,1},Array{tp,2},Array{tp,2},Array{tp,2},A
   copy!(view(diagS, diagind(diagS)), (USVt.S + 1e-10)  .^ (-0.5))
   transpose!(Qinv, USVt.U * diagS * USVt.Vt)
   copy!(data_norm, cdata * Qinv)
-  copy!(data_norm, data_norm .* data_norm)
+  broadcast!(*, data_norm, data_norm, data_norm)
   sum!(maha, data_norm)
   return(t2_out[1])
 end
@@ -230,9 +230,9 @@ return a `KNN_Delta_out` object to be used for `KNN_Delta!`. Input: time steps/o
 """
 
 function init_KNN_Delta(T::Int, VAR::Int, k::Int)
-  r = Array(Float64,T)
-  x_i = Array(Float64, 1, VAR)
-  d_x = Array(Float64, k, VAR)
+  r = Array{Float64}(T)
+  x_i = Array{Float64}(1, VAR)
+  d_x = Array{Float64}(k, VAR)
   KNN_Delta_out = (r, x_i, d_x)
   return(KNN_Delta_out)
 end
@@ -240,9 +240,9 @@ end
 function init_KNN_Delta(knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},Array{Int64,2},Array{Float64,2}}, VAR::Int)
   T = size(knn_dists_out[2], 1)
   K = knn_dists_out[1]
-  r = Array(Float64,T)
-  x_i = Array(Float64, 1, VAR)
-  d_x = Array(Float64, K, VAR)
+  r = Array{Float64}(T)
+  x_i = Array{Float64}(1, VAR)
+  d_x = Array{Float64}(K, VAR)
   KNN_Delta_out = (r, x_i, d_x)
   return(KNN_Delta_out)
 end
@@ -274,7 +274,7 @@ function KNN_Delta!(KNN_Delta_out::Tuple{Array{Float64,1},Array{Float64,2},Array
         for j = 1:VAR
             dists += (x_i[1,j] / K)^2
         end
-        r[i] = sqrt(dists)
+        r[i] = sqrt.(dists)
     end
     return(r)
 end
@@ -445,7 +445,7 @@ function KNFST_predict!(scores, diffs, Ktransposed, proj, targetValue, K)
   A_mul_B!(diffs, Ktransposed, proj)
   # differences to the target value:
   broadcast!(-,diffs,diffs, targetValue)
-  broadcast!(.*,diffs, diffs, diffs)
+  broadcast!(*,diffs, diffs, diffs)
   sum!(scores, diffs)
   broadcast!(sqrt, scores, scores)
   return(scores)
@@ -463,7 +463,7 @@ function KNFST_predict!(KNFST_out::Tuple{Array{Float64,1},Array{Float64,2},Array
   A_mul_B!(diffs, Ktransposed, proj)
   # differences to the target value:
   broadcast!(-,diffs,diffs, targetValue)
-  broadcast!(.*,diffs, diffs, diffs)
+  broadcast!(*,diffs, diffs, diffs)
   sum!(scores, diffs)
   broadcast!(sqrt, scores, scores)
   return(scores)
@@ -512,7 +512,7 @@ function calculateKNFST(K, labels)
     (basisvecsValues,basisvecs) = eig(centeredK);
     basisvecs = basisvecs[:,basisvecsValues .> 1e-12];
     basisvecsValues = basisvecsValues[basisvecsValues .> 1e-12];
-    basisvecsValues = diagm(1./sqrt(basisvecsValues));
+    basisvecsValues = diagm(1./sqrt.(basisvecsValues));
     basisvecs = basisvecs*basisvecsValues;
 
     ### calculate transformation T of within class scatter Sw:

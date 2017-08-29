@@ -211,7 +211,7 @@ function detectAnomalies!{tp}(data::AbstractArray{tp, 2}, P::PARAMS)
     if(any(ispartof(P.algorithms, ["KNFST"])))  KNFST_predict!(P.KNFST, P.KNFST_model, P.D_test[1]) end
     if(any(ispartof(P.algorithms, ["SVDD"])))
       (predicted_labels, decision_values) = SVDD_predict(P.SVDD_model, P.D_test[1])
-      P.SVDD = decision_values .* -1
+      P.SVDD = broadcast(*, decision_values, -1)
     end
   end
 

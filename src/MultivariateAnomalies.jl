@@ -2,7 +2,8 @@ __precompile__(true)
 
 module MultivariateAnomalies
 #######################
-  using MultivariateStats
+  import MultivariateStats
+  import Combinatorics
   using Distances
   using LIBSVM
   using Base.Cartesian

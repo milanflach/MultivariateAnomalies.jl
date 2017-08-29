@@ -217,12 +217,9 @@ julia> K = kernel_matrix(D, 2.0)
 
 # compute kernel matrix from distance matrix
 function kernel_matrix(D::AbstractArray, σ::Float64 = 1.0, kernel::String = "gauss", dimension::Int64 = 1)
-    #if(size(D, 1) != size(D, 2)) print("D is not a distance matrix with equal dimensions")
-    if(kernel == "normalized_gauss") # k integral gets one
-        return(exp(-0.5 .* D/(σ^2))/((2*pi*σ*σ)^(dimension/2)))
-    elseif (kernel == "gauss")
-        return(exp(-0.5 .* D/(σ^2)))
-    end
+  K = similar(D)
+  kernel_matrix!(K, D, σ, kernel, dimension)
+  return K
 end
 
 """
@@ -244,11 +241,11 @@ function kernel_matrix!{T,N}(K::AbstractArray{T,N}, D::AbstractArray{T,N}, σ::R
     σ = convert(T, σ)
     if(kernel == "normalized_gauss") # k integral gets one
     for i in eachindex(K)
-      @inbounds K[i] = exp(-0.5 .* D[i]./(σ.*σ))./((2 .*pi.*σ.*σ).^(dimension./2))
+      @inbounds K[i] = exp.(-0.5 * D[i]./(σ*σ))./((2 *pi*σ*σ).^(dimension/2))
     end
     elseif (kernel == "gauss")
     for i in eachindex(K)
-        @inbounds K[i] = exp(-0.5 .* D[i]./(σ.*σ))
+        @inbounds K[i] = exp.(-0.5 * D[i]./(σ*σ))
     end
     end
   return(K)

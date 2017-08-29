@@ -11,7 +11,7 @@ julia> quantile_scores1 = get_quantile_scores(scores1)
 ```
 """
 
-function get_quantile_scores{tp,N}(scores::AbstractArray{tp,N}, quantiles::FloatRange{Float64} = 0.0:0.01:1.0)
+function get_quantile_scores{tp,N}(scores::AbstractArray{tp,N}, quantiles::StepRangeLen{Float64} = 0.0:0.01:1.0)
   quantile_scores = zeros(Float64, size(scores))
   get_quantile_scores!(quantile_scores, scores, quantiles)
   return(quantile_scores)
@@ -19,12 +19,12 @@ end
 
 
 """
-    get_quantile_scores!{tp,N}(quantile_scores::AbstractArray{Float64, N}, scores::AbstractArray{tp,N}, quantiles::FloatRange{Float64} = 0.0:0.01:1.0)
+    get_quantile_scores!{tp,N}(quantile_scores::AbstractArray{Float64, N}, scores::AbstractArray{tp,N}, quantiles::StepRangeLen{Float64} = 0.0:0.01:1.0)
 
 return the quantiles of the given N dimensional `scores` array into a preallocated `quantile_scores` array, see `get_quantile_scores()`.
 """
 
-function get_quantile_scores!{tp,N}(quantile_scores::AbstractArray{Float64, N}, scores::AbstractArray{tp,N}, quantiles::FloatRange{Float64} = 0.0:0.01:1.0; return_thresholds::Bool = false)
+function get_quantile_scores!{tp,N}(quantile_scores::AbstractArray{Float64, N}, scores::AbstractArray{tp,N}, quantiles::StepRangeLen{Float64} = 0.0:0.01:1.0; return_thresholds::Bool = false)
   LENGTH = length(scores)
   thresholds = quantile(unsafe_wrap(Array, pointer(scores), LENGTH), collect(quantiles))
   n_quants = size(thresholds, 1)
