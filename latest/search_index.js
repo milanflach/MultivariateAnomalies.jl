@@ -21,7 +21,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Requirements",
     "category": "section",
-    "text": "Julia 0.5\nJulia packages Distances, MultivariateStats and LIBSVM."
+    "text": "Julia 0.6\nJulia packages Distances, Combinatorics, MultivariateStats and LIBSVM."
 },
 
 {
@@ -345,11 +345,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "man/DetectionAlgorithms.html#MultivariateAnomalies.SVDD_train",
+    "page": "Anomaly Detection Algorithms",
+    "title": "MultivariateAnomalies.SVDD_train",
+    "category": "Function",
+    "text": "SVDD_train(K, nu)\n\ntrain a one class support vecort machine model (i.e. support vector data description), given a kernel matrix K and and the highest possible percentage of outliers nu. Returns the model object (svdd_model). Requires LIBSVM.\n\nTax, D. M. J., & Duin, R. P. W. (1999). Support vector domain description. Pattern Recognition Letters, 20, 1191–1199. Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector Algorithms. Neural Computation, 12, 1207–1245.\n\n\n\n"
+},
+
+{
+    "location": "man/DetectionAlgorithms.html#MultivariateAnomalies.SVDD_predict",
+    "page": "Anomaly Detection Algorithms",
+    "title": "MultivariateAnomalies.SVDD_predict",
+    "category": "Function",
+    "text": "SVDD_predict(svdd_model, K)\n\npredict the outlierness of an object given the testing Kernel matrix K and the svdd_model from SVDD_train(). Requires LIBSVM.\n\nTax, D. M. J., & Duin, R. P. W. (1999). Support vector domain description. Pattern Recognition Letters, 20, 1191–1199. Schölkopf, B., Williamson, R. C., & Bartlett, P. L. (2000). New Support Vector Algorithms. Neural Computation, 12, 1207–1245.\n\n\n\n"
+},
+
+{
     "location": "man/DetectionAlgorithms.html#Support-Vector-Data-Description-1",
     "page": "Anomaly Detection Algorithms",
     "title": "Support Vector Data Description",
     "category": "section",
-    "text": "SVDD_train\nSVDD_predict\nSVDD_predict!\ninit_SVDD_predict"
+    "text": "SVDD_train\nSVDD_predict"
 },
 
 {
@@ -581,7 +597,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Postprocessing",
     "title": "MultivariateAnomalies.get_quantile_scores!",
     "category": "Function",
-    "text": "get_quantile_scores!{tp,N}(quantile_scores::AbstractArray{Float64, N}, scores::AbstractArray{tp,N}, quantiles::FloatRange{Float64} = 0.0:0.01:1.0)\n\nreturn the quantiles of the given N dimensional scores array into a preallocated quantile_scores array, see get_quantile_scores().\n\n\n\n"
+    "text": "get_quantile_scores!{tp,N}(quantile_scores::AbstractArray{Float64, N}, scores::AbstractArray{tp,N}, quantiles::StepRangeLen{Float64} = 0.0:0.01:1.0)\n\nreturn the quantiles of the given N dimensional scores array into a preallocated quantile_scores array, see get_quantile_scores().\n\n\n\n"
 },
 
 {
