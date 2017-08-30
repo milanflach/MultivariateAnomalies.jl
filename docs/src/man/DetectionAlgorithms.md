@@ -59,8 +59,6 @@ init_UNIV
 ```@docs
 SVDD_train
 SVDD_predict
-SVDD_predict!
-init_SVDD_predict
 ```
 
 ### Kernel Null Foley Summon Transform
