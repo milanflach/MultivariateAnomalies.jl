@@ -241,7 +241,7 @@ function kernel_matrix!{T,N}(K::AbstractArray{T,N}, D::AbstractArray{T,N}, σ::R
     σ = convert(T, σ)
     if(kernel == "normalized_gauss") # k integral gets one
     for i in eachindex(K)
-      @inbounds K[i] = exp.(-0.5 * D[i]./(σ*σ))./((2 *pi*σ*σ).^(dimension/2))
+      @inbounds K[i] = exp.(-0.5 * D[i]./(σ*σ))./(σ * (2 *pi).^(dimension/2))#exp.(-0.5 * D[i]./(σ*σ))./((2 *pi*σ*σ).^(dimension/2))
     end
     elseif (kernel == "gauss")
     for i in eachindex(K)
