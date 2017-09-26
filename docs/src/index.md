@@ -2,10 +2,11 @@
 
 *A julia package for detecting multivariate anomalies.*
 
-*Keywords: Novelty detection, Anomaly Detection, Outlier Detection, Statistical Process Control*
+*Keywords: Novelty detection, Anomaly Detection, Outlier Detection, Statistical Process Control, Process Monitoring*
 
 **Please cite this package as:**
 Flach, M., Gans, F., Brenning, A., Denzler, J., Reichstein, M., Rodner, E., Bathiany, S., Bodesheim, P., Guanche, Y., Sippel, S., and Mahecha, M. D. (2017): Multivariate anomaly detection for Earth observations: a comparison of algorithms and feature extraction techniques, Earth Syst. Dynam., 8, 677-696, [doi:10.5194/esd-8-677-2017](https://doi.org/10.5194/esd-8-677-2017).
+
 ## Requirements
 
 - Julia `0.6`
@@ -13,7 +14,7 @@ Flach, M., Gans, F., Brenning, A., Denzler, J., Reichstein, M., Rodner, E., Bath
 
 ## Installation
 
-- clone the package: `Pkg.clone("https://github.com/milanflach/MultivariateAnomalies.jl")`
+- add the package: ```Pkg.add("MultivariateAnomalies")```
 
 ## Package Features
 
