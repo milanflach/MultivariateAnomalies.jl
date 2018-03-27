@@ -925,7 +925,7 @@ var documenterSearchIndex = {"docs": [
     "page": "OnlineAlgorithms",
     "title": "MultivariateAnomalies.SigmaOnline!",
     "category": "function",
-    "text": "SigmaOnline!{tp}(sigma::Array{tp, 1}, x::AbstractArray{tp, 2}, samplesize::Int = 250, dim::Int = 1)\n\ncompute sigma parameter as mean of the distances of samplesize randomly sampled points along dim.\n\n\n\n"
+    "text": "SigmaOnline!{tp}(sigma::Array{tp, 1}, x::AbstractArray{tp, 2}, [Q::AbstractArray{tp, 2}], samplesize::Int = 250, dim::Int = 1)\n\ncompute sigma parameter as mean of the distances of samplesize randomly sampled points along dim. If Q is given the Mahalanobis distance is used instead of Euclidean.\n\n\n\n"
 },
 
 {
@@ -933,7 +933,7 @@ var documenterSearchIndex = {"docs": [
     "page": "OnlineAlgorithms",
     "title": "MultivariateAnomalies.KDEonline!",
     "category": "function",
-    "text": "KDEonline!{tp}(kdescores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2} [, Q::AbstractArray{tp, 2}], σ::tp, dim::Int = 1)\n\ncompute (1.0 - Kernel Density Estimates) from x and write it to kdescores with dim being the dimension of the observations. If Q is given, the Mahalanobis distance is used instead of teh Euclidean distance.\n\n\n\n"
+    "text": "KDEonline!{tp}(kdescores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2} [, Q::AbstractArray{tp, 2}], σ::tp, dim::Int = 1)\n\ncompute (1.0 - Kernel Density Estimates) from x and write it to kdescores with dim being the dimension of the observations. If Q is given, the Mahalanobis distance is used instead of the Euclidean distance.\n\n\n\n"
 },
 
 {
