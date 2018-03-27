@@ -49,7 +49,7 @@ function Mahalanobis_distance!{tp}(d::Array{tp, 1}, x::AbstractArray{tp, 2}, Q::
     KDEonline!{tp}(kdescores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2} [, Q::AbstractArray{tp, 2}], σ::tp, dim::Int = 1)
 
 compute (1.0 - Kernel Density Estimates) from x and write it to kdescores with dim being the dimension of the observations.
-If Q is given, the Mahalanobis distance is used instead of teh Euclidean distance.
+If Q is given, the Mahalanobis distance is used instead of the Euclidean distance.
 """
 
 function KDEonline!{tp}(k::AbstractArray{tp, 1}, d::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}, i::Int, σ::tp, dim::Int = 1)
@@ -248,9 +248,10 @@ function KDEonline_withNearDistskipping!{tp}(kdescores::AbstractArray{tp, 1}, x:
 end
 
 """
-    SigmaOnline!{tp}(sigma::Array{tp, 1}, x::AbstractArray{tp, 2}, samplesize::Int = 250, dim::Int = 1)
+    SigmaOnline!{tp}(sigma::Array{tp, 1}, x::AbstractArray{tp, 2}, [Q::AbstractArray{tp, 2}], samplesize::Int = 250, dim::Int = 1)
 
 compute `sigma` parameter as mean of the distances of `samplesize` randomly sampled points along `dim`.
+If Q is given the Mahalanobis distance is used instead of Euclidean.
 """
 
 function SigmaOnline!{tp}(sigma::Array{tp, 1}, x::AbstractArray{tp, 2}, samplesize::Int = 250, dim::Int = 1)
@@ -263,6 +264,26 @@ function SigmaOnline!{tp}(sigma::Array{tp, 1}, x::AbstractArray{tp, 2}, samplesi
     for j = 1:samplesize
       if j > i
         Euclidean_distance!(d, x, trainsample1[1], rand!(trainsample2, 1:size(x, dim))[1], dim)
+        # sum of distances
+        sigma[1] = sigma[1] + d[1]
+      end
+    end
+  end
+  # get mean
+  sigma[1] = sigma[1] / (samplesize^2 / 2 - samplesize / 2)
+  return sigma
+end
+
+function SigmaOnline!{tp}(sigma::Array{tp, 1}, x::AbstractArray{tp, 2}, Q::AbstractArray{tp, 2}, samplesize::Int = 250, dim::Int = 1)
+  sigma[1] = 0.0
+  d = zeros(tp, 1)
+  trainsample1 = zeros(Int, 1)
+  trainsample2 = zeros(Int, 1)
+  for i = 1:samplesize
+    rand!(trainsample1, 1:size(x, dim))[1]
+    for j = 1:samplesize
+      if j > i
+        Mahalanobis_distance!(d, x, Q, trainsample1[1], rand!(trainsample2, 1:size(x, dim))[1], dim)
         # sum of distances
         sigma[1] = sigma[1] + d[1]
       end
