@@ -21,15 +21,51 @@ function Euclidean_distance!{tp}(d::Array{tp, 1}, x::AbstractArray{tp, 2}, i::In
 end
 
 """
-    KDEonline!{tp}(kdescores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}, σ::tp, dim::Int = 1)
+    Mahalanobis_distance!{tp}(d::Array{tp, 1}, x::AbstractArray{tp, 2}, Q::AbstractArray{tp, 2}, i::Int, j::Int, dim::Int = 1)
+
+compute the Euclidean distance between x[i,:] and x[j,:] and write the result to d. Memory efficient. dim is the dimension of i and j.
+"""
+
+function Mahalanobis_distance!{tp}(d::Array{tp, 1}, x::AbstractArray{tp, 2}, Q::AbstractArray{tp, 2},i::Int, j::Int, dim::Int = 1)
+         d[1] = 0.0
+         if dim == 2
+         for v2 = 1:size(x, 1)
+           for v = 1:size(x, 1)
+             d[1] = d[1] + (x[v, i] - x[v, j]) * Q[v, v2] *  (x[v, i] - x[v, j])
+           end
+         end
+         else
+         for v = 1:size(x, 2)
+           for v2 = 1:size(x, 2)
+             d[1] = d[1] + (x[i, v] - x[j, v]) * Q[v2, v] *  (x[i, v] - x[j, v])
+           end
+         end
+         end
+         d[1] = sqrt(d[1])
+         return d
+       end
+
+"""
+    KDEonline!{tp}(kdescores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2} [, Q::AbstractArray{tp, 2}], σ::tp, dim::Int = 1)
 
 compute (1.0 - Kernel Density Estimates) from x and write it to kdescores with dim being the dimension of the observations.
+If Q is given, the Mahalanobis distance is used instead of teh Euclidean distance.
 """
 
 function KDEonline!{tp}(k::AbstractArray{tp, 1}, d::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}, i::Int, σ::tp, dim::Int = 1)
   k[1] = 0.0
   for j = 1:size(x, dim)
     Euclidean_distance!(d, x, i, j, dim)
+    innerKDEonline!(k, d, σ)
+  end
+  finalizeKDEonline!(k, x, dim)
+  return k
+end
+
+function KDEonline!{tp}(k::AbstractArray{tp, 1}, d::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}, Q::AbstractArray{tp, 2}, i::Int, σ::tp, dim::Int = 1)
+  k[1] = 0.0
+  for j = 1:size(x, dim)
+    Mahalanobis_distance!(d, x, Q, i, j, dim)
     innerKDEonline!(k, d, σ)
   end
   finalizeKDEonline!(k, x, dim)
@@ -51,6 +87,16 @@ function KDEonline!{tp}(kdescores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}
   k = zeros(tp, 1)
   for i = 1:size(x, dim)
     KDEonline!(k, d, x, i, σ, dim)
+    kdescores[i] = k[1]
+  end
+  return kdescores
+end
+
+function KDEonline!{tp}(kdescores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}, Q::AbstractArray{tp, 2}, σ::tp, dim::Int = 1)
+  d = zeros(tp, 1)
+  k = zeros(tp, 1)
+  for i = 1:size(x, dim)
+    KDEonline!(k, d, x, Q, i, σ, dim)
     kdescores[i] = k[1]
   end
   return kdescores

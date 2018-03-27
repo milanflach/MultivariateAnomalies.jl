@@ -75,6 +75,7 @@ module MultivariateAnomalies
     detectAnomalies!,
 # online algorithms
     Euclidean_distance!,
+    Mahalanobis_distance!,
     SigmaOnline!,
     KDEonline!,
     KNNonline!,
