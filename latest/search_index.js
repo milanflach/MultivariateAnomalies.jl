@@ -933,7 +933,7 @@ var documenterSearchIndex = {"docs": [
     "page": "OnlineAlgorithms",
     "title": "MultivariateAnomalies.KDEonline!",
     "category": "function",
-    "text": "KDEonline!{tp}(kdescores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2} [, Q::AbstractArray{tp, 2}], σ::tp, dim::Int = 1)\n\ncompute (1.0 - Kernel Density Estimates) from x and write it to kdescores with dim being the dimension of the observations. If Q is given, the Mahalanobis distance is used instead of the Euclidean distance.\n\n\n\n"
+    "text": "KDEonline!{tp}(kdescores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2} [, Q::AbstractArray{tp, 2}], σ::tp, dim::Int = 1)\n\ncompute (1.0 - Kernel Density Estimates) from x and write it to kdescores with dim being the dimension of the observations. If teh covariance matrix Q is given, the Mahalanobis distance is used instead of the Euclidean distance.\n\n\n\n"
 },
 
 {
@@ -941,7 +941,7 @@ var documenterSearchIndex = {"docs": [
     "page": "OnlineAlgorithms",
     "title": "MultivariateAnomalies.REConline!",
     "category": "function",
-    "text": "REConline!{tp}(recscores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}, ɛ::tp, dim::Int = 1)\n\ncompute recurrence scores from x and write it to recscores with dim being the dimension of the observations.\n\n\n\n"
+    "text": "REConline!{tp}(recscores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2} [, Q::AbstractArray{tp, 2}], ɛ::tp, dim::Int = 1)\n\ncompute recurrence scores from x and write it to recscores with dim being the dimension of the observations. If the covariance matrix Q is given, the mahalanobis distance is used instead of the euclidean distance.\n\n\n\n"
 },
 
 {
@@ -949,7 +949,7 @@ var documenterSearchIndex = {"docs": [
     "page": "OnlineAlgorithms",
     "title": "MultivariateAnomalies.KNNonline!",
     "category": "function",
-    "text": "KNNonline!{tp}(knnscores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}, k::Int, dim::Int = 1)\n\ncompute k-nearest neighbor (gamma) scores from x and write it to knnscores with dim being the dimension of the observations.\n\n\n\n"
+    "text": "KNNonline!{tp}(knnscores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}, [Q::AbstractArray{tp, 2},] k::Int, dim::Int = 1)\n\ncompute k-nearest neighbor (gamma) scores from x and write it to knnscores with dim being the dimension of the observations. If the covariance matrix Q is given, the mahalanobis distance is used instead of the euclidean distance.\n\n\n\n"
 },
 
 {
