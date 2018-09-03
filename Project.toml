@@ -1,0 +1,25 @@
+name = "MultivariateAnomalies"
+uuid = "b11ec71a-af6e-11e8-3328-f56a17875dc9"
+authors = ["milanflach <milanflach fs@users.noreply.github.com>"]
+version = "0.1.2"
+license = "MIT"
+keywords = ["novelty detection", "anomaly detection", "outlier detection", "statistical process control", "process monitoring"]
+repository = "https://github.com/milanflach/MultivariateAnomalies.jl.git"
+
+[deps]
+Arpack = "7d9fca2a-8960-54d3-9f78-7d1dccf2cb97"
+Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
+Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
+LIBSVM = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+MultivariateStats = "6f286f6a-111f-5878-ab1e-185364afe411"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = "Test"
+
+# [compat]
+# MultivariateStats = ">=0.6.0"

@@ -13,7 +13,6 @@ julia> dc = hcat(rand(193) + 2* sin(0:pi/24:8*pi), rand(193) + 2* sin(0:pi/24:8*
 julia> sMSC_dc = sMSC(dc, 48)
 ```
 """
-
 function sMSC(datacube, cycle_length)
     x_out = similar(datacube)
     removeMSC!(datacube, x_out, cycle_length, 1)
@@ -21,7 +20,7 @@ function sMSC(datacube, cycle_length)
 end
 
 # fast version of fabian to remove the mean seasonal cycle
-function removeMSC!{T,ndim}(xin::AbstractArray{T,ndim},xout::AbstractArray{T,ndim},NpY::Integer,itimedim::Integer;imscstart::Int=1)
+function removeMSC!(xin::AbstractArray{T,ndim},xout::AbstractArray{T,ndim},NpY::Integer,itimedim::Integer;imscstart::Int=1) where {T,ndim}
    # Determine length of reshape dimensions
    s=size(xin)
    l1=itimedim==1 ? 1 : prod(s[1:(itimedim-1)])
@@ -53,18 +52,17 @@ function removeMSC!{T,ndim}(xin::AbstractArray{T,ndim},xout::AbstractArray{T,ndi
        end
    end
    #Copy data if necessary
-   pointer(xout2) != pointer(xout) && copy!(xout,xout2)
+   pointer(xout2) != pointer(xout) && copyto!(xout,xout2)
   return(xout)
 end
 
 """
-    globalPCA{tp, N}(datacube::Array{tp, N}, expl_var::Float64 = 0.95)
+    globalPCA(datacube::Array{tp, N}, expl_var::Float64 = 0.95) where {tp, N}
 
 return an orthogonal subset of the variables, i.e. the last dimension of the datacube.
 A Principal Component Analysis is performed on the entire datacube, explaining at least `expl_var` of the variance.
 """
-
-function globalPCA{tp, N}(datacube::AbstractArray{tp, N}, expl_var::Float64 = 0.95)
+function globalPCA(datacube::AbstractArray{tp, N}, expl_var::Float64 = 0.95) where {tp, N}
     if(expl_var > 1.0 || expl_var < 0.0) print("Stop: expl_var has to be within range(0.0, 1.0) but is $expl_var")
     else
     newsize = zeros(Int64, length(size(datacube)))
@@ -81,7 +79,7 @@ function globalPCA{tp, N}(datacube::AbstractArray{tp, N}, expl_var::Float64 = 0.
     num_expl_comp = findfirst(cumsum(MultivariateStats.principalvars(M))/MultivariateStats.tprincipalvar(M) .>= expl_var)
     newsize[N] = num_expl_comp
     Xout = zeros(tp, ntuple(i -> func(i, newsize), size(newsize, 1)))
-    copy!(Xout, unsafe_wrap(Array, pointer(Y),prod(newsize)))
+    copyto!(Xout, unsafe_wrap(Array, pointer(Y),prod(newsize)))
     end
     return(Xout, MultivariateStats.principalvars(M)/MultivariateStats.tprincipalvar(M),
     cumsum(MultivariateStats.principalvars(M))/MultivariateStats.tprincipalvar(M), num_expl_comp)
@@ -92,6 +90,7 @@ function func(i,x)
         return(x[i])
 end
 
+# ICA with a specific explained percentage of variance out of PCA of a number of components:
 """
     globalICA(datacube::Array{tp, 4}, mode = "expl_var"; expl_var::Float64 = 0.95, num_comp::Int = 3)
 
@@ -99,9 +98,7 @@ perform an Independent Component Analysis on the entire 4-dimensional datacube e
 or (`mode = "expl_var"`) returning the number of components which is necessary to explain expl_var of the variance, when doing a Prinicpal Component Analysis before.
 
 """
-
-# ICA with a specific explained percentage of variance out of PCA of a number of components:
-function globalICA{tp, N}(datacube::AbstractArray{tp, N}, mode = "expl_var"; expl_var::Float64 = 0.95, num_comp::Int = 3)
+function globalICA(datacube::AbstractArray{tp, N}, mode = "expl_var"; expl_var::Float64 = 0.95, num_comp::Int = 3) where {tp, N}
     newsize = zeros(Int64, length(size(datacube)))
     dims = 1
     for i = 1:(N-1) # multiply dimensions except the last one and save as dims
@@ -136,8 +133,8 @@ function globalICA{tp, N}(datacube::AbstractArray{tp, N}, mode = "expl_var"; exp
 end
 
 """
-    TDE{tp}(datacube::Array{tp, 4}, ΔT::Integer, DIM::Int = 3)
-    TDE{tp}(datacube::Array{tp, 3}, ΔT::Integer, DIM::Int = 3)
+    TDE(datacube::Array{tp, 4}, ΔT::Integer, DIM::Int = 3) where {tp}
+    TDE(datacube::Array{tp, 3}, ΔT::Integer, DIM::Int = 3) where {tp}
 
 returns an embedded datacube by concatenating lagged versions of the 2-, 3- or 4-dimensional datacube with `ΔT` time steps in the past up to dimension `DIM` (presetting: `DIM = 3`)
 
@@ -147,8 +144,7 @@ julia> dc = randn(50,3)
 julia> TDE(dc, 3, 2)
 ```
 """
-
-function TDE{tp}(datacube::AbstractArray{tp, 4}, ΔT::Integer, DIM::Int = 3)
+function TDE(datacube::AbstractArray{tp, 4}, ΔT::Integer, DIM::Int = 3) where {tp}
     start = ((DIM-1)*ΔT+1)
     embedded_datacube = zeros(Float64, (size(datacube, 1) - start +1, size(datacube, 2), size(datacube, 3), size(datacube, 4) * DIM))
     for dim = 1:DIM
@@ -158,7 +154,7 @@ function TDE{tp}(datacube::AbstractArray{tp, 4}, ΔT::Integer, DIM::Int = 3)
     return(embedded_datacube)
 end
 
-function TDE{tp}(datacube::AbstractArray{tp, 3}, ΔT::Integer, DIM::Int = 3)
+function TDE(datacube::AbstractArray{tp, 3}, ΔT::Integer, DIM::Int = 3) where {tp}
     start = ((DIM-1)*ΔT+1)
     embedded_datacube = zeros(Float64, (size(datacube, 1) - start +1, size(datacube, 2), size(datacube, 3) * DIM))
     for dim = 1:DIM
@@ -168,7 +164,7 @@ function TDE{tp}(datacube::AbstractArray{tp, 3}, ΔT::Integer, DIM::Int = 3)
     return(embedded_datacube)
 end
 
-function TDE{tp}(datacube::AbstractArray{tp, 2}, ΔT::Integer, DIM::Int = 3)
+function TDE(datacube::AbstractArray{tp, 2}, ΔT::Integer, DIM::Int = 3) where {tp}
     start = ((DIM-1)*ΔT+1)
     embedded_datacube = zeros(Float64, (size(datacube, 1) - start +1,  size(datacube, 2) * DIM))
     for dim = 1:DIM
@@ -179,7 +175,7 @@ function TDE{tp}(datacube::AbstractArray{tp, 2}, ΔT::Integer, DIM::Int = 3)
 end
 
 """
-    mw_VAR{tp,N}(datacube::Array{tp,N}, windowsize::Int = 10)
+    mw_VAR(datacube::Array{tp,N}, windowsize::Int = 10) where {tp,N}
 
 compute the variance in a moving window along the first dimension of the datacube (presetting: `windowsize = 10`).
 Accepts N dimensional datacubes.
@@ -190,8 +186,7 @@ julia> dc = randn(50,3,3,3)
 julia> mw_VAR(dc, 15)
 ```
 """
-
-function mw_VAR{tp,N}(datacube::AbstractArray{tp,N}, windowsize::Int = 10)
+function mw_VAR(datacube::AbstractArray{tp,N}, windowsize::Int = 10) where {tp,N}
   out = zeros(tp, size(datacube))
   for k = 1:length(out) out[k] = NaN end
   datacube0mean = datacube .- mean(datacube, 1)
@@ -200,13 +195,12 @@ function mw_VAR{tp,N}(datacube::AbstractArray{tp,N}, windowsize::Int = 10)
 end
 
 """
-    mw_VAR!{tp,N}(out::Array{tp, N}, datacube0mean::Array{tp,N}, windowsize::Int = 10)
+    mw_VAR!(out::Array{tp, N}, datacube0mean::Array{tp,N}, windowsize::Int = 10) where {tp,N}
 
 mutating version for `mw_VAR()`. The mean of the input data `datacube0mean` has to be 0. Initialize out properly: `out = datacube0mean` leads to wrong results.
 
 """
-
-function mw_VAR!{tp,N}(out::AbstractArray{tp, N}, datacube0mean::AbstractArray{tp,N}, windowsize::Int = 10)
+function mw_VAR!(out::AbstractArray{tp, N}, datacube0mean::AbstractArray{tp,N}, windowsize::Int = 10) where {tp,N}
   T = size(datacube0mean, 1)
   for beg = 1:T:length(datacube0mean)
     inner_mw_VAR!(out, datacube0mean, windowsize, beg, T)
@@ -216,12 +210,11 @@ function mw_VAR!{tp,N}(out::AbstractArray{tp, N}, datacube0mean::AbstractArray{t
 end
 
 """
-    inner_mw_VAR!{tp,N}(out::Array{tp, N}, datacube0mean::Array{tp,N}, windowsize::Int = 10)
+    inner_mw_VAR!(out::Array{tp, N}, datacube0mean::Array{tp,N}, windowsize::Int = 10) where {tp,N}
 
 internal function for mw_VAR!()
 
 """
-
 function inner_mw_VAR!(out, datacube, windowsize, beg, T) # mean already subtracted
   out_beg = Int(floor(windowsize * 0.5)) + beg - 1
   for notavailable =  (beg):(out_beg-1)
@@ -241,7 +234,7 @@ function inner_mw_VAR!(out, datacube, windowsize, beg, T) # mean already subtrac
 end
 
 """
-    mw_AVG{tp,N}(datacube::AbstractArray{tp,N}, windowsize::Int = 10)
+    mw_AVG(datacube::AbstractArray{tp,N}, windowsize::Int = 10) where {tp,N}
 
 compute the average in a moving window along the first dimension of the datacube (presetting: `windowsize = 10`).
 Accepts N dimensional datacubes.
@@ -252,8 +245,7 @@ julia> dc = randn(50,3,3,3)
 julia> mw_AVG(dc, 15)
 ```
 """
-
-function mw_AVG{tp,N}(datacube::AbstractArray{tp,N}, windowsize::Int = 10)
+function mw_AVG(datacube::AbstractArray{tp,N}, windowsize::Int = 10) where {tp,N}
   out = zeros(tp, size(datacube))
   for k = 1:length(out) out[k] = NaN end
   T = size(datacube, 1)
@@ -265,13 +257,12 @@ function mw_AVG{tp,N}(datacube::AbstractArray{tp,N}, windowsize::Int = 10)
 end
 
 """
-    mw_AVG!{tp,N}(out::Array{tp, N}, datacube::Array{tp,N}, windowsize::Int = 10)
+    mw_AVG!(out::Array{tp, N}, datacube::Array{tp,N}, windowsize::Int = 10) where {tp,N}
 
 internal and mutating version for `mw_AVG()`.
 
 """
-
-function mw_AVG!{tp,N}(out::AbstractArray{tp,N}, datacube::AbstractArray{tp,N}, windowsize::Int = 10)
+function mw_AVG!(out::AbstractArray{tp,N}, datacube::AbstractArray{tp,N}, windowsize::Int = 10) where {tp,N}
   for k = 1:length(out) out[k] = NaN end
   T = size(datacube, 1)
   for beg = 1:T:length(datacube)
@@ -281,7 +272,7 @@ function mw_AVG!{tp,N}(out::AbstractArray{tp,N}, datacube::AbstractArray{tp,N}, 
   return(out)
 end
 
-function inner_mw_AVG!{tp,N}(out::AbstractArray{tp, N}, datacube::AbstractArray{tp, N}, windowsize::Int, beg::Int, T::Int)
+function inner_mw_AVG!(out::AbstractArray{tp, N}, datacube::AbstractArray{tp, N}, windowsize::Int, beg::Int, T::Int) where {tp,N}
   out_beg = Int(floor(windowsize * 0.5)) + beg - 1
   for notavailable =  (beg):(out_beg-1)
     out[notavailable] = NaN
@@ -302,14 +293,13 @@ end
 
 
 """
-    mw_COR{tp}(datacube::Array{tp, 4}, windowsize::Int = 10)
+    mw_COR(datacube::Array{tp, 4}, windowsize::Int = 10) where {tp}
 
 compute the correlation in a moving window along the first dimension of the datacube (presetting: `windowsize = 10`).
 Accepts 4-dimensional datacubes.
 
 """
-
-function mw_COR{tp}(datacube::AbstractArray{tp, 4}, windowsize::Int = 10)
+function mw_COR(datacube::AbstractArray{tp, 4}, windowsize::Int = 10) where {tp}
   comb = collect(Combinatorics.combinations(1:size(datacube, 4), 2))
   out = zeros(Float64, size(datacube, 1), size(datacube, 2), size(datacube, 3), size(comb, 1))
   x = zeros(Float64, windowsize, 2)
@@ -317,8 +307,8 @@ function mw_COR{tp}(datacube::AbstractArray{tp, 4}, windowsize::Int = 10)
     for lon = 1:size(datacube, 3)
       for lat = 1:size(datacube, 2)
         for t = 1:(size(datacube, 1)-windowsize)
-          x = copy!(x, datacube[t:(t+windowsize-1),lat,lon,comb[icomb]])
-          copy!(view(out, t + round.(Int, windowsize * 0.5),lat,lon,icomb)
+          x = copyto!(x, datacube[t:(t+windowsize-1),lat,lon,comb[icomb]])
+          copyto!(view(out, t + round.(Int, windowsize * 0.5),lat,lon,icomb)
                 , cor(view(x,:,1), view(x,:,2)))
         end
       end
@@ -327,7 +317,7 @@ function mw_COR{tp}(datacube::AbstractArray{tp, 4}, windowsize::Int = 10)
   return(comb, out)
 end
 
-function innerst_ewma!{tp, N}(z::AbstractArray{tp, N}, dat::AbstractArray{tp, N}, beg::Int, len::Int, lambda::Float64 = 0.15)
+function innerst_ewma!(z::AbstractArray{tp, N}, dat::AbstractArray{tp, N}, beg::Int, len::Int, lambda::Float64 = 0.15) where {tp, N}
     z[beg] = dat[beg]*lambda
     one_m_lambda = 1.0-lambda
     for i = (beg+1):(beg+len-1)
@@ -350,8 +340,7 @@ julia> dc = rand(100,3,2)
 julia> ewma_dc = EWMA(dc, 0.1)
 ```
 """
-
-function EWMA{tp, N}(dat::AbstractArray{tp, N}, lambda::Float64 = 0.15)
+function EWMA(dat::AbstractArray{tp, N}, lambda::Float64 = 0.15) where {tp, N}
   Z = similar(dat)
   T = size(dat, 1)
   LENGTH = length(dat)
@@ -373,9 +362,7 @@ julia> dc = rand(100,3,2)
 julia> EWMA!(dc, dc, 0.1)
 ```
 """
-
-
-function EWMA!{tp, N}(Z::AbstractArray{tp, N}, dat::AbstractArray{tp, N}, lambda::Float64 = 0.15)
+function EWMA!(Z::AbstractArray{tp, N}, dat::AbstractArray{tp, N}, lambda::Float64 = 0.15) where {tp, N}
   T = size(dat, 1)
   LENGTH = length(dat)
   for istart = 1:T:LENGTH
@@ -391,8 +378,7 @@ end
 initialises an init_MC object to be used as input for `get_MedianCycle!()`. Input is either some sample data or the temporal lenght of the expected input vector
 and the length of the annual cycle (presetting: `cycle_length = 46`)
 """
-
-function init_MedianCycle{tp}(dat::AbstractArray{tp}, cycle_length::Int = 46)
+function init_MedianCycle(dat::AbstractArray{tp}, cycle_length::Int = 46) where {tp}
   complete_years = Int(floor(size(dat, 1)/cycle_length))
   cycle_dat = zeros(tp, cycle_length, complete_years)
   cycle_medians = zeros(tp, cycle_length)
@@ -424,16 +410,15 @@ julia> get_MedianCycle!(init_MC, dat)
 julia> init_MC[3]
 ```
 """
-
-function get_MedianCycle!{tp}(init_MC::Tuple{Int64,Int64,Array{tp,1},Array{tp,2}}, dat::Array{tp,1})
-  copy!(init_MC[4], view(dat, 1:(init_MC[2] * init_MC[1])))
+function get_MedianCycle!(init_MC::Tuple{Int64,Int64,Array{tp,1},Array{tp,2}}, dat::Array{tp,1}) where {tp}
+  copyto!(init_MC[4], view(dat, 1:(init_MC[2] * init_MC[1])))
   for i = 1:init_MC[1]
     if(all(.!isnan.(view(init_MC[4], i, :))))
-      copy!(view(init_MC[3], i), median(view(init_MC[4], i, :)))
+      copyto!(view(init_MC[3], i), median(view(init_MC[4], i, :)))
     elseif(all(isnan.(view(init_MC[4], i, :))))
-        copy!(view(init_MC[3], i), NaN)
+        copyto!(view(init_MC[3], i), NaN)
     else
-      copy!(view(init_MC[3], i), median(view(init_MC[4], i, squeeze(!isnan.(view(init_MC[4], i,:)), 1))))
+      copyto!(view(init_MC[3], i), median(view(init_MC[4], i, squeeze(!isnan.(view(init_MC[4], i,:)), 1))))
     end
   end
   return(init_MC[3])
@@ -453,8 +438,7 @@ julia> dat[100] = NaN
 julia> cycles = get_MedianCycle(dat, 48)
 ```
 """
-
-function get_MedianCycle{tp}(dat::AbstractArray{tp,1}, cycle_length::Int = 46)
+function get_MedianCycle(dat::AbstractArray{tp,1}, cycle_length::Int = 46) where {tp}
   init_MC = init_MedianCycle(dat, cycle_length)
   get_MedianCycle!(init_MC, dat)
   return(init_MC[3])
@@ -474,8 +458,7 @@ julia> dc = hcat(rand(193) + 2* sin(0:pi/24:8*pi), rand(193) + 2* sin(0:pi/24:8*
 julia> cycles = get_MedianCycles(dc, 48)
 ```
 """
-
-function get_MedianCycles{tp}(datacube::AbstractArray{tp,4}, cycle_length::Int = 46)
+function get_MedianCycles(datacube::AbstractArray{tp,4}, cycle_length::Int = 46) where {tp}
 dat = zeros(Float64, size(datacube, 1));
 init_MC = init_MedianCycle(dat, cycle_length);
 med_cycles_out = zeros(Float64, cycle_length, size(datacube, 2), size(datacube, 3), size(datacube, 4));
@@ -483,37 +466,37 @@ med_cycles_out = zeros(Float64, cycle_length, size(datacube, 2), size(datacube, 
   for var = 1:size(datacube, 4)
     for lon = 1:size(datacube, 3)
       for lat = 1:size(datacube, 2)
-        copy!(dat, view(datacube, :,lat,lon,var))
-        copy!(view(med_cycles_out, :, lat, lon, var), get_MedianCycle!(init_MC, dat))
+        copyto!(dat, view(datacube, :,lat,lon,var))
+        copyto!(view(med_cycles_out, :, lat, lon, var), get_MedianCycle!(init_MC, dat))
       end
     end
   end
   return(med_cycles_out)
 end
 
-function get_MedianCycles{tp}(datacube::AbstractArray{tp,3}, cycle_length::Int = 46)
+function get_MedianCycles(datacube::AbstractArray{tp,3}, cycle_length::Int = 46) where {tp}
 dat = zeros(tp, size(datacube, 1));
 init_MC = init_MedianCycle(dat, cycle_length);
 med_cycles_out = zeros(tp, cycle_length, size(datacube, 2), size(datacube, 3));
 # loop
   for var = 1:size(datacube, 3)
       for lat = 1:size(datacube, 2)
-        copy!(dat, view(datacube, :, lat,var))
-        copy!(view(med_cycles_out, :, lat, var), get_MedianCycle!(init_MC, dat))
+        copyto!(dat, view(datacube, :, lat,var))
+        copyto!(view(med_cycles_out, :, lat, var), get_MedianCycle!(init_MC, dat))
       end
   end
   return(med_cycles_out)
 end
 
 
-function get_MedianCycles{tp}(datacube::AbstractArray{tp,2}, cycle_length::Int = 46)
+function get_MedianCycles(datacube::AbstractArray{tp,2}, cycle_length::Int = 46) where {tp}
 dat = zeros(tp, size(datacube, 1));
 init_MC = init_MedianCycle(dat, cycle_length);
 med_cycles_out = zeros(tp, cycle_length, size(datacube, 2));
 # loop
   for var = 1:size(datacube, 2)
-        copy!(dat, view(datacube, :, var))
-        copy!(view(med_cycles_out, :, var), get_MedianCycle!(init_MC, dat))
+        copyto!(dat, view(datacube, :, var))
+        copyto!(view(med_cycles_out, :, var), get_MedianCycle!(init_MC, dat))
   end
   return(med_cycles_out)
 end
