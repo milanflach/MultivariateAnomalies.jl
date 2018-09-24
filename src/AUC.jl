@@ -4,7 +4,6 @@ using Base.Cartesian
 #AUC.jl provides fast and memory efficient versions to compute the Area under der receiver operator curve and true/false positive rates after
 #Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters, 27(8), 861–874. http://doi.org/10.1016/j.patrec.2005.10.010
 #"""
-
 macro removeTrailing(x...)
     ex=Expr(:block)
     for i in 1:length(x)
@@ -63,6 +62,8 @@ function trap_area(x1,x2,y1,y2)
     return b*h
 end
 
+# function assumes that outliers have highest scores (increasing = true)
+# additionally to the AUC the false positive rate and the true positive and true positive rate of a specified quantile is returned
 """
     auc_fpr_tpr(scores, events, quant = 0.9, increasing = true)
 
@@ -76,8 +77,6 @@ julia> events = rand(0:1, 10, 2)
 julia> auc_fpr_tpr(scores, events, 0.8)
 ```
 """
-# function assumes that outliers have highest scores (increasing = true)
-# additionally to the AUC the false positive rate and the true positive and true positive rate of a specified quantile is returned
 function auc_fpr_tpr(scores,events, quant = 0.90; increasing = true)
     quant = 1.0 - quant # as we start with the highest score in the loop the quantile is reverted
     s = sortperm(reshape(scores,length(scores)),rev=increasing);

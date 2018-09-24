@@ -9,7 +9,6 @@ Count the number of observations (recurrences) which fall into a radius `rec_thr
 
 Marwan, N., Carmen Romano, M., Thiel, M., & Kurths, J. (2007). Recurrence plots for the analysis of complex systems. Physics Reports, 438(5-6), 237–329. http://doi.org/10.1016/j.physrep.2006.11.001
 """
-
 function REC(D::AbstractArray, rec_threshold::Float64, temp_excl::Int = 5)
   rec_out = init_REC(D)
   REC!(rec_out, D, rec_threshold, temp_excl)
@@ -22,7 +21,6 @@ end
 
 get object for memory efficient `REC!()` versions. Input can be a distance matrix `D` or the number of timesteps (observations) `T`.
 """
-
 function init_REC(T::Int)
   rec_out = zeros(Float64, T)
 end
@@ -36,7 +34,6 @@ end
 
 Memory efficient version of `REC()` for use within a loop. `rec_out` is preallocated output, should be initialised with `init_REC()`.
 """
-
 function REC!(rec_out::AbstractArray, D::AbstractArray, rec_threshold::Float64, temp_excl::Int = 5)
     N = size(D, 1)
     @assert temp_excl < N - 1
@@ -69,7 +66,6 @@ Compute a Kernel Density Estimation (the Parzen sum), given a Kernel matrix `K`.
 
 Parzen, E. (1962). On Estimation of a Probability Density Function and Mode. The Annals of Mathematical Statistics, 33, 1–1065–1076.
 """
-
 function KDE(K::AbstractArray)
     KDEout = init_KDE(size(K, 1))
     KDE!(KDEout, K)
@@ -82,7 +78,6 @@ end
 
 Returns `KDE_out` object for usage in `KDE!()`. Use either a Kernel matrix `K` or the number of time steps/observations `T` as argument.
 """
-
 function init_KDE(T::Int)
   KDE_out = zeros(Float64, T)
 end
@@ -96,7 +91,6 @@ end
 
 Memory efficient version of `KDE()`. Additionally uses preallocated `KDE_out` object for writing the results. Initialize `KDE_out` with `init_KDE()`.
 """
-
 function KDE!(KDE_out, K::AbstractArray)
   @assert size(K, 1) == size(KDE_out, 1)
   mean!(KDE_out, K)
@@ -120,7 +114,7 @@ function init_T2(VAR::Int, T::Int)
   return(t2_out)
 end
 
-function init_T2{tp, N}(data::AbstractArray{tp,N})
+function init_T2(data::AbstractArray{tp,N}) where {tp, N}
   VAR = size(data, N)
   T = size(data, 1)
   diagS =  zeros(tp, VAR, VAR);
@@ -138,26 +132,29 @@ end
 Memory efficient version of `T2()`, for usage within a loop etc. Initialize the `t2_out` object with `init_T2()`.
 `t2_out[1]` contains the squred Mahalanobis distance after computation.
 """
-function T2!{tp}(t2_out::Tuple{Array{tp,1},Array{tp,2},Array{tp,2},Array{tp,2},Array{tp,2}}
-             , data::AbstractArray{tp,2}, Q::AbstractArray{tp,2}, mv = 0)
+function T2!(t2_out::Tuple{Array{tp,1},Array{tp,2},Array{tp,2},Array{tp,2},Array{tp,2}}
+             , data::AbstractArray{tp,2}, Q::AbstractArray{tp,2}, mv = 0) where {tp}
   (maha, diagS, cdata, Qinv, data_norm) = t2_out
   if(mv == 0)
-    copy!(cdata, data)
+    copyto!(cdata, data)
   elseif(size(mv, 1) == 1)
-    copy!(cdata, data .- mv)
+    copyto!(cdata, data .- mv)
   elseif(size(mv, 1) != 1)
-    copy!(cdata, data .- mv')
+    copyto!(cdata, data .- mv')
   end
-  USVt = svdfact(Q)
-  copy!(view(diagS, diagind(diagS)), (USVt.S + 1e-10)  .^ (-0.5))
+  USVt = svd(Q)
+  copyto!(view(diagS, diagind(diagS)), (USVt.S .+ 1e-10)  .^ (-0.5))
   transpose!(Qinv, USVt.U * diagS * USVt.Vt)
-  copy!(data_norm, cdata * Qinv)
+  copyto!(data_norm, cdata * Qinv)
   broadcast!(*, data_norm, data_norm, data_norm)
   sum!(maha, data_norm)
   return(t2_out[1])
 end
 
 
+
+# Hotelling's T^2 (Mahalanobis distance to the data mean)
+# input is time * var data matrix
 """
     T2{tp}(data::AbstractArray{tp,2}, Q::AbstractArray[, mv])
 
@@ -166,15 +163,13 @@ Input data is a two dimensional data matrix (observations * variables).
 
 Lowry, C. A., & Woodall, W. H. (1992). A Multivariate Exponentially Weighted Moving Average Control Chart. Technometrics, 34, 46–53.
 """
-
-# Hotelling's T^2 (Mahalanobis distance to the data mean)
-# input is time * var data matrix
-function T2{tp}(data::AbstractArray{tp,2}, Q::AbstractArray{tp, 2}, mv = 0)
+function T2(data::AbstractArray{tp,2}, Q::AbstractArray{tp, 2}, mv = 0) where {tp}
   t2_out = init_T2(data)
   T2!(t2_out, data, Q, mv)
   return(t2_out[1])
 end
 
+# mean of k nearest neighbor distances
 """
     KNN_Gamma(knn_dists_out)
 
@@ -182,7 +177,6 @@ This function computes the mean distance of the K nearest neighbors given a `knn
 
 Harmeling, S., Dornhege, G., Tax, D., Meinecke, F., & Müller, K.-R. (2006). From outliers to prototypes: Ordering data. Neurocomputing, 69(13-15), 1608–1618. http://doi.org/10.1016/j.neucom.2005.05.015
 """
-# mean of k nearest neighbor distances
 function KNN_Gamma(knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},Array{Int64,2},Array{Float64,2}})
   NNdists = knn_dists_out[5]
   N = size(NNdists,1)
@@ -191,14 +185,14 @@ function KNN_Gamma(knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},Ar
   return(KNN_Gamma_out)
 end
 
+
+#T: number of timesteps in the datacube
 """
     init_KNN_Gamma(T::Int)
     init_KNN_Gamma(knn_dists_out)
 
 initialize a `KNN_Gamma_out` object for `KNN_Gamma!` either with `T`, the number of observations/time steps or with a `knn_dists_out` object.
 """
-
-#T: number of timesteps in the datacube
 function init_KNN_Gamma(T::Int)
   KNN_Gamma_out = zeros(Float64, T)
 end
@@ -213,7 +207,6 @@ end
 
 Memory efficient version of `KNN_Gamma`, to be used in a loop. Initialize `KNN_Gamma_out` with `init_KNN_Gamma()`.
 """
-
 function KNN_Gamma!(KNN_Gamma_out, knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},Array{Int64,2},Array{Float64,2}})
   NNdists = knn_dists_out[5]
   @assert size(NNdists,1) ==  size(KNN_Gamma_out,1) || error("input size KNN_Gamma_out and NNdists not equal")
@@ -228,11 +221,10 @@ end
 
 return a `KNN_Delta_out` object to be used for `KNN_Delta!`. Input: time steps/observations `T`, variables `VAR`, number of K nearest neighbors `k`.
 """
-
 function init_KNN_Delta(T::Int, VAR::Int, k::Int)
-  r = Array{Float64}(T)
-  x_i = Array{Float64}(1, VAR)
-  d_x = Array{Float64}(k, VAR)
+  r = Array{Float64}(undef, T)
+  x_i = Array{Float64}(undef, 1, VAR)
+  d_x = Array{Float64}(undef, k, VAR)
   KNN_Delta_out = (r, x_i, d_x)
   return(KNN_Delta_out)
 end
@@ -240,9 +232,9 @@ end
 function init_KNN_Delta(knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},Array{Int64,2},Array{Float64,2}}, VAR::Int)
   T = size(knn_dists_out[2], 1)
   K = knn_dists_out[1]
-  r = Array{Float64}(T)
-  x_i = Array{Float64}(1, VAR)
-  d_x = Array{Float64}(K, VAR)
+  r = Array{Float64}(undef, T)
+  x_i = Array{Float64}(undef, 1, VAR)
+  d_x = Array{Float64}(undef, K, VAR)
   KNN_Delta_out = (r, x_i, d_x)
   return(KNN_Delta_out)
 end
@@ -252,7 +244,6 @@ end
 
 Memory Efficient Version of `KNN_Delta()`. `KNN_Delta_out[1]` is the vector difference of the k-nearest neighbors.
 """
-
 function KNN_Delta!(KNN_Delta_out::Tuple{Array{Float64,1},Array{Float64,2},Array{Float64,2}}
                     , knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},Array{Int64,2},Array{Float64,2}}
                     , data::AbstractArray{Float64,2})
@@ -286,7 +277,6 @@ Compute Delta as vector difference of the k-nearest neighbors. Arguments are a `
 
 Harmeling, S., Dornhege, G., Tax, D., Meinecke, F., & Müller, K.-R. (2006). From outliers to prototypes: Ordering data. Neurocomputing, 69(13-15), 1608–1618. http://doi.org/10.1016/j.neucom.2005.05.015
 """
-
 function KNN_Delta(knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},Array{Int64,2},Array{Float64,2}}
                     , data::AbstractArray{Float64,2})
   KNN_Delta_out = init_KNN_Delta(knn_dists_out, size(data, 2))
@@ -308,7 +298,7 @@ function init_UNIV(T::Int, VAR::Int)
      return(univ_out)
 end
 
-function init_UNIV{tp,N}(data::AbstractArray{tp, N})
+function init_UNIV(data::AbstractArray{tp, N}) where {tp,N}
      dims = 1
      for i = 1:(N-1) # multiply dimensions except the last one and save as dims
        dims = size(data, i) * dims
@@ -327,8 +317,8 @@ end
 
 Memory efficient version of `UNIV()`, input an `univ_out` object from `init_UNIV()` and some `data` matrix observations * variables
 """
-function UNIV!{tp, N}(univ_out::Tuple{Array{tp,1},Array{Int64,2},Array{Int64,2}}
-                              , data::AbstractArray{tp, N})
+function UNIV!(univ_out::Tuple{Array{tp,1},Array{Int64,2},Array{Int64,2}}
+                              , data::AbstractArray{tp, N}) where {tp, N}
   (var_dat, dc_ix_order, dc_ix_order2) = univ_out
   dims = 1
   olddims = zeros(Int64, N-1)
@@ -341,7 +331,7 @@ function UNIV!{tp, N}(univ_out::Tuple{Array{tp,1},Array{Int64,2},Array{Int64,2}}
   @assert size(dc_ix_order, 2) == size(data, 2) == size(dc_ix_order2, 2)
   for variable = 1:size(data, 2)
     # copy with little allocation
-    copy!(var_dat, view(data, :, variable))
+    copyto!(var_dat, view(data, :, variable))
     sortperm!(view(dc_ix_order, :, variable), var_dat, rev = false)
     for t = 1:size(var_dat, 1) dc_ix_order2[dc_ix_order[t,variable],variable] = t end
   end
@@ -360,7 +350,7 @@ function funct(i, x) return(x[i]) end
 order the values in each varaible and return their maximum, i.e. any of the variables in `data` (observations * variables) is above a given quantile,
 the highest quantile will be returned.
 """
-function UNIV{tp, N}(data::AbstractArray{tp, N})
+function UNIV(data::AbstractArray{tp, N}) where {tp, N}
   univ_out = init_UNIV(data)
   return(UNIV!(univ_out, data))
 end
@@ -405,7 +395,6 @@ Paul Bodesheim and Alexander Freytag and Erik Rodner and Michael Kemmler and Joa
 "Kernel Null Space Methods for Novelty Detection". Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2013.
 
 """
-
 function KNFST_predict(KNFST_mod, K)
   knfst_out = init_KNFST(size(K,2),KNFST_mod)
   KNFST_predict!(knfst_out, KNFST_mod, K)
@@ -417,7 +406,6 @@ end
 
 initialize a `KNFST_out`object for the use with `KNFST_predict!`, given `T`, the number of observations and the model output `KNFST_train(K)`.
 """
-
 function init_KNFST(T::Int, KNFST_mod::Tuple{Array{Float64,2},Array{Float64,2}})
   diffs = zeros(Float64, T, size(KNFST_mod[2], 2));
   scores = zeros(Float64, T);
@@ -436,13 +424,12 @@ and the testing kernel matrix K.
 Paul Bodesheim and Alexander Freytag and Erik Rodner and Michael Kemmler and Joachim Denzler:
 "Kernel Null Space Methods for Novelty Detection". Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2013.
 """
-
 function KNFST_predict!(scores, diffs, Ktransposed, proj, targetValue, K)
   @assert size(scores, 1) == size(K, 2) == size(diffs, 1)
   @assert size(Ktransposed, 1) == size(K, 2) && size(Ktransposed, 2) == size(K, 1)
   transpose!(Ktransposed, K)
   # projected test samples: Ktransposed * model["proj"]
-  A_mul_B!(diffs, Ktransposed, proj)
+  mul!(diffs, Ktransposed, proj)
   # differences to the target value:
   broadcast!(-,diffs,diffs, targetValue)
   broadcast!(*,diffs, diffs, diffs)
@@ -460,7 +447,7 @@ function KNFST_predict!(KNFST_out::Tuple{Array{Float64,1},Array{Float64,2},Array
   @assert size(Ktransposed, 1) == size(K, 2) && size(Ktransposed, 2) == size(K, 1)
   transpose!(Ktransposed, K)
   # projected test samples: Ktransposed * model["proj"]
-  A_mul_B!(diffs, Ktransposed, proj)
+  mul!(diffs, Ktransposed, proj)
   # differences to the target value:
   broadcast!(-,diffs,diffs, targetValue)
   broadcast!(*,diffs, diffs, diffs)
@@ -509,10 +496,10 @@ function calculateKNFST(K, labels)
     ### calculate weights of orthonormal basis in kernel space
     centeredK = copy(K); # because we need original K later on again
     centerKernelMatrix(centeredK);
-    (basisvecsValues,basisvecs) = eig(centeredK);
+    (basisvecsValues,basisvecs) = eigen(centeredK);
     basisvecs = basisvecs[:,basisvecsValues .> 1e-12];
     basisvecsValues = basisvecsValues[basisvecsValues .> 1e-12];
-    basisvecsValues = diagm(1./sqrt.(basisvecsValues));
+    basisvecsValues = Diagonal(1 ./ sqrt.(basisvecsValues));
     basisvecs = basisvecs*basisvecsValues;
 
     ### calculate transformation T of within class scatter Sw:
@@ -520,7 +507,7 @@ function calculateKNFST(K, labels)
     L = zeros(n,n);
     for i=1:length(classes)
 
-       L[labels.==classes[i],labels.==classes[i]] = 1./sum(labels.==classes[i]);
+       L[labels .== classes[i], labels .== classes[i]] .= 1.0 / sum(labels .== classes[i]);
 
     end
 
@@ -529,7 +516,7 @@ function calculateKNFST(K, labels)
     M = ones(m,m)./m;
 
     ### compute helper matrix H
-    H = ((eye(m)-M)*basisvecs)'*K*(eye(n)-L);
+    H = ((I - M)*basisvecs)' * K * (I - L);
 
     ### T = H*H' = B'*Sw*B with B=basisvecs
     T = H*H';
@@ -539,14 +526,14 @@ function calculateKNFST(K, labels)
 
     if size(eigenvecs,2) < 1
 
-      (eigenvals,eigenvecs) = eig(T);
+      (eigenvals,eigenvecs) = eigen(T);
       (min_val,min_ID) = findmin(eigenvals);
       eigenvecs = eigenvecs[:,min_ID];
 
     end
 
     ### calculate null space projection and return it
-    proj = ((eye(m)-M)*basisvecs)*eigenvecs;
+    proj = ((I - M) * basisvecs) * eigenvecs;
 
 end
 
@@ -564,7 +551,7 @@ function centerKernelMatrix(kernelMatrix)
   n = size(kernelMatrix, 1);
 
   ### get mean values of each row/column
-  columnMeans = mean(kernelMatrix,2); ### NOTE: columnMeans = rowMeans because kernelMatrix is symmetric
+  columnMeans = mean(kernelMatrix, dims = 2); ### NOTE: columnMeans = rowMeans because kernelMatrix is symmetric
   matrixMean = mean(columnMeans);
 
   centeredKernelMatrix = kernelMatrix;
@@ -576,7 +563,7 @@ function centerKernelMatrix(kernelMatrix)
     end
   end
   #This line will not have any effect
-  centeredKernelMatrix = centeredKernelMatrix + matrixMean;
+  centeredKernelMatrix .+= matrixMean;
 
 end
 
@@ -593,7 +580,6 @@ Paul Bodesheim and Alexander Freytag and Erik Rodner and Michael Kemmler and Joa
 `proj` 	-- projection vector for data points (project x via kx*proj, where kx is row vector containing kernel values of x and training data)
 `targetValue` -- value of all training samples in the null space
 """
-
 function KNFST_train(K)
 
     # get number of training samples
@@ -607,7 +593,7 @@ function KNFST_train(K)
 
     # get model parameters
     proj = calculateKNFST(K_ext,labels);
-    targetValue = mean(K_ext[labels.==1,:]*proj,1);
+    targetValue = mean(K_ext[labels.==1,:]*proj, dims = 1);
     proj = proj[1:n,:];
 
     # return both variables
@@ -616,7 +602,7 @@ function KNFST_train(K)
 end
 
 """
-    Dist2Centers{tp}(centers::AbstractArray{tp, 2})
+    Dist2Centers(centers::AbstractArray{tp, 2}) where {tp}
 
 Compute the distance to the nearest centers of i.e. a K-means clustering output.
 Large Distances to the nearest center are anomalies. data: Observations * Variables.
@@ -624,7 +610,7 @@ Large Distances to the nearest center are anomalies. data: Observations * Variab
 `(proj, targetValue)`
 
 """
-function Dist2Centers{tp}(data::AbstractArray{tp,2}, centers::AbstractArray{tp,2})
+function Dist2Centers(data::AbstractArray{tp,2}, centers::AbstractArray{tp,2}) where {tp}
   (minD, minDIdx) = findmin(pairwise(Euclidean(), data', centers'), 2)
   clustassgin = zeros(Int, size(data, 1))
   for i = 1:size(data, 1)

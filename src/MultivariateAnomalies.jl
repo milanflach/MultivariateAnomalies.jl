@@ -4,9 +4,11 @@ module MultivariateAnomalies
 #######################
   import MultivariateStats
   import Combinatorics
+  using LinearAlgebra
   using Distances
   using LIBSVM
   using Base.Cartesian
+  using Statistics
 
   # DistDensity
   export
