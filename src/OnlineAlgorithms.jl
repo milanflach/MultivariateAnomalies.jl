@@ -31,13 +31,13 @@ function Mahalanobis_distance!{tp}(d::Array{tp, 1}, x::AbstractArray{tp, 2}, Q::
          if dim == 2
          for v2 = 1:size(x, 1)
            for v = 1:size(x, 1)
-             d[1] = d[1] + (x[v, i] - x[v, j]) * Q[v, v2] *  (x[v, i] - x[v, j])
+             d[1] = d[1] + (x[v, i] - x[v, j]) * Q[v, v2] *  (x[v2, i] - x[v2, j])
            end
          end
          else
          for v = 1:size(x, 2)
            for v2 = 1:size(x, 2)
-             d[1] = d[1] + (x[i, v] - x[j, v]) * Q[v2, v] *  (x[i, v] - x[j, v])
+             d[1] = d[1] + (x[i, v] - x[j, v]) * Q[v, v2] *  (x[i, v2] - x[j, v2])
            end
          end
          end
