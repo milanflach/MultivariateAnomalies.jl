@@ -10,7 +10,7 @@
 
 ## Requirements
 
-- Julia `0.6`
+- Julia `0.7`
 - Julia packages `Distances`, `Combinatorics`, `MultivariateStats` and `LIBSVM`.
 
 ## Installation
