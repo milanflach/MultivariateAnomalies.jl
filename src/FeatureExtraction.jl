@@ -20,7 +20,7 @@ function sMSC(datacube, cycle_length)
 end
 
 # fast version of fabian to remove the mean seasonal cycle
-function removeMSC!(xin::AbstractArray{T,ndim},xout::AbstractArray{T,ndim},NpY::Integer,itimedim::Integer;imscstart::Int=1) where {T,ndim}
+function removeMSC!(xin::AbstractArray{Tp,ndim},xout::AbstractArray{Tp,ndim},NpY::Integer,itimedim::Integer;imscstart::Int=1) where {Tp,ndim}
    # Determine length of reshape dimensions
    s=size(xin)
    l1=itimedim==1 ? 1 : prod(s[1:(itimedim-1)])

@@ -61,7 +61,7 @@ julia> quantile_scores2 = get_quantile_scores(scores2)
 julia> compute_ensemble(quantile_scores1, quantile_scores2, ensemble = "max")
 ```
 """
-function compute_ensemble(m1_scores::Array{T, N}, m2_scores::Array{T, N}; ensemble = "mean") where {T, N}
+function compute_ensemble(m1_scores::Array{Tp, N}, m2_scores::Array{Tp, N}; ensemble = "mean") where {Tp, N}
     @assert any(ensemble .== ["mean","min","max","median"])
 
     scores = cat(N+1,m1_scores, m2_scores);
@@ -84,7 +84,7 @@ function compute_ensemble(m1_scores::Array{T, N}, m2_scores::Array{T, N}; ensemb
   return(ensemble_scores)
 end
 
-function compute_ensemble(m1_scores::Array{T, N}, m2_scores::Array{T, N}, m3_scores::Array{T, N}; ensemble = "mean") where {T, N}
+function compute_ensemble(m1_scores::Array{Tp, N}, m2_scores::Array{Tp, N}, m3_scores::Array{Tp, N}; ensemble = "mean") where {Tp, N}
     @assert any(ensemble .== ["mean","min","max","median"])
 
     scores = cat(N+1,m1_scores, m2_scores, m3_scores);
@@ -107,7 +107,7 @@ function compute_ensemble(m1_scores::Array{T, N}, m2_scores::Array{T, N}, m3_sco
   return(ensemble_scores)
 end
 
-function compute_ensemble(m1_scores::Array{T, N}, m2_scores::Array{T, N}, m3_scores::Array{T, N}, m4_scores::Array{T, N}; ensemble = "mean") where {T, N}
+function compute_ensemble(m1_scores::Array{Tp, N}, m2_scores::Array{Tp, N}, m3_scores::Array{Tp, N}, m4_scores::Array{Tp, N}; ensemble = "mean") where {Tp, N}
     @assert any(ensemble .== ["mean","min","max","median"])
 
     scores = cat(N+1,m1_scores, m2_scores, m3_scores, m4_scores);

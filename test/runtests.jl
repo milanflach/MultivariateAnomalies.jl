@@ -1,5 +1,5 @@
 using MultivariateAnomalies
-using LinearAlgebra
+#using LinearAlgebra
 using Statistics
 using Test
 
