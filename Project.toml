@@ -1,5 +1,5 @@
 name = "MultivariateAnomalies"
-uuid = "b11ec71a-af6e-11e8-3328-f56a17875dc9"
+uuid = "6b1494d1-c0e4-5e11-970b-cb64accc6d0e"
 authors = ["milanflach <milanflach fs@users.noreply.github.com>"]
 version = "0.1.2"
 license = "MIT"
