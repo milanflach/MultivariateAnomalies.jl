@@ -64,3 +64,8 @@ detectAnomalies(dat, P)
 @test K[1:4,1:4] == P.D_train[1]
 @test Ktest == P.D_test[1]
 @test round.(P.KNFST[1], digits = 3) == round.(KNFST_predict(knfst_model, Ktest)[1], digits = 3)
+
+
+data = rand(200,3)
+methods = ["REC","KDE"]
+@test all(detectAnomalies(data, getParameters(methods, data)) .== detectAnomalies(data, methods))

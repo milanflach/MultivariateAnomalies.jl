@@ -287,12 +287,12 @@ function return_detectAnomalies(P::PARAMS)
 end
 
 
-function detectAnomalies(data::AbstractArray{tp, N}, algorithms::Array{String,1} = ["REC", "KDE"]; mean = 0) where {tp, N}
+function detectAnomalies(data::AbstractArray{tp, N}, algorithms::Array{String,1} = ["REC", "KDE"]; mean = 0, dist = "Euclidean") where {tp, N}
   @assert !any(ispartof(algorithms, ["SVDD", "KNFST"]))
    Q = cov(reshape_dims_except_N(data))
    if(mean == 0) meanvec = zeros(Float64, 1, size(data, N))
    else  meanvec = mean(data, dims = 1) end
-   D = dist_matrix(data)
+   D = dist_matrix(data; dist = dist)
    sigma =  median(unsafe_wrap(Array, pointer(D), length(D)))
    P = PARAMS(algorithms, [NaN NaN], dist, sigma # sigma
              , Int(ceil(0.05 * size(data, 1))) # k
