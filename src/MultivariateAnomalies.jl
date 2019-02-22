@@ -62,6 +62,7 @@ module MultivariateAnomalies
     get_MedianCycle,
     get_MedianCycle!,
     init_MedianCycle,
+    mapMovingWindow,
 # AUC
     auc,
     auc_fpr_tpr,

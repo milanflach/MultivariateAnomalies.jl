@@ -501,7 +501,185 @@ med_cycles_out = zeros(tp, cycle_length, size(datacube, 2));
   return(med_cycles_out)
 end
 
+# get moving window loop with MWobj
+mutable struct MWobj
+    ObsPerYear::Int
+    windowsize::Int
+    edgecut::Int
+    startidx::Int
+    numoutvars::Int
+    minwindow::Int
+    maxwindow::Int
+    count::Array{Int, 1}
+    iterator_windowcenter::StepRange{Int,Int}
+    mw_indat
+    mw_outdat
+    mw_idx::Array{Int, 1}
+    xin
+    xout
+end
 
+
+function init_MovingWindow(xin::AbstractArray{tp, 2}; ObsPerYear::Int = 46, windowsize::Int = 11, edgecut::Int = 0, startidx::Int = 1, numoutvars::Int = 0) where {tp}
+    if 2*edgecut >= windowsize error("2 * edgecut has to be smaller windowsize, but is $edgecut, windowsize = $windowsize") end
+    if !isodd(windowsize) error("windowsize has to be odd, but is $windowsize") end
+    if numoutvars == 0 numoutvars = size(xin, 2) end
+    if numoutvars > 1
+        mwobj = MWobj(
+        ObsPerYear
+        ,windowsize
+        ,edgecut
+        ,startidx
+        ,numoutvars
+        ,-floor(Int, windowsize / 2.0) # minwindow
+        ,floor(Int, windowsize / 2.0) # maxwindow
+        , [0] # count
+        ,startidx:(windowsize-2*edgecut):ObsPerYear #iterator_windowcenter
+        ,zeros(eltype(xin), windowsize * floor(Int, size(xin, 1) / ObsPerYear), size(xin, 2)) #mw_indat
+        ,zeros(eltype(xin), windowsize * floor(Int, size(xin, 1) / ObsPerYear), numoutvars) #mw_outdat
+        ,zeros(Int, windowsize * floor(Int, size(xin, 1) / ObsPerYear)) # mw_idx
+        ,xin
+        ,zeros(eltype(xin), size(xin, 1), numoutvars) #xout
+        )
+    else
+        mwobj = MWobj(
+        ObsPerYear
+        ,windowsize
+        ,edgecut
+        ,startidx
+        ,numoutvars
+        ,-floor(Int, windowsize / 2.0) # minwindow
+        ,floor(Int, windowsize / 2.0) # maxwindow
+        , [0] # count
+        ,startidx:(windowsize-2*edgecut):ObsPerYear #iterator_windowcenter
+        ,zeros(eltype(xin), windowsize * floor(Int, size(xin, 1) / ObsPerYear), size(xin, 2)) #mw_indat
+        ,zeros(eltype(xin), windowsize * floor(Int, size(xin, 1) / ObsPerYear)) #mw_outdat
+        ,zeros(Int, windowsize * floor(Int, size(xin, 1) / ObsPerYear)) # mw_idx
+        ,xin
+        ,zeros(eltype(xin), size(xin, 1), numoutvars) #xout
+        )
+    end
+    return mwobj
+end
+
+
+function getMWData!(mwobj::MWobj, windowcenter::Int)
+    xin = mwobj.xin
+    mwdata = mwobj.mw_indat
+    mwidx = mwobj.mw_idx
+    ObsPerYear = mwobj.ObsPerYear
+    windowsize = mwobj.windowsize
+    minwindow =  mwobj.minwindow
+    maxwindow = mwobj.maxwindow
+    count = mwobj.count
+
+    count[1] = 0
+    for i = windowcenter:ObsPerYear:(size(xin, 1)+windowsize)
+      for j = minwindow:maxwindow
+        tempidx = i+j
+        if tempidx > 0 && tempidx <= size(xin, 1)
+          count[1] += 1
+          mwidx[count[1]] = tempidx
+          for varidx = 1:size(xin, 2)
+            mwdata[count[1], varidx] = xin[tempidx, varidx]
+          end
+        end
+      end
+    end
+
+  return view(mwobj.mw_indat,1:mwobj.count[1],:)
+end
+
+function pushMWResultsBack!(mwobj::MWobj, windowcenter::Int)
+    mwdata = mwobj.mw_outdat
+    mwidx = mwobj.mw_idx
+    xout = mwobj.xout
+    ObsPerYear=mwobj.ObsPerYear
+    windowsize = mwobj.windowsize
+    edgecut = mwobj.edgecut
+    minwindow = mwobj.minwindow
+    maxwindow = mwobj.maxwindow
+    count = mwobj.count
+
+  # assumes Time * Vars
+    count[1] = 0
+    for i = windowcenter:ObsPerYear:(size(xout, 1)+windowsize)
+      for j = minwindow:maxwindow
+        tempidx = i+j
+        if tempidx > 0 && tempidx <= size(xout, 1)
+          count[1] += 1
+          if mwidx[count[1]] != tempidx error("not matching mwidx[count] = $(mwidx[count]), check windowsize") end
+          if j >= (minwindow + edgecut) && j <= (maxwindow - edgecut)
+              for varidx = 1:size(xout, 2)
+                xout[tempidx, varidx] = mwdata[count[1], varidx]
+              end
+          end
+        end
+      end
+    end
+
+    return view(mwobj.mw_outdat, 1:mwobj.count[1], :)
+end
+
+
+"""
+    mapMovingWindow(function2mw, x, args...; ObsPerYear::Int = 46, windowsize::Int = 9, edgecut::Int = 0, startidx::Int = 1, numoutvars::Int = 0)
+    mapMovingWindow(function2mw, x; ...)
+apply a function (function2mw) in a moving window encompassing all years and running along the time, e.g. apply the function to all summers, then summers + 1 timestep ...
+results are written to the center of the respective windowsize. Input axes are time or time-variables. The number of output variables can be different from the number of input variables, specified in numoutvars.
+e.g. transforming the variables in normalised ranks between zero and one to get rid of heteroscedasticity would look like:
+    using MultivariateAnomalies
+    x = randn(10*46, 3)
+    mapMovingWindow(get_quantile_scores, x, numoutvars = size(x, 2))
+"""
+
+function mapMovingWindow(function2mw, x, args...; ObsPerYear::Int = 46, windowsize::Int = 9, edgecut::Int = 0, startidx::Int = 1, numoutvars::Int = 0)
+  mwobj = init_MovingWindow(x, ObsPerYear = ObsPerYear, windowsize = windowsize, edgecut = edgecut, numoutvars = numoutvars, startidx = startidx)
+  if numoutvars > 1
+      for windowcenter = mwobj.iterator_windowcenter
+        getMWData!(mwobj, windowcenter)
+        # do something with mwobj.mw_indat and write the results to mwobj.mw_outdat
+        xout = view(mwobj.mw_outdat, 1:mwobj.count[1], :)
+        xin = view(mwobj.mw_indat, 1:mwobj.count[1], :)
+        xout[:] = function2mw(xin, args...)
+        pushMWResultsBack!(mwobj, windowcenter)
+    end
+  else
+      for windowcenter = mwobj.iterator_windowcenter
+        getMWData!(mwobj, windowcenter)
+        # do something with mwobj.mw_indat and write the results to mwobj.mw_outdat
+        xout = view(mwobj.mw_outdat, 1:mwobj.count[1])
+        xin = view(mwobj.mw_indat, 1:mwobj.count[1], :)
+        xout[:] = function2mw(xin, args...)
+        pushMWResultsBack!(mwobj, windowcenter)
+    end
+  end
+  return mwobj.xout
+end
+
+function mapMovingWindow(function2mw, x; ObsPerYear::Int = 46, windowsize::Int = 9, edgecut::Int = 0, startidx::Int = 1, numoutvars::Int = 0)
+  mwobj = init_MovingWindow(x, ObsPerYear = ObsPerYear, windowsize = windowsize, edgecut = edgecut, numoutvars = numoutvars, startidx = startidx)
+  if numoutvars > 1
+      for windowcenter = mwobj.iterator_windowcenter
+        getMWData!(mwobj, windowcenter)
+        # do something with mwobj.mw_indat and write the results to mwobj.mw_outdat
+        xout = view(mwobj.mw_outdat, 1:mwobj.count[1], :)
+        xin = view(mwobj.mw_indat, 1:mwobj.count[1], :)
+        xout[:] = function2mw(xin)
+        pushMWResultsBack!(mwobj, windowcenter)
+    end
+  else
+      for windowcenter = mwobj.iterator_windowcenter
+        getMWData!(mwobj, windowcenter)
+        # do something with mwobj.mw_indat and write the results to mwobj.mw_outdat
+        xout = view(mwobj.mw_outdat, 1:mwobj.count[1])
+        xin = view(mwobj.mw_indat, 1:mwobj.count[1], :)
+        xout[:] = function2mw(xin)
+        pushMWResultsBack!(mwobj, windowcenter)
+    end
+  end
+  return mwobj.xout
+end
 
 ###################################
 #end
