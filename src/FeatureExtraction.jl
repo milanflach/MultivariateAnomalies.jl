@@ -9,7 +9,7 @@ subtract the median seasonal cycle from the datacube given the length of year `c
 
 # Examples
 ```
-julia> dc = hcat(rand(193) + 2* sin(0:pi/24:8*pi), rand(193) + 2* sin(0:pi/24:8*pi))
+julia> dc = hcat(rand(193) + 2* sin.(0:pi/24:8*pi), rand(193) + 2* sin.(0:pi/24:8*pi))
 julia> sMSC_dc = sMSC(dc, 48)
 ```
 """
@@ -19,7 +19,6 @@ function sMSC(datacube, cycle_length)
     return(x_out)
 end
 
-# fast version of fabian to remove the mean seasonal cycle
 function removeMSC!(xin::AbstractArray{Tp,ndim},xout::AbstractArray{Tp,ndim},NpY::Integer,itimedim::Integer;imscstart::Int=1) where {Tp,ndim}
    # Determine length of reshape dimensions
    s=size(xin)
@@ -56,81 +55,12 @@ function removeMSC!(xin::AbstractArray{Tp,ndim},xout::AbstractArray{Tp,ndim},NpY
   return(xout)
 end
 
-"""
-    globalPCA(datacube::Array{tp, N}, expl_var::Float64 = 0.95) where {tp, N}
-
-return an orthogonal subset of the variables, i.e. the last dimension of the datacube.
-A Principal Component Analysis is performed on the entire datacube, explaining at least `expl_var` of the variance.
-"""
-function globalPCA(datacube::AbstractArray{tp, N}, expl_var::Float64 = 0.95) where {tp, N}
-    if(expl_var > 1.0 || expl_var < 0.0) print("Stop: expl_var has to be within range(0.0, 1.0) but is $expl_var")
-    else
-    newsize = zeros(Int64, length(size(datacube)))
-    dims = 1
-    for i = 1:(N-1) # multiply dimensions except the last one and save as dims
-        dims = size(datacube, i) * dims
-        newsize[i] = size(datacube, i)
-    end
-    X = reshape(datacube, dims, size(datacube, N)) # reshape according to dims
-    X = permutedims(X, [2,1]) # permute as PCA expectes other input format
-    M = MultivariateStats.fit(MultivariateStats.PCA, X, pratio = 0.999, method = :svd)
-    Y = MultivariateStats.transform(M, X)
-    Y = permutedims(Y, [2,1])
-    num_expl_comp = findfirst(cumsum(MultivariateStats.principalvars(M))/MultivariateStats.tprincipalvar(M) .>= expl_var)
-    newsize[N] = num_expl_comp
-    Xout = zeros(tp, ntuple(i -> func(i, newsize), size(newsize, 1)))
-    copyto!(Xout, unsafe_wrap(Array, pointer(Y),prod(newsize)))
-    end
-    return(Xout, MultivariateStats.principalvars(M)/MultivariateStats.tprincipalvar(M),
-    cumsum(MultivariateStats.principalvars(M))/MultivariateStats.tprincipalvar(M), num_expl_comp)
-end
 
 #small helper
 function func(i,x)
         return(x[i])
 end
 
-# ICA with a specific explained percentage of variance out of PCA of a number of components:
-"""
-    globalICA(datacube::Array{tp, 4}, mode = "expl_var"; expl_var::Float64 = 0.95, num_comp::Int = 3)
-
-perform an Independent Component Analysis on the entire 4-dimensional datacube either by (`mode = "num_comp"`) returning num_comp number of independent components
-or (`mode = "expl_var"`) returning the number of components which is necessary to explain expl_var of the variance, when doing a Prinicpal Component Analysis before.
-
-"""
-function globalICA(datacube::AbstractArray{tp, N}, mode = "expl_var"; expl_var::Float64 = 0.95, num_comp::Int = 3) where {tp, N}
-    newsize = zeros(Int64, length(size(datacube)))
-    dims = 1
-    for i = 1:(N-1) # multiply dimensions except the last one and save as dims
-        dims = size(datacube, i) * dims
-        newsize[i] = size(datacube, i)
-    end
-    X = reshape(datacube, dims, size(datacube, N)) # reshape according to dims
-    X = permutedims(X, [2,1]) # permute as PCA expectes other input format
-    if(mode != "expl_var" && mode != "num_comp") print("Stop: mode has to be either 'expl_var' or 'num_comp' but is $mode")
-        else
-    if (mode == "expl_var")
-      if(expl_var > 1.0 || expl_var < 0.0) print("Stop: expl_var has to be within range(0.0, 1.0) but is $expl_var")
-        else
-        # explaining variance, estimate number of components to a certain variance with PCA
-        M = MultivariateStats.fit(MultivariateStats.PCA, X, pratio = 0.99, method = :svd)
-        num_comp = findfirst(cumsum(MultivariateStats.principalvars(M))/MultivariateStats.tprincipalvar(M) .>= expl_var)
-      end
-    end
-    if(num_comp > size(datacube, N)) print("Stop: num_comp has to be smaller than size(datacube, N) = $(size(datacube, N)) but is $num_comp")
-      else
-        M = MultivariateStats.fit(MultivariateStats.ICA, X, num_comp, do_whiten = true, mean = 0.0) # without whitening --> get orthonormal vectors before
-        Y = MultivariateStats.transform(M, X)
-        Y = permutedims(Y, [2,1])
-        newsize[N] = num_comp
-        Xout = similar(datacube)
-        Xout = Xout[:,:,:,1:num_comp]
-        Xout[:] = Y[:]
-        Xout
-    end
-    return(Xout, num_comp)
-    end
-end
 
 """
     TDE(datacube::Array{tp, 4}, ΔT::Integer, DIM::Int = 3) where {tp}
@@ -146,7 +76,7 @@ julia> TDE(dc, 3, 2)
 """
 function TDE(datacube::AbstractArray{tp, 4}, ΔT::Integer, DIM::Int = 3) where {tp}
     start = ((DIM-1)*ΔT+1)
-    embedded_datacube = zeros(Float64, (size(datacube, 1) - start +1, size(datacube, 2), size(datacube, 3), size(datacube, 4) * DIM))
+    embedded_datacube = zeros(tp, (size(datacube, 1) - start +1, size(datacube, 2), size(datacube, 3), size(datacube, 4) * DIM))
     for dim = 1:DIM
     embedded_datacube[:,:,:,((dim-1)*size(datacube, 4)+1):(dim*size(datacube, 4))] =
         datacube[(start - ((dim-1) * ΔT)) : (size(datacube, 1) - ((dim-1) * ΔT)),:,:,:]
@@ -156,7 +86,7 @@ end
 
 function TDE(datacube::AbstractArray{tp, 3}, ΔT::Integer, DIM::Int = 3) where {tp}
     start = ((DIM-1)*ΔT+1)
-    embedded_datacube = zeros(Float64, (size(datacube, 1) - start +1, size(datacube, 2), size(datacube, 3) * DIM))
+    embedded_datacube = zeros(tp, (size(datacube, 1) - start +1, size(datacube, 2), size(datacube, 3) * DIM))
     for dim = 1:DIM
     embedded_datacube[:,:,((dim-1)*size(datacube, 3)+1):(dim*size(datacube, 3))] =
         datacube[(start - ((dim-1) * ΔT)) : (size(datacube, 1) - ((dim-1) * ΔT)),:,:]
@@ -166,9 +96,19 @@ end
 
 function TDE(datacube::AbstractArray{tp, 2}, ΔT::Integer, DIM::Int = 3) where {tp}
     start = ((DIM-1)*ΔT+1)
-    embedded_datacube = zeros(Float64, (size(datacube, 1) - start +1,  size(datacube, 2) * DIM))
+    embedded_datacube = zeros(tp, (size(datacube, 1) - start +1,  size(datacube, 2) * DIM))
     for dim = 1:DIM
     embedded_datacube[:,((dim-1)*size(datacube, 2)+1):(dim*size(datacube, 2))] =
+        datacube[(start - ((dim-1) * ΔT)) : (size(datacube, 1) - ((dim-1) * ΔT)),:]
+    end
+    return(embedded_datacube)
+end
+
+function TDE(datacube::AbstractArray{tp, 1}, ΔT::Integer, DIM::Int = 3) where {tp}
+    start = ((DIM-1)*ΔT+1)
+    embedded_datacube = zeros(tp, (size(datacube, 1) - start +1,   DIM))
+    for dim = 1:DIM
+    embedded_datacube[:,((dim-1)+1):(dim)] =
         datacube[(start - ((dim-1) * ΔT)) : (size(datacube, 1) - ((dim-1) * ΔT)),:]
     end
     return(embedded_datacube)
@@ -186,10 +126,10 @@ julia> dc = randn(50,3,3,3)
 julia> mw_VAR(dc, 15)
 ```
 """
-function mw_VAR(datacube::AbstractArray{tp,N}, windowsize::Int = 10) where {tp,N}
-  out = zeros(tp, size(datacube))
+function mw_VAR(datacube::AbstractArray{<:AbstractFloat,N}, windowsize::Int = 10) where {N}
+  out = zeros(eltype(datacube), size(datacube))
   for k = 1:length(out) out[k] = NaN end
-  datacube0mean = datacube .- mean(datacube, 1)
+  datacube0mean = datacube .- mean(datacube, dims = 1)
   mw_VAR!(out, datacube0mean, windowsize)
   return(out)
 end
@@ -200,7 +140,7 @@ end
 mutating version for `mw_VAR()`. The mean of the input data `datacube0mean` has to be 0. Initialize out properly: `out = datacube0mean` leads to wrong results.
 
 """
-function mw_VAR!(out::AbstractArray{tp, N}, datacube0mean::AbstractArray{tp,N}, windowsize::Int = 10) where {tp,N}
+function mw_VAR!(out::AbstractArray{tp, N}, datacube0mean::AbstractArray{tp,N}, windowsize::Int = 10) where {tp, N}
   T = size(datacube0mean, 1)
   for beg = 1:T:length(datacube0mean)
     inner_mw_VAR!(out, datacube0mean, windowsize, beg, T)
@@ -216,15 +156,15 @@ internal function for mw_VAR!()
 
 """
 function inner_mw_VAR!(out, datacube, windowsize, beg, T) # mean already subtracted
-  out_beg = Int(floor(windowsize * 0.5)) + beg - 1
+  out_beg = floor(Int, windowsize * 0.5) + beg
   for notavailable =  (beg):(out_beg-1)
     out[notavailable] = NaN
   end
   # init x
   x = sum(unsafe_wrap(Array, pointer(datacube, beg), windowsize).^2)
   out[out_beg] = x
-  @inbounds for i = 1:(T-windowsize +1)
-    x = x - datacube[beg + i - 1]^2 + datacube[beg + i - 1 + windowsize - 1]^2
+  for i = 1:(T-windowsize)
+    x = x - datacube[beg + i - 1]^2 + datacube[beg + i - 1 + windowsize]^2
     out[out_beg + i] = x
   end
   for notavailable = (out_beg + (T-windowsize +1) + 1):(beg+T-1)
@@ -245,8 +185,8 @@ julia> dc = randn(50,3,3,3)
 julia> mw_AVG(dc, 15)
 ```
 """
-function mw_AVG(datacube::AbstractArray{tp,N}, windowsize::Int = 10) where {tp,N}
-  out = zeros(tp, size(datacube))
+function mw_AVG(datacube::AbstractArray{<:AbstractFloat,N}, windowsize::Int = 10) where {N}
+  out = zeros(eltype(datacube), size(datacube))
   for k = 1:length(out) out[k] = NaN end
   T = size(datacube, 1)
   for beg = 1:T:length(datacube)
@@ -273,15 +213,15 @@ function mw_AVG!(out::AbstractArray{tp,N}, datacube::AbstractArray{tp,N}, window
 end
 
 function inner_mw_AVG!(out::AbstractArray{tp, N}, datacube::AbstractArray{tp, N}, windowsize::Int, beg::Int, T::Int) where {tp,N}
-  out_beg = Int(floor(windowsize * 0.5)) + beg - 1
+  out_beg = floor(Int, windowsize * 0.5) + beg
   for notavailable =  (beg):(out_beg-1)
     out[notavailable] = NaN
   end
   # init x
   x = sum(unsafe_wrap(Array, pointer(datacube, beg), windowsize))
   out[out_beg] = x
-  @inbounds for i = 1:(T-windowsize +1)
-    x = x - datacube[beg + i - 1] + datacube[beg + i - 1 + windowsize - 1]
+  for i = 1:(T - windowsize)
+    x = x - datacube[beg + i - 1] + datacube[beg + i - 1 + windowsize]
     out[out_beg + i] = x
   end
   for notavailable = (out_beg + (T-windowsize +1) + 1):(beg+T-1)

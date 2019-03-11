@@ -48,8 +48,6 @@ module MultivariateAnomalies
     Dist2Centers,
 # FeatureExtraction
     sMSC,
-    globalPCA,
-    globalICA,
     TDE,
     mw_VAR,
     mw_VAR!,
