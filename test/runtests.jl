@@ -3,5 +3,5 @@ using MultivariateAnomalies
 using Statistics
 using Test
 
-include("test/testFeatureExtr.jl")
-include("test/testAlgorithms.jl")
+include("testFeatureExtr.jl")
+include("testAlgorithms.jl")

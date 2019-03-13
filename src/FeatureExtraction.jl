@@ -109,7 +109,7 @@ function TDE(datacube::AbstractArray{tp, 1}, ΔT::Integer, DIM::Int = 3) where {
     embedded_datacube = zeros(tp, (size(datacube, 1) - start +1,   DIM))
     for dim = 1:DIM
     embedded_datacube[:,((dim-1)+1):(dim)] =
-        datacube[(start - ((dim-1) * ΔT)) : (size(datacube, 1) - ((dim-1) * ΔT)),:]
+        datacube[(start - ((dim-1) * ΔT)) : (size(datacube, 1) - ((dim-1) * ΔT))]
     end
     return(embedded_datacube)
 end
@@ -373,8 +373,7 @@ Can deal with some NaN values.
 # Examples
 ```
 julia> using MultivariateAnomalies
-julia> dat = rand(193) + 2* sin(0:pi/24:8*pi)
-julia> dat[100] = NaN
+julia> dat = randn(90) + x = sind.(0:8:719)
 julia> cycles = get_MedianCycle(dat, 48)
 ```
 """
@@ -463,6 +462,7 @@ end
 function init_MovingWindow(xin::AbstractArray{tp, 2}; ObsPerYear::Int = 46, windowsize::Int = 11, edgecut::Int = 0, startidx::Int = 1, numoutvars::Int = 0) where {tp}
     if 2*edgecut >= windowsize error("2 * edgecut has to be smaller windowsize, but is $edgecut, windowsize = $windowsize") end
     if !isodd(windowsize) error("windowsize has to be odd, but is $windowsize") end
+    if round(Int, size(xin, 1) / ObsPerYear) * ObsPerYear == size(xin, 1) error("ObsPerYear multiplied by some integer is not matching size(xin, 1)") end
     if numoutvars == 0 numoutvars = size(xin, 2) end
     if numoutvars > 1
         mwobj = MWobj(

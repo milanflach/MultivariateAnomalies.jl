@@ -27,3 +27,12 @@ x = [3.0, -3.0, 4.0, -4.0, 5.0]
 # EWMA
 x = [10.0, 0.0, 0.0, 0.0, 0.0, 10.0, 0.0]
 @test all(round.(Int, EWMA(x, 0.5) * 4) .== [20, 10, 5, 2, 1, 21, 10])
+
+# map moving window
+x = randn(144, 1)
+@test all(reshape(EWMA(reshape(x, 48, 3)')', 144, 1) .== mapMovingWindow(EWMA, x,ObsPerYear = 48, windowsize = 1, numoutvars = 1))
+@test all(reshape(EWMA(reshape(x, 48, 3)', 0.5)', 144, 1) .== mapMovingWindow(EWMA, x, 0.5,ObsPerYear = 48, windowsize = 1, numoutvars = 1))
+
+# get median cycle
+ x = sind.(0:8:719)
+ @test all(get_MedianCycle(x, 45) .== x[1:45])
