@@ -462,7 +462,7 @@ end
 function init_MovingWindow(xin::AbstractArray{tp, 2}; ObsPerYear::Int = 46, windowsize::Int = 11, edgecut::Int = 0, startidx::Int = 1, numoutvars::Int = 0) where {tp}
     if 2*edgecut >= windowsize error("2 * edgecut has to be smaller windowsize, but is $edgecut, windowsize = $windowsize") end
     if !isodd(windowsize) error("windowsize has to be odd, but is $windowsize") end
-    if round(Int, size(xin, 1) / ObsPerYear) * ObsPerYear == size(xin, 1) error("ObsPerYear multiplied by some integer is not matching size(xin, 1)") end
+    if round(Int, size(xin, 1) / ObsPerYear) * ObsPerYear != size(xin, 1) error("ObsPerYear multiplied by some integer is not matching size(xin, 1)") end
     if numoutvars == 0 numoutvars = size(xin, 2) end
     if numoutvars > 1
         mwobj = MWobj(
