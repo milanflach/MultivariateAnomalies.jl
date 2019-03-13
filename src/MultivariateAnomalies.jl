@@ -2,7 +2,7 @@ __precompile__(true)
 
 module MultivariateAnomalies
 #######################
-  import MultivariateStats
+  #import MultivariateStats
   import Combinatorics
   using LinearAlgebra
   using Distances
