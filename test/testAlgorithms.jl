@@ -62,3 +62,20 @@ detectAnomalies(dat, P)
 data = rand(200,3)
 methods = ["REC","KDE"]
 @test all(detectAnomalies(data, getParameters(methods, data)) .== detectAnomalies(data, methods))
+
+
+# test online algorithms with the non-online corresponding ones
+using StatsBase
+
+out = zeros(100)
+x = randn(100, 3)
+Q = StatsBase.cov(x)
+@test all(round.(KDEonline!(out, x, 1.0), digits = 4) .== round.(KDE(kernel_matrix(dist_matrix(x), 1.0)), digits = 4))
+
+@test all(round.(KDEonline!(out, x, Q, 1.0), digits = 4) .== round.(KDE(kernel_matrix(dist_matrix(x, dist = "Mahalanobis", Q = Q), 1.0)), digits = 4))
+
+@test all(round.(REConline!(out, x, 1.0), digits = 4) .== round.(REC(dist_matrix(x), 1.0), digits = 4))
+
+@test all(round.(REConline!(out, x, Q, 1.0), digits = 4) .== round.(REC(ist_matrix(x, dist = "Mahalanobis", Q = Q), 1.0), digits = 4))
+
+#@test all(round.(KNNonline!(out, x, 10), digits = 4) .== round.(KNN(dist_matrix(x), 10), digits = 4))

@@ -133,7 +133,7 @@ function innerREConline!(r::AbstractArray{tp, 1}, d::AbstractArray{tp, 1}, ɛ::t
 end
 
 function finalizeREConline!(r::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}, dim::Int) where {tp}
-  r[1] = 1.0 - (r[1] / size(x, dim))
+  r[1] = 1.0 - ((r[1] - 1.0) / size(x, dim))
   return r
 end
 
@@ -235,55 +235,6 @@ function finalizeKNNonline!(knn::AbstractArray{tp, 1}, k::Int) where {tp}
   end
   knn[1] = knn[1] / k
   return knn
-end
-
-"""
-    KDEonline_withNearDistskipping!{tp}(kdescores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}, σ::tp, init_sample::Int = 100, dim::Int = 1)
-
-compute (1.0 - Kernel Density Estimates) from `x` and write it to kdescores with `dim` being the dimension of the observations.
-Precomputes distances to `init_sample` randomly sampled points. New distance computation is omitted in cases
-when the distance to the precomputed random samples is small. However, in low density regions the distance is always comuted.
-Faster performance than KDEonline() for more than 2000 observations.
-"""
-function KDEonline_withNearDistskipping!(kdescores::AbstractArray{tp, 1}, x::AbstractArray{tp, 2}, σ::tp, init_sample::Int = 100, dim::Int = 1) where {tp}
-  for n = 1:length(kdescores)
-    kdescores[n] = 0.0
-  end
-  k = zeros(tp, 1)
-  d = zeros(tp, 1)
-  d_small = fill(typemax(tp), 1)
-  scalethres = 1.0/3.0#3.0/10.0
-  similardistthres = σ * scalethres
-  lowdensitythres = (1- exp(-0.5/σ) ) * 1.05# / scalethres
-  initidxs = rand(1:size(x, dim), init_sample)
-  # initdists = zeros(Float64, 100)
-  # compute some initial scores
-  for iinits = 1:size(initidxs, 1)
-    idx = initidxs[iinits]
-    KDEonline!(k, d, x, idx, σ, dim)
-    kdescores[idx] = k[1]
-  end
-  # skip scores computation if the kde distance to already computed points is small
-  for i = 1:size(x, dim)
-    d_small[1] = typemax(tp)
-    for iinits = 1:size(initidxs, 1)
-      #if kdescores[i] == 0.0
-        idx = initidxs[iinits]
-        Euclidean_distance!(d, x, i, idx, dim)
-        if d[1] < similardistthres #&& kdescores[idx] < lowdensitythres
-          if d[1] < d_small[1]
-            d_small[1] = d[1]
-            kdescores[i] = kdescores[idx] # approximately
-          end
-        end
-    end
-    # d is never smaller than similardistthres
-    if kdescores[i] == 0.0 || kdescores[i] > lowdensitythres
-      KDEonline!(k, d, x, i, σ, dim) # kde for all j
-      kdescores[i] = k[1]
-    end
-  end
-  return kdescores
 end
 
 """

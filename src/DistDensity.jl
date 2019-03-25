@@ -40,20 +40,20 @@ julia> dist_matrix!(D_out, dc, lat = 2, lon = 2)
 julia> D_out[1]
 ```
 """
-function dist_matrix!(D_out::Tuple{Array{tp,2},Array{tp,2},Array{tp,2}}, data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0) where {tp, N}
+function dist_matrix!(D_out::Tuple{Array{tp,2},Array{tp,2},Array{tp,2}}, data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0, dims = 1) where {tp, N}
   #@assert N == 2 || N == 3 || N  = 4
   (D, dat, tdat) = D_out
   if N == 2 copyto!(dat, data) end
   if N == 3 copyto!(dat, view(data, :, space, :)) end
   if N == 4 copyto!(dat, view(data, :, lat, lon, :))  end
   transpose!(tdat, dat)
-  if(dist == "Euclidean")         pairwise!(D, Euclidean(), tdat)
-  elseif(dist == "SqEuclidean")   pairwise!(D, SqEuclidean(), tdat)
-  elseif(dist == "Chebyshev")     pairwise!(D, Chebyshev(), tdat)
-  elseif(dist == "Cityblock")     pairwise!(D, Cityblock(), tdat)
-  elseif(dist == "JSDivergence")  pairwise!(D, JSDivergence(), tdat)
-  elseif(dist == "Mahalanobis")   pairwise!(D, Mahalanobis(Q), tdat)
-  elseif(dist == "SqMahalanobis") pairwise!(D, SqMahalanobis(Q), tdat)
+  if(dist == "Euclidean")         pairwise!(D, Euclidean(), tdat, dims = dims)
+  elseif(dist == "SqEuclidean")   pairwise!(D, SqEuclidean(), tdat, dims = dims)
+  elseif(dist == "Chebyshev")     pairwise!(D, Chebyshev(), tdat, dims = dims)
+  elseif(dist == "Cityblock")     pairwise!(D, Cityblock(), tdat, dims = dims)
+  elseif(dist == "JSDivergence")  pairwise!(D, JSDivergence(), tdat, dims = dims)
+  elseif(dist == "Mahalanobis")   pairwise!(D, Mahalanobis(Q), tdat, dims = dims)
+  elseif(dist == "SqMahalanobis") pairwise!(D, SqMahalanobis(Q), tdat, dims = dims)
   else print("$dist is not a defined distance metric, has to be one of 'Euclidean', 'SqEuclidean', 'Chebyshev', 'Cityblock' or 'JSDivergence'")
   end
   return(D_out[1])
@@ -110,9 +110,9 @@ function dist_matrix(data::AbstractArray{tp, N}, training_data::AbstractArray{tp
 end
 
 """
-    knn_dists(D, k::Int, temp_excl::Int = 5)
+    knn_dists(D, k::Int, temp_excl::Int = 0)
 
-returns the k-nearest neighbors of a distance matrix `D`. Excludes `temp_excl` (default: `temp_excl = 5`) distances
+returns the k-nearest neighbors of a distance matrix `D`. Excludes `temp_excl` (default: `temp_excl = 0`) distances
 from the main diagonal of `D` to be also nearest neighbors.
 
 # Examples
@@ -124,7 +124,7 @@ julia> knn_dists_out[5] # distances
 julia> knn_dists_out[4] # indices
 ```
 """
-function knn_dists(D::AbstractArray, k::Int, temp_excl::Int = 5)
+function knn_dists(D::AbstractArray, k::Int, temp_excl::Int = 0)
     T = size(D,1)
     if ((k + temp_excl) > T-1) print("k has to be smaller size(D,1)") end
     knn_dists_out = init_knn_dists(T, k)

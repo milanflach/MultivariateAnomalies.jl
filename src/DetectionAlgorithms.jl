@@ -30,11 +30,11 @@ function init_REC(D::Array{Float64, 2})
 end
 
 """
-    REC!(rec_out::AbstractArray, D::AbstractArray, rec_threshold::Float64, temp_excl::Int = 5)
+    REC!(rec_out::AbstractArray, D::AbstractArray, rec_threshold::Float64, temp_excl::Int = 0)
 
 Memory efficient version of `REC()` for use within a loop. `rec_out` is preallocated output, should be initialised with `init_REC()`.
 """
-function REC!(rec_out::AbstractArray, D::AbstractArray, rec_threshold::Float64, temp_excl::Int = 5)
+function REC!(rec_out::AbstractArray, D::AbstractArray, rec_threshold::Float64, temp_excl::Int = 0)
     N = size(D, 1)
     @assert temp_excl < N - 1
     @inbounds for i = 1:N
