@@ -11,11 +11,11 @@
 ## Requirements
 
 - Julia >= `0.7`
-- Julia packages `Distances`, `Combinatorics`, `MultivariateStats` and `LIBSVM`.
+- Julia packages `Distances`, `Combinatorics` and `LIBSVM`.
 
 ## Installation
 
-- add the package: ```Pkg.add("MultivariateAnomalies")```
+- add the package: ```]add MultivariateAnomalies```
 
 ## Documentation
 
