@@ -1,5 +1,6 @@
 julia >= 0.7
 Distances
 LIBSVM
-MultivariateStats
 Combinatorics
+StatsBase
+Statistics

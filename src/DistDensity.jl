@@ -40,7 +40,7 @@ julia> dist_matrix!(D_out, dc, lat = 2, lon = 2)
 julia> D_out[1]
 ```
 """
-function dist_matrix!(D_out::Tuple{Array{tp,2},Array{tp,2},Array{tp,2}}, data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0, dims = 1) where {tp, N}
+function dist_matrix!(D_out::Tuple{Array{tp,2},Array{tp,2},Array{tp,2}}, data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0, dims = 2) where {tp, N}
   #@assert N == 2 || N == 3 || N  = 4
   (D, dat, tdat) = D_out
   if N == 2 copyto!(dat, data) end
@@ -60,7 +60,7 @@ function dist_matrix!(D_out::Tuple{Array{tp,2},Array{tp,2},Array{tp,2}}, data::A
 end
 
 function dist_matrix!(D_out::Tuple{Array{tp,2},Array{tp,2},Array{tp,2},Array{tp,2},Array{tp,2}},
-                             data::AbstractArray{tp, N}, training_data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0) where {tp, N}
+                             data::AbstractArray{tp, N}, training_data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0, dims = 2) where {tp, N}
   #@assert N == 2 || N == 3 || N  = 4
   (D, dat, tdat, traindat, ttraindat) = D_out
   if N == 2 copyto!(dat, data) end
@@ -71,13 +71,13 @@ function dist_matrix!(D_out::Tuple{Array{tp,2},Array{tp,2},Array{tp,2},Array{tp,
   if N == 4 copyto!(traindat, view(training_data, :, lat, lon, :))  end
   transpose!(tdat, dat)
   transpose!(ttraindat, traindat)
-  if(dist == "Euclidean")         pairwise!(D, Euclidean(), ttraindat, tdat)
-  elseif(dist == "SqEuclidean")   pairwise!(D, SqEuclidean(), ttraindat, tdat)
-  elseif(dist == "Chebyshev")     pairwise!(D, Chebyshev(), ttraindat, tdat)
-  elseif(dist == "Cityblock")     pairwise!(D, Cityblock(), ttraindat, tdat)
-  elseif(dist == "JSDivergence")  pairwise!(D, JSDivergence(), ttraindat, tdat)
-  elseif(dist == "Mahalanobis")   pairwise!(D, Mahalanobis(Q), ttraindat, tdat)
-  elseif(dist == "SqMahalanobis") pairwise!(D, SqMahalanobis(Q), ttraindat, tdat)
+  if(dist == "Euclidean")         pairwise!(D, Euclidean(), ttraindat, tdat, dims = dims)
+  elseif(dist == "SqEuclidean")   pairwise!(D, SqEuclidean(), ttraindat, tdat, dims = dims)
+  elseif(dist == "Chebyshev")     pairwise!(D, Chebyshev(), ttraindat, tdat, dims = dims)
+  elseif(dist == "Cityblock")     pairwise!(D, Cityblock(), ttraindat, tdat, dims = dims)
+  elseif(dist == "JSDivergence")  pairwise!(D, JSDivergence(), ttraindat, tdat, dims = dims)
+  elseif(dist == "Mahalanobis")   pairwise!(D, Mahalanobis(Q), ttraindat, tdat, dims = dims)
+  elseif(dist == "SqMahalanobis") pairwise!(D, SqMahalanobis(Q), ttraindat, tdat, dims = dims)
   else print("$dist is not a defined distance metric, has to be one of 'Euclidean', 'SqEuclidean', 'Chebyshev', 'Cityblock' or 'JSDivergence'")
   end
   return(D_out[1])
@@ -97,13 +97,13 @@ julia> dc = randn(10, 4,3)
 julia> D = dist_matrix(dc, space = 2)
 ```
 """
-function dist_matrix(data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0, dims::Int = 1) where {tp, N}
+function dist_matrix(data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0, dims::Int = 2) where {tp, N}
   D_out = init_dist_matrix(data)
   dist_matrix!(D_out, data, dist = dist, space = space, lat = lat, lon = lon ,Q = Q, dims = dims)
   return(D_out[1])
 end
 
-function dist_matrix(data::AbstractArray{tp, N}, training_data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0, dims::Int = 1) where {tp, N}
+function dist_matrix(data::AbstractArray{tp, N}, training_data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0, dims::Int = 2) where {tp, N}
   D_out = init_dist_matrix(data, training_data)
   dist_matrix!(D_out, data, training_data, dist = dist, space = space, lat = lat, lon = lon ,Q = Q, dims = dims)
   return(D_out[1])
@@ -173,7 +173,7 @@ julia> knn_dists_out[5] # distances
 julia> knn_dists_out[4] # indices
 ```
 """
-function knn_dists!(knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},Array{Int64,2},Array{Float64,2}}, D::AbstractArray, temp_excl::Int = 5)
+function knn_dists!(knn_dists_out::Tuple{Int64,Array{Int64,1},Array{Float64,1},Array{Int64,2},Array{Float64,2}}, D::AbstractArray, temp_excl::Int = 0)
     (k, ix, v, indices, nndists) = knn_dists_out
     T = size(D,1)
     if ((k + temp_excl) > T-1) print("k has to be smaller size(D,1)") end

@@ -249,10 +249,10 @@ function SigmaOnline!(sigma::Array{tp, 1}, x::AbstractArray{tp, 2}, samplesize::
   trainsample1 = zeros(Int, 1)
   trainsample2 = zeros(Int, 1)
   for i = 1:samplesize
-    rand!(trainsample1, 1:size(x, dim))[1]
+    StatsBase.rand!(trainsample1, 1:size(x, dim))[1]
     for j = 1:samplesize
       if j > i
-        Euclidean_distance!(d, x, trainsample1[1], rand!(trainsample2, 1:size(x, dim))[1], dim)
+        Euclidean_distance!(d, x, trainsample1[1], StatsBase.rand!(trainsample2, 1:size(x, dim))[1], dim)
         # sum of distances
         sigma[1] = sigma[1] + d[1]
       end
@@ -269,10 +269,10 @@ function SigmaOnline!(sigma::Array{tp, 1}, x::AbstractArray{tp, 2}, Q::AbstractA
   trainsample1 = zeros(Int, 1)
   trainsample2 = zeros(Int, 1)
   for i = 1:samplesize
-    rand!(trainsample1, 1:size(x, dim))[1]
+    StatsBase.rand!(trainsample1, 1:size(x, dim))[1]
     for j = 1:samplesize
       if j > i
-        Mahalanobis_distance!(d, x, Q, trainsample1[1], rand!(trainsample2, 1:size(x, dim))[1], dim)
+        Mahalanobis_distance!(d, x, Q, trainsample1[1], StatsBase.rand!(trainsample2, 1:size(x, dim))[1], dim)
         # sum of distances
         sigma[1] = sigma[1] + d[1]
       end

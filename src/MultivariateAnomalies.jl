@@ -9,6 +9,7 @@ module MultivariateAnomalies
   using LIBSVM
   using Base.Cartesian
   using Statistics
+  using StatsBase
 
   # DistDensity
   export
