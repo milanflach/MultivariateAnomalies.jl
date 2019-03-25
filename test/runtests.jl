@@ -5,3 +5,4 @@ using Test
 
 include("testFeatureExtr.jl")
 include("testAlgorithms.jl")
+include("testPostprocessing.jl")

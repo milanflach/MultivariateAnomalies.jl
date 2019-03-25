@@ -77,7 +77,7 @@ Q = StatsBase.cov(x)
 
 @test all(round.(REConline!(out, x, 1.0), digits = 4) .== round.(REC(dist_matrix(x), 1.0), digits = 4))
 
-@test all(round.(REConline!(out, x, Q, 1.0), digits = 4) .== round.(REC(ist_matrix(x, dist = "Mahalanobis", Q = Q), 1.0), digits = 4))
+@test all(round.(REConline!(out, x, Q, 1.0), digits = 4) .== round.(REC(dist_matrix(x, dist = "Mahalanobis", Q = Q), 1.0), digits = 4))
 
 @test all(round.(KNNonline!(out, x, 5), digits = 4) .== round.(KNN_Gamma(knn_dists(dist_matrix(x, dims = 2), 5)), digits = 4))
 
