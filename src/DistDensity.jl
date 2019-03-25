@@ -158,7 +158,7 @@ function init_knn_dists(datacube::AbstractArray, k::Int)
 end
 
 """
-    knn_dists!(knn_dists_out, D, temp_excl::Int = 5)
+    knn_dists!(knn_dists_out, D, temp_excl::Int = 0)
 
 returns the k-nearest neighbors of a distance matrix `D`. Similar to `knn_dists()`, but uses preallocated input object `knn_dists_out`, initialized with `init_knn_dists()`.
 Please note that the number of nearest neighbors `k` is not necessary, as it is already determined by the `knn_dists_out` object.
