@@ -443,16 +443,7 @@ function KNFST_predict!(KNFST_out::Tuple{Array{Float64,1},Array{Float64,2},Array
                                      , KNFST_mod::Tuple{Array{Float64,2},Array{Float64,2}}, K::Array{Float64,2})
   (scores, diffs, Ktransposed) = KNFST_out
   (proj, targetValue) = KNFST_mod
-  @assert size(scores, 1) == size(K, 2) == size(diffs, 1)
-  @assert size(Ktransposed, 1) == size(K, 2) && size(Ktransposed, 2) == size(K, 1)
-  transpose!(Ktransposed, K)
-  # projected test samples: Ktransposed * model["proj"]
-  mul!(diffs, Ktransposed, proj)
-  # differences to the target value:
-  broadcast!(-,diffs,diffs, targetValue)
-  broadcast!(*,diffs, diffs, diffs)
-  sum!(scores, diffs)
-  broadcast!(sqrt, scores, scores)
+  KNFST_predict!(scores, diffs, Ktransposed, proj, targetValue, K)
   return(scores)
 end
 

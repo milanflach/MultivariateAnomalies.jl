@@ -187,12 +187,7 @@ julia> mw_AVG(dc, 15)
 """
 function mw_AVG(datacube::AbstractArray{<:AbstractFloat,N}, windowsize::Int = 10) where {N}
   out = zeros(eltype(datacube), size(datacube))
-  for k = 1:length(out) out[k] = NaN end
-  T = size(datacube, 1)
-  for beg = 1:T:length(datacube)
-    inner_mw_AVG!(out, datacube, windowsize, beg, T)
-  end
-   broadcast!(/, out, out, windowsize)
+  mw_AVG!(out, datacube, windowsize)
   return(out)
 end
 
@@ -282,11 +277,7 @@ julia> ewma_dc = EWMA(dc, 0.1)
 """
 function EWMA(dat::AbstractArray{tp, N}, lambda::Float64 = 0.15) where {tp, N}
   Z = similar(dat)
-  T = size(dat, 1)
-  LENGTH = length(dat)
-  for istart = 1:T:LENGTH
-    innerst_ewma!(Z, dat, istart, T, lambda)
-  end
+  EWMA!(Z, dat, lambda)
   return(Z)
 end
 
