@@ -70,6 +70,7 @@ using StatsBase
 out = zeros(100)
 x = randn(100, 3)
 Q = StatsBase.cov(x)
+
 @test all(round.(KDEonline!(out, x, 1.0), digits = 4) .== round.(KDE(kernel_matrix(dist_matrix(x), 1.0)), digits = 4))
 
 @test all(round.(KDEonline!(out, x, Q, 1.0), digits = 4) .== round.(KDE(kernel_matrix(dist_matrix(x, dist = "Mahalanobis", Q = Q), 1.0)), digits = 4))
@@ -81,3 +82,13 @@ Q = StatsBase.cov(x)
 @test all(round.(KNNonline!(out, x, 5), digits = 4) .== round.(KNN_Gamma(knn_dists(dist_matrix(x, dims = 2), 5)), digits = 4))
 
 @test all(round.(KNNonline!(out, x, Q, 5), digits = 4) .== round.(KNN_Gamma(knn_dists(dist_matrix(x, dist = "Mahalanobis",Q = Q, dims = 2), 5)), digits = 4))
+
+s = zeros(1)
+
+SigmaOnline!(s, x)
+
+@test round.(Int, s)[1] == 2
+
+SigmaOnline!(s, x, Q)
+
+@test round.(Int, s)[1] == 2
