@@ -97,15 +97,15 @@ julia> dc = randn(10, 4,3)
 julia> D = dist_matrix(dc, space = 2)
 ```
 """
-function dist_matrix(data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0) where {tp, N}
+function dist_matrix(data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0, dims::Int = 1) where {tp, N}
   D_out = init_dist_matrix(data)
-  dist_matrix!(D_out, data, dist = dist, space = space, lat = lat, lon = lon ,Q = Q)
+  dist_matrix!(D_out, data, dist = dist, space = space, lat = lat, lon = lon ,Q = Q, dims = dims)
   return(D_out[1])
 end
 
-function dist_matrix(data::AbstractArray{tp, N}, training_data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0) where {tp, N}
+function dist_matrix(data::AbstractArray{tp, N}, training_data::AbstractArray{tp, N}; dist::String = "Euclidean", space::Int = 0, lat::Int = 0, lon::Int = 0, Q = 0, dims::Int = 1) where {tp, N}
   D_out = init_dist_matrix(data, training_data)
-  dist_matrix!(D_out, data, training_data, dist = dist, space = space, lat = lat, lon = lon ,Q = Q)
+  dist_matrix!(D_out, data, training_data, dist = dist, space = space, lat = lat, lon = lon ,Q = Q, dims = dims)
   return(D_out[1])
 end
 
