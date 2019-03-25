@@ -572,7 +572,6 @@ e.g. transforming the variables in normalised ranks between zero and one to get 
     x = randn(10*46, 3)
     mapMovingWindow(get_quantile_scores, x, numoutvars = size(x, 2))
 """
-
 function mapMovingWindow(function2mw, x, args...; ObsPerYear::Int = 46, windowsize::Int = 9, edgecut::Int = 0, startidx::Int = 1, numoutvars::Int = 0)
   mwobj = init_MovingWindow(x, ObsPerYear = ObsPerYear, windowsize = windowsize, edgecut = edgecut, numoutvars = numoutvars, startidx = startidx)
   if numoutvars > 1

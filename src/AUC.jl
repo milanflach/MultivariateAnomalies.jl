@@ -1,13 +1,6 @@
 using Base.Cartesian
 
 
-macro removeTrailing(x...)
-    ex=Expr(:block)
-    for i in 1:length(x)
-        push!(ex.args,:(endswith($(esc(x[i])),"\0") && ($(esc(x[i]))=$(esc(x[i]))[1:end-1])))
-    end
-    ex
-end
 
 """
     auc(scores, events, increasing = true)
@@ -60,8 +53,7 @@ function trap_area(x1,x2,y1,y2)
     return b*h
 end
 
-# function assumes that outliers have highest scores (increasing = true)
-# additionally to the AUC the false positive rate and the true positive and true positive rate of a specified quantile is returned
+
 """
     auc_fpr_tpr(scores, events, quant = 0.9, increasing = true)
 
@@ -116,21 +108,6 @@ end
 isextreme(l::Bool)=l
 isextreme(l::Integer)=l>0
 
-"""
-    boolevents(events)
-
-convert an `events` array into a boolean array.
-"""
-function boolevents(events)
-    eventsb=falses(size(events,1),size(events,2),size(events,3))
-    nindep=size(events,4)
-    Base.Cartesian.@nloops 3 i eventsb begin
-        for i_4=1:nindep
-            (Base.Cartesian.@nref(4,events,i) > 0.0) && (Base.Cartesian.@nref(3,eventsb,i)=true; break)
-        end
-    end
-    eventsb
-end
 
 
 

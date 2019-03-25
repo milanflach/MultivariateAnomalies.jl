@@ -64,8 +64,6 @@ module MultivariateAnomalies
     mapMovingWindow,
 # AUC
     auc,
-    auc_fpr_tpr,
-    boolevents,
 # Scores
     get_quantile_scores,
     get_quantile_scores!,
