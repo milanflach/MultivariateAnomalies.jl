@@ -61,7 +61,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Authors",
     "category": "section",
-    "text": "|The package was implemented by Milan Flach and Fabian Gans, Max Planck Institute for Biogeochemistry, Department Biogeochemical Integration, Jena. |(Image: Minerva) |"
+    "text": "<img align=\"right\" src=\"img/MPG_Minerva.png\" alt=\"Minerva\" width=\"75\"/>  The package was implemented by Milan Flach and Fabian Gans, Max Planck Institute for Biogeochemistry, Department Biogeochemical Integration, Research group for Empirical Inference of the Earth System, Jena. "
 },
 
 {
@@ -645,15 +645,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Preprocessing",
     "title": "Dimensionality Reduction",
     "category": "section",
-    "text": "Currently two dimenionality reduction techniques are implemented from MultivariateStats.jl:Principal Component Analysis (PCA)\nIndependent Component Analysis (ICA)"
-},
-
-{
-    "location": "man/Preprocessing/#Functions-1",
-    "page": "Preprocessing",
-    "title": "Functions",
-    "category": "section",
-    "text": "globalPCA\nglobalICA"
+    "text": "For dimensionality reduction, we would like to point to the package MultivariateStats.jl. Several techniques are implemented there, e.g.Principal Component Analysis (PCA)\nIndependent Component Analysis (ICA)"
 },
 
 {
@@ -705,7 +697,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/Preprocessing/#Functions-2",
+    "location": "man/Preprocessing/#Functions-1",
     "page": "Preprocessing",
     "title": "Functions",
     "category": "section",
@@ -817,7 +809,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/Preprocessing/#Functions-3",
+    "location": "man/Preprocessing/#Functions-2",
     "page": "Preprocessing",
     "title": "Functions",
     "category": "section",
@@ -849,11 +841,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "man/AUC/#MultivariateAnomalies.auc",
+    "page": "AUC",
+    "title": "MultivariateAnomalies.auc",
+    "category": "function",
+    "text": "auc(scores, events, increasing = true)\n\ncompute the Area Under the receiver operator Curve (AUC), given some output scores array and some ground truth (events). By default, it is assumed, that the scores are ordered increasingly (increasing = true), i.e. high scores represent events. AUC is computed according to Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters, 27(8), 861–874. http://doi.org/10.1016/j.patrec.2005.10.010\n\nExamples\n\njulia> scores = rand(10, 2)\njulia> events = rand(0:1, 10, 2)\njulia> auc(scores, events)\njulia> auc(scores, boolevents(events))\n\n\n\n\n\n"
+},
+
+{
     "location": "man/AUC/#Functions-1",
     "page": "AUC",
     "title": "Functions",
     "category": "section",
-    "text": "auc\nauc_fpr_tpr\nbooleventsIndexPages = [\"AUC.md\"]"
+    "text": "aucIndexPages = [\"AUC.md\"]"
 },
 
 {
