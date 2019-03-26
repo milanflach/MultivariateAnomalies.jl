@@ -21,7 +21,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Requirements",
     "category": "section",
-    "text": "Julia >= 0.7\nJulia packages Distances, Combinatorics, LinearAlgebra, Statistics, and,LIBSVM`."
+    "text": "Julia >= 0.7\nJulia packages Distances, Combinatorics, LinearAlgebra, Statistics, and, LIBSVM."
 },
 
 {
