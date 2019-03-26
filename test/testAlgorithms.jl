@@ -90,8 +90,8 @@ s = zeros(1)
 
 SigmaOnline!(s, x)
 
-#@test floor.(Int, s)[1] == 2
+@test floor.(Int, s)[1] == 2 ||  floor.(Int, s)[1] == 1
 
 SigmaOnline!(s, x, Q)
 
-#@test floor.(Int, s)[1] == 2
+@test floor.(Int, s)[1] == 2 ||  floor.(Int, s)[1] == 1
