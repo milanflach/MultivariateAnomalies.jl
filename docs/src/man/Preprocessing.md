@@ -4,16 +4,11 @@ Extract the relevant inforamtion out of your data and use them as input feature 
 
 ## Dimensionality Reduction
 
-Currently two dimenionality reduction techniques are implemented from *MultivariateStats.jl*:
+For dimensionality reduction, we would like to point to the package *MultivariateStats.jl*. Several techniques are implemented there, e.g.
 
 - Principal Component Analysis (PCA)
 - Independent Component Analysis (ICA)
 
-### Functions
-```@docs
-globalPCA
-globalICA
-```
 
 ## Seasonality
 

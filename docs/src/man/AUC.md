@@ -9,8 +9,6 @@ Fawcett, T. (2006). An introduction to ROC analysis. Pattern Recognition Letters
 
 ```@docs
 auc
-auc_fpr_tpr
-boolevents
 ```
 
 Index

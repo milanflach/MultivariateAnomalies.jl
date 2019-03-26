@@ -39,8 +39,9 @@ For a quick start it might be useful to start with the [high level functions](ma
 *MultivariateAnomalies.jl* assumes that observations/samples/time steps are stored along the first dimension of the data array (rows of a matrix) with the number of observations `T = size(data, 1)`. Variables/attributes are stored along the last dimension `N` of the data array (along the columns of a matrix) with the number of variables `VAR = size(data, N)`. The implemented anomaly detection algorithms return anomaly scores indicating which observation(s) of the data are anomalous.
 
 ## Authors
+<img align="right" src="img/MPG_Minerva.png" alt="Minerva" width="75"/> 
+The package was implemented by Milan Flach and Fabian Gans, Max Planck Institute for Biogeochemistry, Department Biogeochemical Integration, Research group for Empirical Inference of the Earth System, Jena. 
 
-|The package was implemented by Milan Flach and Fabian Gans, Max Planck Institute for Biogeochemistry, Department Biogeochemical Integration, Jena. |![Minerva](img/MPG_Minerva.png =50x50) |
 
 
 
