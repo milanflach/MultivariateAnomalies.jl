@@ -10,7 +10,7 @@ Flach, M., Gans, F., Brenning, A., Denzler, J., Reichstein, M., Rodner, E., Bath
 ## Requirements
 
 - Julia >= `0.7`
-- Julia packages `Distances`, `Combinatorics`, `LinearAlgebra`, `Statistics, and, `LIBSVM`.
+- Julia packages `Distances`, `Combinatorics`, `LinearAlgebra`, `Statistics`, and, `LIBSVM`.
 
 ## Installation
 
@@ -41,10 +41,6 @@ For a quick start it might be useful to start with the [high level functions](ma
 ## Authors
 <img align="right" src="img/MPG_Minerva.png" alt="Minerva" width="75"/> 
 The package was implemented by Milan Flach and Fabian Gans, Max Planck Institute for Biogeochemistry, Department Biogeochemical Integration, Research group for Empirical Inference of the Earth System, Jena. 
-
-
-
-
 
 
 ## Index
