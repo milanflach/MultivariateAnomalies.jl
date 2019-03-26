@@ -3,28 +3,29 @@ language: julia
 
 codecov: true
 
+os:
+  - linux
+  - osx
+
+julia:
+  - 0.7
+  - 1.0
+  - 1.1
+  - nightly
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    -julia: nightly
+
+notifications:
+  email: false
+
+after_success:
+  - julia -e 'using Pkg; Pkg.instantiate(); cd(Pkg.dir("MultivariateAnomalies")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+
 jobs:
   include:
-    - stage: "Testing"
-      os: - linux
-          - osx
-          
-      julia:
-          - 0.7
-          - 1.0
-          - 1.1
-          - nightly
-          
-      matrix:
-        fast_finish: true
-        allow_failures: 
-            -julia: nightly
-        notifications:
-            email: false
-        after_success:
-           - julia -e 'cd(Pkg.dir("MultivariateAnomalies")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
-
-          
     - stage: "Documentation"
       julia: 1.0
       os: linux
@@ -33,5 +34,3 @@ jobs:
                                                Pkg.instantiate()'
         - julia --project=docs/ docs/make.jl
       after_success: skip
-      
-      
