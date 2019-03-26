@@ -1,4 +1,4 @@
-using Base.Cartesian
+#using Base.Cartesian
 
 
 
@@ -54,56 +54,6 @@ function trap_area(x1,x2,y1,y2)
 end
 
 
-"""
-    auc_fpr_tpr(scores, events, quant = 0.9, increasing = true)
-
-Similar like `auc()`, but return additionally the true positive and false positive rate at a given quantile (default: `quant = 0.9`).
-
-# Examples
-
-```
-julia> scores = rand(10, 2)
-julia> events = rand(0:1, 10, 2)
-julia> auc_fpr_tpr(scores, events, 0.8)
-```
-"""
-function auc_fpr_tpr(scores,events, quant = 0.90; increasing = true)
-    quant = 1.0 - quant # as we start with the highest score in the loop the quantile is reverted
-    s = sortperm(reshape(scores,length(scores)),rev=increasing);
-    length(scores) == length(events) || error("Scores and events must have same number of elements")
-    f=scores[s]
-    L=events[s]
-    fp=0
-    tp=0
-    fpr = 0.0
-    tpr = 0.0
-    fpprev=0
-    tpprev=0
-    A=0.0
-    fprev=-Inf
-    P=sum(L)
-    N=length(L)-P
-    for i=1:length(L)
-        if f[i]!=fprev
-            A+=trap_area(fp,fpprev,tp,tpprev)
-            @inbounds fprev=f[i]
-            fpprev=fp
-            tpprev=tp
-        end
-        if isextreme(L[i])
-            tp+=1
-        else
-            fp+=1
-        end
-        if i == round(Int, quant * length(L))
-            fpr = fp/N
-            tpr = tp/P
-        end
-    end
-    A+=trap_area(N,fpprev,P,tpprev)
-    A=A/(P*N)
-    return(A, fpr, tpr)
-end
 
 isextreme(l::Bool)=l
 isextreme(l::Integer)=l>0

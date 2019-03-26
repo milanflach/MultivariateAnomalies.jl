@@ -291,24 +291,19 @@ end
 initialize a `univ_out` object to be used in `UNIV!()` either with number of time steps/observations `T` and variables `VAR` or with a `data` matrix observations * variables.
 """
 function init_UNIV(T::Int, VAR::Int)
-     var_dat = zeros(Float64, T)
-     dc_ix_order = zeros(Int64,T, VAR)
-     dc_ix_order2 = zeros(Int64,T, VAR)
-     univ_out = (var_dat, dc_ix_order, dc_ix_order2)
-     return(univ_out)
+    var_dat = zeros(tp, T)
+    varquants = zeros(Float64,T, VAR)
+    univ_out = (var_dat, varquants)
+    return univ_out
 end
 
 function init_UNIV(data::AbstractArray{tp, N}) where {tp,N}
-     dims = 1
-     for i = 1:(N-1) # multiply dimensions except the last one and save as dims
-       dims = size(data, i) * dims
-     end
-     T = dims
+     T = size(data, 1)
      VAR = size(data, N)
      var_dat = zeros(tp, T)
      varquants = zeros(Float64,T, VAR)
      univ_out = (var_dat, varquants)
-     return(univ_out)
+     return univ_out
 end
 
 """
@@ -316,8 +311,7 @@ end
 
 Memory efficient version of `UNIV()`, input an `univ_out` object from `init_UNIV()` and some `data` matrix observations * variables
 """
-function UNIV!(univ_out::Tuple{Array{tp,1},Array{Float64,2}}
-                              , data::AbstractArray{tp, N}) where {tp, N}
+function UNIV!(univ_out::Tuple{Array{tp,1},Array{Float64,2}}, data::AbstractArray{tp, N}) where {tp, N}
   (var_dat, varquants) = univ_out
   @assert size(var_dat, 1) == size(varquants, 1) == size(data, 1)
   @assert size(varquants, 2) == size(data, 2)
@@ -339,7 +333,7 @@ the highest quantile will be returned.
 """
 function UNIV(data::AbstractArray{tp, N}) where {tp, N}
   univ_out = init_UNIV(data)
-  return(UNIV!(univ_out, data))
+  return UNIV!(univ_out, data)
 end
 
 """
