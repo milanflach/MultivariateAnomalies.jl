@@ -14,7 +14,7 @@ Flach, M., Gans, F., Brenning, A., Denzler, J., Reichstein, M., Rodner, E., Bath
 
 ## Installation
 
-- add the package: ```Pkg.add("MultivariateAnomalies")```
+- add the package: ```]add MultivariateAnomalies```
 
 ## Package Features
 
