@@ -306,9 +306,8 @@ function init_UNIV(data::AbstractArray{tp, N}) where {tp,N}
      T = dims
      VAR = size(data, N)
      var_dat = zeros(tp, T)
-     dc_ix_order = zeros(Int64,T, VAR)
-     dc_ix_order2 = zeros(Int64,T, VAR)
-     univ_out = (var_dat, dc_ix_order, dc_ix_order2)
+     varquants = zeros(Float64,T, VAR)
+     univ_out = (var_dat, varquants)
      return(univ_out)
 end
 
@@ -317,32 +316,20 @@ end
 
 Memory efficient version of `UNIV()`, input an `univ_out` object from `init_UNIV()` and some `data` matrix observations * variables
 """
-function UNIV!(univ_out::Tuple{Array{tp,1},Array{Int64,2},Array{Int64,2}}
+function UNIV!(univ_out::Tuple{Array{tp,1},Array{Float64,2}}
                               , data::AbstractArray{tp, N}) where {tp, N}
-  (var_dat, dc_ix_order, dc_ix_order2) = univ_out
-  dims = 1
-  olddims = zeros(Int64, N-1)
-  for i = 1:(N-1) # multiply dimensions except the last one and save as dims
-    dims = size(data, i) * dims
-    olddims[i] = size(data, i)
-  end
-  data = reshape(data, dims, size(data, N))
-  @assert size(var_dat, 1) == size(dc_ix_order, 1) == size(data, 1) === size(dc_ix_order2, 1)
-  @assert size(dc_ix_order, 2) == size(data, 2) == size(dc_ix_order2, 2)
+  (var_dat, varquants) = univ_out
+  @assert size(var_dat, 1) == size(varquants, 1) == size(data, 1)
+  @assert size(varquants, 2) == size(data, 2)
   for variable = 1:size(data, 2)
     # copy with little allocation
     copyto!(var_dat, view(data, :, variable))
-    sortperm!(view(dc_ix_order, :, variable), var_dat, rev = false)
-    for t = 1:size(var_dat, 1) dc_ix_order2[dc_ix_order[t,variable],variable] = t end
+    get_quantile_scores!(view(varquants, :, variable), var_dat)
   end
-  mymed = median(dc_ix_order2)
-  maxabs!(var_dat, dc_ix_order2 .- mymed)
-  broadcast!(/, var_dat, var_dat, mymed)
-  return(reshape(var_dat, ntuple(i -> funct(i, olddims), size(olddims, 1))))
+  maximum!(var_dat, varquants)
+  return var_dat
 end
 
-# samll helper
-function funct(i, x) return(x[i]) end
 
 """
     UNIV(data)

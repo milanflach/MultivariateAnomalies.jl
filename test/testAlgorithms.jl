@@ -64,6 +64,9 @@ methods = ["REC","KDE"]
 @test all(detectAnomalies(data, getParameters(methods, data)) .== detectAnomalies(data, methods))
 
 
+x = [[1.0,2.0,3.0] [-2.0,4.0,1.0]]
+@test all(round.(UNIV(x), digits = 0) .== [0,1,1])
+
 # test online algorithms with the non-online corresponding ones
 using StatsBase
 
