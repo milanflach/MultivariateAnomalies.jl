@@ -10,7 +10,7 @@ Flach, M., Gans, F., Brenning, A., Denzler, J., Reichstein, M., Rodner, E., Bath
 ## Requirements
 
 - Julia >= `0.7`
-- Julia packages `Distances`, `Combinatorics`, `LinearAlgebra`, `Statistics`, and, `LIBSVM`.
+- Julia packages `Distances`, `Combinatorics`, `LinearAlgebra`, and `LIBSVM`.
 
 ## Installation
 
