@@ -11,7 +11,7 @@
 ## Requirements
 
 - Julia >= `0.7`
-- Julia packages `Distances`, `Combinatorics` and `LIBSVM`.
+- Julia packages `Distances`, `LIBSVM`, `Combinatorics`, and `Linear Algebra`.
 
 ## Installation
 
