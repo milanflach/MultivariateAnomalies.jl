@@ -23,7 +23,7 @@ knfst_model = KNFST_train(K[1:4,1:4])
 # Hotelling's T^2
 # is also the quared mahalanobis distance to the data's mean
 using Distances
-@test all(round.(T2(dat, Q, mean(dat, dims = 1)), digits = 2) .== round.(pairwise(SqMahalanobis(Q), dat', mean(dat', dims = 2)), digits = 2))
+@test all(round.(T2(dat, Q, mean(dat, dims = 1)), digits = 2) .== round.(pairwise(SqMahalanobis(Q), dat', mean(dat', dims = 2), dims = 2), digits = 2))
 
 # SVDD
 Ktest = exp.(-0.5 * pairwise(Euclidean(), dat[1:4,:]', dat') ./ sigma^2)
