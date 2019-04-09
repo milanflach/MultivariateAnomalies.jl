@@ -64,70 +64,70 @@ julia> compute_ensemble(quantile_scores1, quantile_scores2, ensemble = "max")
 function compute_ensemble(m1_scores::Array{Tp, N}, m2_scores::Array{Tp, N}; ensemble = "mean") where {Tp, N}
     @assert any(ensemble .== ["mean","min","max","median"])
 
-    scores = cat(N+1,m1_scores, m2_scores);
+    scores = cat(m1_scores, m2_scores, dims = N+1);
 
-    if(ensemble == "mean")
-      ensemble_scores = squeeze(mean(scores, dims = N+1), N+1)
+    if ensemble == "mean"
+      ensemble_scores = dropdims(mean(scores, dims = N+1), dims = N+1)
     end
 
-    if(ensemble == "median")
-      ensemble_scores = squeeze(median(scores, dims = N+1), N+1)
+    if ensemble == "median"
+      ensemble_scores = dropdims(median(scores, dims = N+1), dims = N+1)
     end
 
-    if(ensemble == "max")
-      ensemble_scores = squeeze(maximum(scores, dims = N+1), N+1)
+    if ensemble == "max"
+      ensemble_scores = dropdims(maximum(scores, dims = N+1), dims = N+1)
     end
 
-    if(ensemble == "min")
-      ensemble_scores = squeeze(minimum(scores, dims = N+1), N+1)
+    if ensemble == "min"
+      ensemble_scores = dropdims(minimum(scores, dims = N+1), dims = N+1)
     end
-  return(ensemble_scores)
+  return ensemble_scores
 end
 
 function compute_ensemble(m1_scores::Array{Tp, N}, m2_scores::Array{Tp, N}, m3_scores::Array{Tp, N}; ensemble = "mean") where {Tp, N}
     @assert any(ensemble .== ["mean","min","max","median"])
 
-    scores = cat(N+1,m1_scores, m2_scores, m3_scores);
+    scores = cat(m1_scores, m2_scores, m3_scores, dims = N+1);
 
-    if(ensemble == "mean")
-      ensemble_scores = squeeze(mean(scores, dims = N+1), N+1)
+    if ensemble == "mean"
+      ensemble_scores = dropdims(mean(scores, dims = N+1), dims = N+1)
     end
 
-    if(ensemble == "median")
-      ensemble_scores = squeeze(median(scores, dims = N+1), N+1)
+    if ensemble == "median"
+      ensemble_scores = dropdims(median(scores, dims = N+1), dims = N+1)
     end
 
-    if(ensemble == "max")
-      ensemble_scores = squeeze(maximum(scores, dims = N+1), N+1)
+    if ensemble == "max"
+      ensemble_scores = dropdims(maximum(scores, dims = N+1), dims = N+1)
     end
 
-    if(ensemble == "min")
-      ensemble_scores = squeeze(minimum(scores, dims = N+1), N+1)
+    if ensemble == "min"
+      ensemble_scores = dropdims(minimum(scores, dims = N+1), dims = N+1)
     end
-  return(ensemble_scores)
+  return ensemble_scores
 end
 
 function compute_ensemble(m1_scores::Array{Tp, N}, m2_scores::Array{Tp, N}, m3_scores::Array{Tp, N}, m4_scores::Array{Tp, N}; ensemble = "mean") where {Tp, N}
     @assert any(ensemble .== ["mean","min","max","median"])
 
-    scores = cat(N+1,m1_scores, m2_scores, m3_scores, m4_scores);
+    scores = cat(m1_scores, m2_scores, m3_scores, m4_scores, dims = N+1);
 
-    if(ensemble == "mean")
-      ensemble_scores = squeeze(mean(scores, dims = N+1), N+1)
+    if ensemble == "mean"
+      ensemble_scores = dropdims(mean(scores, dims = N+1), dims = N+1)
     end
 
-    if(ensemble == "median")
-      ensemble_scores = squeeze(median(scores, dims = N+1), N+1)
+    if ensemble == "median"
+      ensemble_scores = dropdims(median(scores, dims = N+1), dims = N+1)
     end
 
-    if(ensemble == "max")
-      ensemble_scores = squeeze(maximum(scores, dims = N+1), N+1)
+    if ensemble == "max"
+      ensemble_scores = dropdims(maximum(scores, dims = N+1), dims = N+1)
     end
 
-    if(ensemble == "min")
-      ensemble_scores = squeeze(minimum(scores, dims = N+1), N+1)
+    if ensemble == "min"
+      ensemble_scores = dropdims(minimum(scores, dims = N+1), dims = N+1)
     end
-  return(ensemble_scores)
+  return ensemble_scores
 end
 
 
