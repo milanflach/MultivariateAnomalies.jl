@@ -11,6 +11,8 @@ julia:
   - 0.7
   - 1.0
   - 1.1
+  - 1.2
+  - 1.3
   - nightly
 
 matrix:
@@ -19,7 +21,7 @@ matrix:
     -julia: nightly
 
 notifications:
-  email: false
+  email: true
 
 after_success:
   - julia -e 'using Pkg; Pkg.instantiate(); cd(Pkg.dir("MultivariateAnomalies")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
