@@ -1,7 +1,7 @@
 name = "MultivariateAnomalies"
 uuid = "6b1494d1-c0e4-5e11-970b-cb64accc6d0e"
 authors = ["milanflach <milanflach fs@users.noreply.github.com>"]
-version = "0.2.3"
+version = "0.2.4"
 license = "MIT"
 keywords = ["novelty detection", "anomaly detection", "outlier detection", "statistical process control", "process monitoring"]
 repository = "https://github.com/milanflach/MultivariateAnomalies.jl.git"
