@@ -4,7 +4,6 @@ using Documenter, MultivariateAnomalies
           makedocs(
               modules = [MultivariateAnomalies],
               clean   = false,
-              format   = :html,
               sitename = "MultivariateAnomalies.jl",
               pages    = Any[ # Compat: `Any` for 0.4 compat
                   "Home" => "index.md",
@@ -22,8 +21,5 @@ using Documenter, MultivariateAnomalies
 
           deploydocs(
               repo   = "github.com/milanflach/MultivariateAnomalies.jl.git",
-              #julia  = "0.7",
-              #deps   = nothing,
-              #make   = nothing,
               target = "build"
           )
